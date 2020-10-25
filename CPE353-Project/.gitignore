@@ -1,0 +1,4 @@
+*.o
+.qmake.stash
+*.pro.user
+CPE353-Project
