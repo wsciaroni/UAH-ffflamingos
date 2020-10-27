@@ -7,6 +7,9 @@ namespace Ui {
 class ManageRoom;
 }
 
+/**
+ * Used to have the host see who has joined the game, and allows the host to start the game.
+ */
 class ManageRoom : public QDialog
 {
     Q_OBJECT

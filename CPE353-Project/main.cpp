@@ -12,31 +12,31 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     GameWidget w;
-    w.show();
+    //w.show();
 
     Connecting c;
-    c.show();
+    //c.show();
 
     CreateGame cg;
-    cg.show();
+    //cg.show();
 
     DetermineRoleDialog d;
-    d.show();
+    //d.show();
 
     error e;
-    e.show();
+    //e.show();
 
     GameWidget g;
-    g.show();
+    //g.show();
 
     JoinExistingGame j;
-    j.show();
+    //j.show();
 
     ManageRoom m;
-    m.show();
+    //m.show();
 
     WaitingToStart t;
-    t.show();
+    //t.show();
 
 
     return a.exec();

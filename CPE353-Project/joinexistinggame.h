@@ -7,6 +7,9 @@ namespace Ui {
 class JoinExistingGame;
 }
 
+/**
+ * Used to have the guest enter the details of the game he wishes to join
+ */
 class JoinExistingGame : public QDialog
 {
     Q_OBJECT

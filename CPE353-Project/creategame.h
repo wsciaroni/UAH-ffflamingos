@@ -7,6 +7,9 @@ namespace Ui {
 class CreateGame;
 }
 
+/**
+ * Used to have the host enter the details to bind to an ip and port
+ */
 class CreateGame : public QDialog
 {
     Q_OBJECT

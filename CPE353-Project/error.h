@@ -7,6 +7,9 @@ namespace Ui {
 class error;
 }
 
+/**
+ * Used to display an error
+ */
 class error : public QDialog
 {
     Q_OBJECT

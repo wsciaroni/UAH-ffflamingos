@@ -33,6 +33,7 @@ SOURCES += \
         main.cpp \
         gamewidget.cpp \
         manageroom.cpp \
+        networkconfigurator.cpp \
         waitingtostart.cpp
 
 HEADERS += \
@@ -43,6 +44,7 @@ HEADERS += \
         gamewidget.h \
         joinexistinggame.h \
         manageroom.h \
+        networkconfigurator.h \
         waitingtostart.h
 
 FORMS += \

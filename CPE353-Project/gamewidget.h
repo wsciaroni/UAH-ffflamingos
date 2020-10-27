@@ -7,6 +7,9 @@ namespace Ui {
 class GameWidget;
 }
 
+/**
+ * Used to display the Qt 2D graphics portion of the game
+ */
 class GameWidget : public QWidget
 {
     Q_OBJECT

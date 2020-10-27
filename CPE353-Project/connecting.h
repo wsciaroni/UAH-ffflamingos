@@ -7,6 +7,9 @@ namespace Ui {
 class Connecting;
 }
 
+/**
+ * Used to indicate to a guest that his machine is attempting to connect
+ */
 class Connecting : public QDialog
 {
     Q_OBJECT
