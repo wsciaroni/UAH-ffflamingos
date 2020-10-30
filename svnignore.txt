@@ -1,10 +1,5 @@
 *.o
 *.pro.user
-debug/.moc/*.cpp
-debug/.obj/*.o
-debug/.ui/*.h
-release/.moc/*.cpp
-release/.obj/*.o
-release/.ui/*.h
-
+build
 .qmake.stash
+Makefile
