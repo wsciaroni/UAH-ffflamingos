@@ -50,7 +50,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="disconnect">
        <property name="text">
         <string>Disconnect From Game (Quit)</string>
        </property>
