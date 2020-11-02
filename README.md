@@ -33,14 +33,12 @@
 
 ## Signals and Slots
 
-```c++
-connect(
-  address of object emitting the signal,
-  SIGNAL,
-  address of the object to respond to that particular signal,
-  SLOT
-  )
-```
+    connect(
+    address of object emitting the signal,
+    SIGNAL,
+    address of the object to respond to that particular signal,
+    SLOT
+    )
 
 ### Qt4 Style Signals and Slots
 
@@ -72,17 +70,13 @@ Some more dialog windows can be seen at [Dialog Windows](https://doc.qt.io/qt-5/
 
 Input validation is often most easily done using a `QRegularExpressionValidator`.  This looks as follows:
 
-```c++
-QRegularExpressionValidator* validatorName = new QRegularExpressionValidator(QRegularExpression("[0-9]{3}"));
-someString.setValidator(validatorName);
-```
+    QRegularExpressionValidator* validatorName = new QRegularExpressionValidator(QRegularExpression("[0-9]{3}"));
+    someString.setValidator(validatorName);
 
 You may also need to process only numerical input.  This is most easily done through `QIntValidator`
 
-```c++
-QIntValidator* validatorName = new QIntValidator(0,999, someString);
-someString.setValidator(validatorName);
-```
+    QIntValidator* validatorName = new QIntValidator(0,999, someString);
+    someString.setValidator(validatorName);
 
 More can be found at [Qt Quick Text Input Handling and Validators](https://doc.qt.io/qt-5/qtquick-input-textinput.html)
 
@@ -91,10 +85,8 @@ More can be found at [Qt Quick Text Input Handling and Validators](https://doc.q
 The tool bar is used by adding `QAction` to it. See `QAction`.
 The tool bar lets you have drag and drop functionality by default.  This can be handy when you're trying to implement tools that should be readily available to the user.
 
-```c++
-action1 = new QAction(...);
-someToolBar->addAction(action1);
-```
+    action1 = new QAction(...);
+    someToolBar->addAction(action1);
 
 More can be found at [QToolBar](https://doc.qt.io/qt-5.9/qtoolbar.html)
 
@@ -102,21 +94,17 @@ More can be found at [QToolBar](https://doc.qt.io/qt-5.9/qtoolbar.html)
 
 The menu bar also takes `QAction` and implements the typical `File`, `Edit`, `View`, `...` on normal windows.
 
-```c++
-action1 = new QAction(...);
-actionMenu = menuBar()->addMenu("&Actions");
-actionMenu->addAction(action1);
-actionMenu->addSeparator();
-```
+    action1 = new QAction(...);
+    actionMenu = menuBar()->addMenu("&Actions");
+    actionMenu->addAction(action1);
+    actionMenu->addSeparator();
 
 More can be found at [QMenuBar](https://doc.qt.io/qt-5/qmenubar.html)
 
 ## Status Bar
 
-```c++
-QLabel* statusLabel = new QLabel("Ready");
-statusBar()->addWidget(statusLabel);
-```
+    QLabel* statusLabel = new QLabel("Ready");
+    statusBar()->addWidget(statusLabel);
 
 More can be found at [QStatusBar](https://doc.qt.io/qt-5/qstatusbar.html)
 
@@ -134,37 +122,32 @@ You may need to implement either the general or specific event handler of an eve
 
 ### Specific
 
-```c++
-void MainWindow::keyPressEvent(QKeyEvent * key) {
-    if (key && key->key() == Qt::Key_Escape) {
-        bool ok;
-        int count = status->text().toInt(&ok);
-        if (ok) {
-            count++;
-            status->setNum(count);
-        }
-        else {
-            qDebug() << "BAD BOI";
+    void MainWindow::keyPressEvent(QKeyEvent * key) {
+        if (key && key->key() == Qt::Key_Escape) {
+            bool ok;
+            int count = status->text().toInt(&ok);
+            if (ok) {
+                count++;
+                status->setNum(count);
+            }
+            else {
+                qDebug() << "BAD BOI";
+            }
         }
     }
-}
-
-```
 
 ### Generic
 
-```c++
-bool MainWindow::event(QEvent * e) {
-    if (e && e->type() == QEvent::KeyPress) {
-        QKeyEvent * key = static_cast<QKeyEvent*>(e);
-
-        if (key->key() == Qt::Key_Escape) {
-            qDebug() << "Escape";
+    bool MainWindow::event(QEvent * e) {
+        if (e && e->type() == QEvent::KeyPress) {
+            QKeyEvent * key = static_cast<QKeyEvent*>(e);
+    
+            if (key->key() == Qt::Key_Escape) {
+                qDebug() << "Escape";
+            }
         }
+        return QMainWindow::event(e);
     }
-    return QMainWindow::event(e);
-}
-```
 
 Notice how the general event handler passes the puck to `QMainWindow::event(e)` if the `MainwWindow::event(e)` call did not need to prcoess that specific event.
 
@@ -176,11 +159,9 @@ More can be found at [The Event System.](https://doc.qt.io/qt-5/eventsandfilters
 
 ***WARNING*** Paths that are relative attempt to open from the build directory.
 
-```c++
-QFile somefile("filename.txt");
-if(somefile.exists()) // Returns a boolean
-  somefile.open(QIODevice::ReadOnly | QIODevice::Text);
-```
+    QFile somefile("filename.txt");
+    if(somefile.exists()) // Returns a boolean
+      somefile.open(QIODevice::ReadOnly | QIODevice::Text);
 
 Notice the Logical or to combine properties.  Common properties are as follows:
 
@@ -196,24 +177,20 @@ Notice the Logical or to combine properties.  Common properties are as follows:
 Remember, for Data streams you can choose to overload the `>>` and `<<` operators. The example below shows writing out using the student method discussed in Qt010.
 For the following, we are using a `QDataStream`
 
-```c++
-QFile outFile( "sample.txt" );
-outFile.open( QIODevice::WriteOnly)
-QDataStream outStream(&outFile);
-outStream.setVersion( QDataStream::Qt_4_1);
-outStream<< student1 << student2 << student3;
-outFile.close();
-```
+    QFile outFile( "sample.txt" );
+    outFile.open( QIODevice::WriteOnly)
+    QDataStream outStream(&outFile);
+    outStream.setVersion( QDataStream::Qt_4_1);
+    outStream<< student1 << student2 << student3;
+    outFile.close();
 
 The following shows a similar type example but for Text Streams.  These are easier to debug although they require more space to store.
 
-```c++
-QFile outFile( "sample.txt" );
-outFile.open( QIODevice::WriteOnly);
-QTextStream someStream(&outFile);
-someStream << "someString";
-outFile.close();
-```
+    QFile outFile( "sample.txt" );
+    outFile.open( QIODevice::WriteOnly);
+    QTextStream someStream(&outFile);
+    someStream << "someString";
+    outFile.close();
 
 More can be found at [File and Datastream Functions](https://doc.qt.io/qt-5/io-functions.html)
 
@@ -221,56 +198,48 @@ More can be found at [File and Datastream Functions](https://doc.qt.io/qt-5/io-f
 
 ### UDP
 
-```c++
-QUdpSocket * socket = new QUdpSocket;
-connect(socket, &QUdpSocket::readyRead, this, someClass::someHandler);
-socket->bind(QHostAddress::LocalHost, 5678);
-```
+    QUdpSocket * socket = new QUdpSocket;
+    connect(socket, &QUdpSocket::readyRead, this, someClass::someHandler);
+    socket->bind(QHostAddress::LocalHost, 5678);
 
 The handler would look something like this:
 
-```c++
-QByteArray datagram;
-while (socket->hasPendingDatagrams()) {
-  datagram.resize(socket->pendingDatagramSize());
-  socket->readDatagram(datagram.data(), datagram.size());
-  QTextStream in(&dattagram);
-  QString msg = in.readAll();
-  msg = msg.trimmed();
-  // Then put the QString where you need it.
-}
-```
+    QByteArray datagram;
+    while (socket->hasPendingDatagrams()) {
+      datagram.resize(socket->pendingDatagramSize());
+      socket->readDatagram(datagram.data(), datagram.size());
+      QTextStream in(&dattagram);
+      QString msg = in.readAll();
+      msg = msg.trimmed();
+      // Then put the QString where you need it.
+    }
 
 ### TCP
 
-```c++
-myTCPSocket = new QTcpSocket;                   // Allocate a new QTcpSocket
-myTCPSocket->setProxy(QNetworkProxy::NoProxy);  // Avoid using a proxy if the system defaults to one
-
-connect(
-    myTCPSocket,
-    &QTcpSocket::readyRead,
-    this,
-    &MainWindow::processPendingData
-);                                  // Form the connection between the TCP socket and the handler
-myTCPSocket->connectToHost(
-    QHostAddress::LocalHost,
-    5678,
-    QIODevice::ReadOnly
-);                                  // Attempt to connect to a device on incoming port 5678
-myTCPSocket->waitForConnected();    // Stays in program loop until a TCP connection is established
-```
+    myTCPSocket = new QTcpSocket;                   // Allocate a new QTcpSocket
+    myTCPSocket->setProxy(QNetworkProxy::NoProxy);  // Avoid using a proxy if the system defaults to one
+    
+    connect(
+        myTCPSocket,
+        &QTcpSocket::readyRead,
+        this,
+        &MainWindow::processPendingData
+    );                                  // Form the connection between the TCP socket and the handler
+    myTCPSocket->connectToHost(
+        QHostAddress::LocalHost,
+        5678,
+        QIODevice::ReadOnly
+    );                                  // Attempt to connect to a device on incoming port 5678
+    myTCPSocket->waitForConnected();    // Stays in program loop until a TCP connection is established
 
 Where the `processPendingData` would look something like this:
 
-```c++
-void MainWindow::processPendingData() {   
-    QByteArray data = myTCPSocket->readAll();   // Allocate the memory of the size of the new line and read it in
-    QString msg(data);                          // Type cast the QByteArray into a QString
-    qDebug() << msg.trimmed();                  // Write out the message to debug
-    ui->textBrowser->append(msg.trimmed());     // Append this wherever it needs to be
-}
-```
+    void MainWindow::processPendingData() {   
+        QByteArray data = myTCPSocket->readAll();   // Allocate the memory of the size of the new line and read it in
+        QString msg(data);                          // Type cast the QByteArray into a QString
+        qDebug() << msg.trimmed();                  // Write out the message to debug
+        ui->textBrowser->append(msg.trimmed());     // Append this wherever it needs to be
+    }
 
 More can be found on [Networking and Connectivity.](https://doc.qt.io/qt-5/topics-network-connectivity.html)
 More can be found on [QtNetwork C++ Classes](https://doc.qt.io/qt-5/qtnetwork-module.html)
@@ -291,52 +260,46 @@ Function | Destination | Source
 
 - Reimplement `void dragEnterEvent(QDragEnterEvent* event);`
 
-  ```c++
-  void Label::dragEnterEvent(QDragEnterEvent* event) {
-    if (event && event->mimeData()) {
-      const QMimeData* md = event->mimeData();
-      if(md->hasImage()) {  // Handle your MimeData as needed
-        event->acceptProposedAction();
+      void Label::dragEnterEvent(QDragEnterEvent* event) {
+        if (event && event->mimeData()) {
+          const QMimeData* md = event->mimeData();
+          if(md->hasImage()) {  // Handle your MimeData as needed
+            event->acceptProposedAction();
+          }
+        }
+        QLabel::dragEnterEvent(event);
       }
-    }
-    QLabel::dragEnterEvent(event);
-  }
-  ```
 
 - Reimplement `void dropEvent(QDropEvent* event);`
 
-  ```c++
-  void Label::dropEvent(QDropEvent* event) {
-    QPixmap pic;
-    if (event && event->mimeData()) {
-      const QMimeData* md = event->mimeData();
-      if (md->hasImage()) { // Handle your mimeData as needed
-        pic = md->imageData().value<QPixmap>();
+      void Label::dropEvent(QDropEvent* event) {
+        QPixmap pic;
+        if (event && event->mimeData()) {
+          const QMimeData* md = event->mimeData();
+          if (md->hasImage()) { // Handle your mimeData as needed
+            pic = md->imageData().value<QPixmap>();
+          }
+        }
+        QLabel::dropEvent(event);
       }
-    }
-    QLabel::dropEvent(event);
-  }
-  ```
 
 ### Source
 
 - Reimplement `void mousePressEvent(QMouseEvent* event);`
 
-  ```c++
-  void Label::mousePressEvent(QMouseEvent *event) {
-    if(event && event->button() == Qt::LeftButton) {
-      // Allocate and initialize Mimedata object
-      QMimeData* md = new QMimeData;
-      md->setImageData(*this->pixmap());
-
-      QDrag* drag = new QDrag(this);
-      drag->setMimeData(md);
-      if (pixmap()) {
-        drag->start();
+      void Label::mousePressEvent(QMouseEvent *event) {
+        if(event && event->button() == Qt::LeftButton) {
+          // Allocate and initialize Mimedata object
+          QMimeData* md = new QMimeData;
+          md->setImageData(*this->pixmap());
+      
+          QDrag* drag = new QDrag(this);
+          drag->setMimeData(md);
+          if (pixmap()) {
+            drag->start();
+          }
+        }
       }
-    }
-  }
-  ```
 
 More can be found on the [Drag and Drop page.](https://doc.qt.io/qt-5/dnd.html)
 
@@ -353,14 +316,12 @@ Viewed by
 
 Using the following:
 
-```c++
-QListView listView;
-QStringList list;
-QStringListModel model;
-listView.setModel(&model);
-list.append("someNewString);
-model.setStringList(list);
-```
+    QListView listView;
+    QStringList list;
+    QStringListModel model;
+    listView.setModel(&model);
+    list.append("someNewString);
+    model.setStringList(list);
 
 More can be found on the [Graphics View Documentation.](https://doc.qt.io/qt-5/graphicsview.html)
 
@@ -370,10 +331,8 @@ More can be found on the [Graphics View Documentation.](https://doc.qt.io/qt-5/g
 
 This can be enabled via
 
-```c++
-QPainter painter(this);
-painter.setRenderHint(QPainter::Antialiasing);
-```
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
 
 ### Coordinate Systems
 
@@ -386,13 +345,11 @@ See more on the usage of Logical COordinates on the Qt Docs [Coordinate System](
 
 A `QComboBox` is interected to by making appending QStrings to the values.
 
-```c++
-QComboBox someBox;
-QStringList someList;
-someList.append("Help");
-someList.append("ME");
-someBox.addItems(someList);
-```
+    QComboBox someBox;
+    QStringList someList;
+    someList.append("Help");
+    someList.append("ME");
+    someBox.addItems(someList);
 
 ### QFile
 
