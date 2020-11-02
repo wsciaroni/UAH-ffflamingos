@@ -18,15 +18,33 @@ ManageRoom::~ManageRoom()
     delete ui;
 }
 
-void ManageRoom::addPlayer(QString name)
+void ManageRoom::addPlayer(PlayerModel* player)
 {
+    std::list<PlayerModel*>::iterator it;
+    for (it = playerList.begin(); it != playerList.end(); it++) {
+        if (*it == player)
+        {
+            /// @todo Throw an exception if attempting to add a player twice to the UI
+            return;
+        }
+    }
+    playerList.insert(it, player);
+
+    QString name = player->getName();
     list.append(name);
     model.setStringList(list);
 }
 
-void ManageRoom::removePlayer(QString name)
+void ManageRoom::removePlayer(PlayerModel* player)
 {
-    list.removeOne(name);
+    for (std::list<PlayerModel*>::iterator it = playerList.begin(); it != playerList.end(); it++) {
+        if (*it == player)
+        {
+            playerList.erase(it);
+            continue;
+        }
+    }
+    list.removeOne(player->getName());
     model.setStringList(list);
 }
 

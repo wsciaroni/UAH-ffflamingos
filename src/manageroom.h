@@ -1,7 +1,10 @@
 #ifndef MANAGEROOM_H
 #define MANAGEROOM_H
 
+#include "playermodel.h"
+
 #include <QDialog>
+#include <QString>
 #include <QStringList>
 #include <QStringListModel>
 
@@ -38,6 +41,9 @@ private:
     ///Model for list
     QStringListModel model;
 
+    /// Map to hold user ids of players and their names in the table
+    std::list<PlayerModel*> playerList;
+
 private slots:
    /**
    @todo Transfers players from wait room to game state.
@@ -53,15 +59,15 @@ public slots:
 
    /**
    addPlayer should be called when a player has successfully connected
-   @param
+   @param player Pass the player class
    */
-   void addPlayer(QString name);
+   void addPlayer(PlayerModel* player);
 
    /**
    removePlayer should be called when a player disconnects either via connection drop or self disconnect.
-   @param name Pass the username of the player
+   @param player Pass the player class of the player to remove
    */
-   void removePlayer(QString name);
+   void removePlayer(PlayerModel* player);
 };
 
 #endif // MANAGEROOM_H
