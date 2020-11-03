@@ -1,6 +1,8 @@
 #ifndef WAITINGTOSTART_H
 #define WAITINGTOSTART_H
 
+#include "gamedialog.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -28,6 +30,8 @@ private:
     ///ui pointer
     Ui::WaitingToStart *ui;
 
+    GameDialog* gameWindow;
+
 private slots:
 
     /**
@@ -35,6 +39,11 @@ private slots:
     as well as disconnect the player.
     */
     void disconnect();
+
+    /**
+     * @todo Needs to launch gameplay window and handle other things appropriately
+     */
+    void playGame();
 };
 
 #endif // WAITINGTOSTART_H

@@ -1,6 +1,8 @@
 #ifndef CREATEGAME_H
 #define CREATEGAME_H
 
+#include "manageroom.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -20,6 +22,14 @@ public:
 
 private:
     Ui::CreateGame *ui;
+
+    ManageRoom* waitingRoom;
+
+private slots:
+    /**
+     * Slot that calls out to the next dialog and accepts this QDialog
+     */
+    void goToWaitingRoom();
 };
 
 #endif // CREATEGAME_H

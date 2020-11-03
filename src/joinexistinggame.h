@@ -1,6 +1,8 @@
 #ifndef JOINEXISTINGGAME_H
 #define JOINEXISTINGGAME_H
 
+#include "connecting.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -20,6 +22,15 @@ public:
 
 private:
     Ui::JoinExistingGame *ui;
+
+    Connecting* connectingScreen;
+
+private slots:
+    /**
+     * Slot that calls out to the next dialog and accepts this QDialog
+     */
+    void goToConnecting();
+
 };
 
 #endif // JOINEXISTINGGAME_H

@@ -6,9 +6,19 @@ JoinExistingGame::JoinExistingGame(QWidget *parent) :
     ui(new Ui::JoinExistingGame)
 {
     ui->setupUi(this);
+
+    this->connectingScreen = new Connecting;
+    connect(ui->buttonBox,&QDialogButtonBox::accepted,this,&JoinExistingGame::goToConnecting);
 }
 
 JoinExistingGame::~JoinExistingGame()
 {
     delete ui;
+    delete connectingScreen;
+}
+
+void JoinExistingGame::goToConnecting() {
+    this->hide();
+    connectingScreen->exec();
+    this->accept();
 }

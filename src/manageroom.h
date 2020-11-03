@@ -2,6 +2,7 @@
 #define MANAGEROOM_H
 
 #include "playermodel.h"
+#include "gamedialog.h"
 
 #include <QDialog>
 #include <QString>
@@ -35,6 +36,9 @@ private:
     ///ui pointer
     Ui::ManageRoom *ui;
 
+    ///Gameplay Window
+    GameDialog* gameWindow;
+
     ///Holds the list of playernames to be displayed
     QStringList list;
 
@@ -46,6 +50,7 @@ private:
 
 private slots:
    /**
+   Slot to send user to game play
    @todo Transfers players from wait room to game state.
    */
    void startGame();

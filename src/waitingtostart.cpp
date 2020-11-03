@@ -6,17 +6,25 @@ WaitingToStart::WaitingToStart(QWidget *parent) :
     ui(new Ui::WaitingToStart)
 {
     ui->setupUi(this);
-
-    connect(ui->disconnect,SIGNAL(clicked(bool)),this,SLOT(disconnect()));
+    gameWindow = new GameDialog;
+    connect(ui->disconnect,&QPushButton::clicked,this,&WaitingToStart::disconnect);
 }
 
 WaitingToStart::~WaitingToStart()
 {
     delete ui;
+    delete gameWindow;
 }
 
 
 void WaitingToStart::disconnect()
 {
+    /// @todo Handle a graceful disconnect here
+    this->accept();
+}
 
+void WaitingToStart::playGame() {
+    this->hide();
+    gameWindow->exec();
+    this->accept();
 }

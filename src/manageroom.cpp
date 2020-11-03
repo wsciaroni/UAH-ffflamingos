@@ -9,13 +9,14 @@ ManageRoom::ManageRoom(QWidget *parent) :
 
     ui->players->setModel(&model);
 
+    gameWindow = new GameDialog;
     connect(ui->buttonBox,&QDialogButtonBox::accepted,this,&ManageRoom::startGame);
-    connect(ui->buttonBox,&QDialogButtonBox::rejected,this,&ManageRoom::closeLobby);
 }
 
 ManageRoom::~ManageRoom()
 {
     delete ui;
+    delete gameWindow;
 }
 
 void ManageRoom::addPlayer(PlayerModel* player)
@@ -50,10 +51,13 @@ void ManageRoom::removePlayer(PlayerModel* player)
 
 void ManageRoom::startGame()
 {
-
+    this->hide();
+    gameWindow->exec();
+    closeLobby();
 }
 
 void ManageRoom::closeLobby()
 {
-
+    ///@todo handle the graceful disconnects when the lobby closes
+    this->accept();
 }

@@ -6,9 +6,35 @@ DetermineRoleDialog::DetermineRoleDialog(QWidget *parent) :
     ui(new Ui::DetermineRoleDialog)
 {
     ui->setupUi(this);
+
+    createGameDialog = new CreateGame;
+    joinGameDialog = new JoinExistingGame;
+    connect(ui->buttonBox,&QDialogButtonBox::accepted,this,&DetermineRoleDialog::moveForward);
 }
 
 DetermineRoleDialog::~DetermineRoleDialog()
 {
     delete ui;
+    delete createGameDialog;
+    delete joinGameDialog;
+}
+
+void DetermineRoleDialog::createGame() {
+    this->hide();
+    createGameDialog->exec();
+    this->show();
+}
+
+void DetermineRoleDialog::joinGame() {
+    this->hide();
+    joinGameDialog->exec();
+    this->show();
+}
+
+void DetermineRoleDialog::moveForward() {
+    if(ui->createGame->isChecked()) {
+        createGame();
+    } else {
+        joinGame();
+    }
 }

@@ -1,6 +1,8 @@
 #ifndef CONNECTING_H
 #define CONNECTING_H
 
+#include "waitingtostart.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -20,6 +22,20 @@ public:
 
 private:
     Ui::Connecting *ui;
+
+    /// QDialog for waiting screen
+    WaitingToStart* waitingScreen;
+
+private slots:
+    /**
+     * Slot that calls out to the next dialog and accepts this QDialog
+     */
+    void goToWaitingScreen();
+
+    /**
+     * Slot to cancel a network connection in process
+     */
+    void cancel();
 };
 
 #endif // CONNECTING_H
