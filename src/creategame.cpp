@@ -11,7 +11,7 @@ CreateGame::CreateGame(QWidget *parent) :
 {
     ui->setupUi(this);
     waitingRoom = new ManageRoom;
-    bindError = new error;
+
     //connect(ui->buttonBox,&QDialogButtonBox::accepted,this,&CreateGame::goToWaitingRoom);
     connect(ui->buttonBox,&QDialogButtonBox::accepted, this,&CreateGame::bindIP_Port);
 
@@ -45,6 +45,7 @@ void CreateGame::goToWaitingRoom() {
 
 void CreateGame::throwBindError(){
     this->hide();
+    bindError = new error;
     bindError->throwErrorMsg("ERROR: Could not bind IP and Port");
     bindError->exec();
     this->accept();

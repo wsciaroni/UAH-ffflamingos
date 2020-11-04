@@ -2,6 +2,7 @@
 #define JOINEXISTINGGAME_H
 
 #include "connecting.h"
+#include "error.h"
 
 #include <QDialog>
 
@@ -24,12 +25,22 @@ private:
     Ui::JoinExistingGame *ui;
 
     Connecting* connectingScreen;
+    error* missingField;
+    /**
+     * Go to connecting window
+     */
+    void goToConnecting();
+    /**
+     * Throws error for missing required field
+     */
+    void missingFieldError();
 
 private slots:
     /**
      * Slot that calls out to the next dialog and accepts this QDialog
      */
-    void goToConnecting();
+    void attemptToJoin();
+
 
 };
 
