@@ -9,7 +9,7 @@
 namespace Ui {
 class DetermineRoleDialog;
 }
-
+/// @todo handle intake of this name
 class DetermineRoleDialog : public QDialog
 {
     Q_OBJECT

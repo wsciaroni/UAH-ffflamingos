@@ -2,8 +2,10 @@
 #define CREATEGAME_H
 
 #include "manageroom.h"
+#include "error.h"
 
 #include <QDialog>
+#include <QUdpSocket>
 
 namespace Ui {
 class CreateGame;
@@ -24,12 +26,18 @@ private:
     Ui::CreateGame *ui;
 
     ManageRoom* waitingRoom;
+    error* bindError;
+    QUdpSocket* myUDPSocket;
+
+    void throwBindError();
+    void goToWaitingRoom();
 
 private slots:
     /**
      * Slot that calls out to the next dialog and accepts this QDialog
      */
-    void goToWaitingRoom();
+
+    void bindIP_Port();
 };
 
 #endif // CREATEGAME_H

@@ -6,6 +6,7 @@ error::error(QWidget *parent) :
     ui(new Ui::error)
 {
     ui->setupUi(this);
+    connect(ui->close, &QPushButton::clicked, this, &QDialog::reject);
 }
 
 error::~error()

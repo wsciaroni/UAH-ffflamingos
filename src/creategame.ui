@@ -47,18 +47,12 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="ip"/>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Port to Listen On</string>
        </property>
       </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="port"/>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_4">
@@ -69,6 +63,12 @@
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="roomCode"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="port"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="ipDropdown"/>
      </item>
     </layout>
    </item>
