@@ -15,8 +15,11 @@ CreateGame::CreateGame(QWidget *parent) :
     //connect(ui->buttonBox,&QDialogButtonBox::accepted,this,&CreateGame::goToWaitingRoom);
     connect(ui->buttonBox,&QDialogButtonBox::accepted, this,&CreateGame::bindIP_Port);
 
-    QIntValidator* intValidator1 = new QIntValidator(ui->port);
-    ui->port->setValidator(intValidator1);
+    QIntValidator* portValidator = new QIntValidator(1024, 65535, ui->port);
+    ui->port->setValidator(portValidator);
+
+    QIntValidator* roomCodeValidator = new QIntValidator(0, 999999, ui->roomCode);
+    ui->roomCode->setValidator(roomCodeValidator);
 
     // gets list of all network interfaces
     QList <QHostAddress> addressList = QNetworkInterface::allAddresses();
@@ -48,14 +51,12 @@ void CreateGame::throwBindError(){
 
 void CreateGame::bindIP_Port(){
     QHostAddress IP(ui->ipDropdown->currentText());
-    myUDPSocket = new QUdpSocket(this);
-    if(myUDPSocket->bind(IP,(ui->port->text()).toUShort()))
+    TcpServer = new QTcpServer(this);
+    if(TcpServer->listen(IP,(ui->port->text()).toUShort()))
     {
-        if(ui->port->text().length() > 0 || ui->roomCode->text().length() > 0)
+        if(!(ui->port->text().isEmpty()) && !(ui->roomCode->text().isEmpty()))
             goToWaitingRoom();
     }
-    else{
+    else
         throwBindError();
-    }
-
 }

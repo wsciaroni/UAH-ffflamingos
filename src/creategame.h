@@ -5,7 +5,7 @@
 #include "error.h"
 
 #include <QDialog>
-#include <QUdpSocket>
+#include <QTcpServer>
 
 namespace Ui {
 class CreateGame;
@@ -27,7 +27,7 @@ private:
 
     ManageRoom* waitingRoom;
     error* bindError;
-    QUdpSocket* myUDPSocket;
+    QTcpServer* TcpServer;
 
     void throwBindError();
     void goToWaitingRoom();
