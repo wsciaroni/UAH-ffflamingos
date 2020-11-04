@@ -26,10 +26,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += src/*.cpp \
-    src/hostmodel.cpp
+    src/hostmodel.cpp \
+    src/playerlist.cpp
 
 HEADERS += src/*.h \
-    src/hostmodel.h
+    src/hostmodel.h \
+    src/playerlist.h
 
 FORMS += src/*.ui
 
