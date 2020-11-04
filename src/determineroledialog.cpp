@@ -32,9 +32,11 @@ void DetermineRoleDialog::joinGame() {
 }
 
 void DetermineRoleDialog::moveForward() {
-    if(ui->createGame->isChecked()) {
-        createGame();
-    } else {
-        joinGame();
+    if(!(ui->userName->text().isEmpty())){
+        if(ui->createGame->isChecked()) {
+            createGame();
+        } else {
+            joinGame();
+        }
     }
 }

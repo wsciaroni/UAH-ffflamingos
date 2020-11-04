@@ -13,3 +13,8 @@ error::~error()
 {
     delete ui;
 }
+
+void error::throwErrorMsg(QString msg)
+{
+    ui->errorOutput->append(msg);
+}

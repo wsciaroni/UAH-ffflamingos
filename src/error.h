@@ -17,6 +17,7 @@ class error : public QDialog
 public:
     explicit error(QWidget *parent = nullptr);
     ~error();
+    void throwErrorMsg(QString msg);
 
 private:
     Ui::error *ui;

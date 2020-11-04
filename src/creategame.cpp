@@ -45,6 +45,7 @@ void CreateGame::goToWaitingRoom() {
 
 void CreateGame::throwBindError(){
     this->hide();
+    bindError->throwErrorMsg("ERROR: Could not bind IP and Port");
     bindError->exec();
     this->accept();
 }
