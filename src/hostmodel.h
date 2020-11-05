@@ -13,6 +13,8 @@
  */
 class HostModel : public PlayerModel
 {
+private:
+    QTcpServer* tcpServer;
 
 public:
 // Constructors / Destructors
@@ -34,9 +36,6 @@ public:
      * @return QTcpServer
      */
     QTcpServer* getTcpServer();
-
-private:
-    QTcpServer* tcpServer;
 
 };
 
