@@ -1,6 +1,7 @@
 #include "joinexistinggame.h"
 #include "ui_joinexistinggame.h"
 #include <QIntValidator>
+#include <QRegularExpressionValidator>
 
 JoinExistingGame::JoinExistingGame(QWidget *parent) :
     QDialog(parent),
@@ -12,6 +13,10 @@ JoinExistingGame::JoinExistingGame(QWidget *parent) :
 
     this->connectingScreen = new Connecting;
     connect(ui->buttonBox,&QDialogButtonBox::accepted,this,&JoinExistingGame::attemptToJoin);
+
+    QRegularExpression ipExpression ("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}");
+    QRegularExpressionValidator* ipValidator = new QRegularExpressionValidator(ipExpression, ui->ip);
+    ui->ip->setValidator(ipValidator);
 
     QIntValidator* portValidator = new QIntValidator(1024, 65535, ui->port);
     ui->port->setValidator(portValidator);
