@@ -5,45 +5,60 @@
 #include "hostmodel.h"
 #include "playermodel.h"
 
+/**
+ * @brief The PlayerList class
+ * @details Contains a map of players to UIDs, with supporting methods
+ */
 class PlayerList
 {
 private:
+    /// Map containing the PlayerModel that have joined, with dynamically updated UIDs
     QMap<PlayerModel*, int> playerList;
 
 public:
+    /// Contructor methods for PlayerList (created on room creation)
     PlayerList();
+    /// Destructor (after game ends)
     ~PlayerList();
 
-    /*
+    /**
      * Add a player model to the QMap
-     * returns true if successful
+     * @param Reference to the player model to add
+     * @return true if successful
      */
     bool addPlayer(PlayerModel* playerModel);
 
-    /*
+    /**
      * Remove a player model from the QMap
-     * returns true if successful
+     * @param reference to the player model to remove
+     * @return true if successful
      */
     bool removePlayer(PlayerModel* playerModel);
 
-    /*
+    /**
      * Remove a player model from the QMap based on uid
-     * Returns true if successful
+     * @param UID of the player to remove
+     * @return true if successful
      */
     bool removePlayer(int uid);
 
-    /*
+    /**
      * Return the player model based on uid
+     * @param UID of the player to get the Player Model of
+     * @return The Player Model if found, otherwise nullptr
      */
     PlayerModel* getPlayer(int uid);
 
-    /*
+    /**
      * Return a player model based on the given position
+     * @param The PlayerPosition of the player modoel to get
+     * @return the Player Model if found, otherwise nullptr
      */
     PlayerModel* getPlayerByPosition(PlayerPosition position);
 
-    /*
+    /**
      * Returns the current player count
+     * @return returns the current number of players in the game
      */
     int getPlayerCount();
 

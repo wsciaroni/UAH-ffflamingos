@@ -53,6 +53,6 @@ PlayerModel* PlayerList::getPlayerByPosition(PlayerPosition position) {
 }
 
 int PlayerList::getPlayerCount() {
-    return playerList.keys().length();
+    return playerList.keys().length(); // Return the current number of keys
 }
 
