@@ -14,7 +14,7 @@ JoinExistingGame::JoinExistingGame(QWidget *parent) :
     this->connectingScreen = new Connecting;
     connect(ui->buttonBox,&QDialogButtonBox::accepted,this,&JoinExistingGame::attemptToJoin);
 
-    QRegularExpression ipExpression ("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}");
+    QRegularExpression ipExpression ("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})");
     QRegularExpressionValidator* ipValidator = new QRegularExpressionValidator(ipExpression, ui->ip);
     ui->ip->setValidator(ipValidator);
 
