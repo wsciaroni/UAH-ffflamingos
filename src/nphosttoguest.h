@@ -6,7 +6,11 @@
 class NPHostToGuest : public NPGeneric
 {
 private:
-    /* data */
+    /**
+     * @copydoc NPGeneric::packetType
+     */
+    PacketType packetType = PacketType::NULLPACKETTYPE;
+
 public:
     NPHostToGuest(/* args */);
     ~NPHostToGuest();

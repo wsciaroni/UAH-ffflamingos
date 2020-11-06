@@ -3,8 +3,6 @@
 
 #include "npgeneric.h"
 
-#include <QString>
-
 /**
  * Used for network traffic passed from a Guest to the Host
  */

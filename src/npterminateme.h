@@ -6,7 +6,11 @@
 class NPTerminateMe : public NPGuestToHost
 {
 private:
-    /* data */
+    /**
+     * @copydoc NPGuestToHost::packetType
+     */
+    PacketType packetType = PacketType::TERMINATEME;
+
 public:
     NPTerminateMe(/* args */);
     ~NPTerminateMe();

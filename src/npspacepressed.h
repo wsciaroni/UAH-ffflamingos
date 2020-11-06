@@ -6,7 +6,11 @@
 class NPSpacePressed : public NPGuestToHost
 {
 private:
-    /* data */
+    /**
+     * @copydoc NPGuestToHost::packetType
+     */
+    PacketType packetType = PacketType::SPACEPRESSED;
+
 public:
     NPSpacePressed(/* args */);
     ~NPSpacePressed();

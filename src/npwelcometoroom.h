@@ -6,10 +6,14 @@
 class NPWelcomeToRoom : public NPHostToGuest
 {
 private:
-    /* data */
+    /**
+     * @copydoc NPHostToGuest::packetType
+     */
+    PacketType packetType = PacketType::WELCOMETOROOM;
+
 public:
     NPWelcomeToRoom(/* args */);
     ~NPWelcomeToRoom();
 };
 
-#endif
+#endif // NPWELCOMETOROOM_H

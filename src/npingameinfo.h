@@ -6,7 +6,11 @@
 class NPInGameInfo : public NPHostToGuest
 {
 private:
-    /* data */
+    /**
+     * @copydoc NPHostToGuest::packetType
+     */
+    PacketType packetType = PacketType::INGAMEINFO;
+
 public:
     NPInGameInfo(/* args */);
     ~NPInGameInfo();
