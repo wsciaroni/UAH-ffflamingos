@@ -22,9 +22,9 @@ public:
     /**
      * Constructor to instantiate a host player
      * @param uid Unique User ID
-     * @param socket tcpsocket to communicate with player's machine
+     * @param server tcpsocket to communicate with players' machines
      */
-    HostModel(int uid, QTcpSocket* socket);
+    HostModel(int uid, QTcpServer* server);
 
     /**
      * Destructor

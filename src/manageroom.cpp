@@ -1,6 +1,10 @@
 #include "manageroom.h"
 #include "ui_manageroom.h"
 
+#include <QtDebug> 
+
+
+
 ManageRoom::ManageRoom(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ManageRoom)
@@ -17,6 +21,12 @@ ManageRoom::~ManageRoom()
 {
     delete ui;
     delete gameWindow;
+}
+
+void ManageRoom::passHost(HostModel* hostPlayer) {
+    addPlayer(hostPlayer);
+    
+    qDebug() << "Host added to list with name: " << hostPlayer->getName();
 }
 
 void ManageRoom::addPlayer(PlayerModel* player)

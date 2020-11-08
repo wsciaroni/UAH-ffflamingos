@@ -26,6 +26,10 @@ PlayerModel::PlayerModel(int uid, QTcpSocket* socket) {
     setTCPSocket(socket);
 }
 
+PlayerModel::PlayerModel(int uid) {
+    setUID(uid);
+}
+
 PlayerModel::~PlayerModel() {
 
 }

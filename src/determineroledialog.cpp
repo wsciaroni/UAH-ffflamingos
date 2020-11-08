@@ -21,12 +21,14 @@ DetermineRoleDialog::~DetermineRoleDialog()
 
 void DetermineRoleDialog::createGame() {
     this->hide();
+    createGameDialog->passName(ui->userName->text());
     createGameDialog->exec();
     this->show();
 }
 
 void DetermineRoleDialog::joinGame() {
     this->hide();
+    joinGameDialog->passName(ui->userName->text());
     joinGameDialog->exec();
     this->show();
 }

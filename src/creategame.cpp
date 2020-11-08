@@ -12,7 +12,6 @@ CreateGame::CreateGame(QWidget *parent) :
     ui->setupUi(this);
     waitingRoom = new ManageRoom;
 
-    //connect(ui->buttonBox,&QDialogButtonBox::accepted,this,&CreateGame::goToWaitingRoom);
     connect(ui->buttonBox,&QDialogButtonBox::accepted, this,&CreateGame::bindIP_Port);
 
     QIntValidator* portValidator = new QIntValidator(1024, 65535, ui->port);
@@ -35,10 +34,19 @@ CreateGame::~CreateGame()
 {
     delete ui;
     delete waitingRoom;
+    delete hostPlayer;
+    delete TcpServer;
+}
+
+void CreateGame::passName(QString name) {
+    playerName = name;
 }
 
 void CreateGame::goToWaitingRoom() {
     this->hide();
+    this->createHost();
+    hostPlayer->setName(playerName);
+    waitingRoom->passHost(hostPlayer);
     waitingRoom->exec();
     this->accept();
 }
@@ -48,7 +56,12 @@ void CreateGame::throwBindError(){
     bindError = new error;
     bindError->throwErrorMsg("ERROR: Could not bind IP and Port");
     bindError->exec();
+    delete bindError;
     this->accept();
+}
+
+void CreateGame::createHost() {
+    hostPlayer = new HostModel(0, TcpServer);
 }
 
 void CreateGame::bindIP_Port(){

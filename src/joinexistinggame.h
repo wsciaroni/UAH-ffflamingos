@@ -5,6 +5,7 @@
 #include "error.h"
 
 #include <QDialog>
+#include <QString>
 
 namespace Ui {
 class JoinExistingGame;
@@ -21,6 +22,8 @@ public:
     explicit JoinExistingGame(QWidget *parent = nullptr);
     ~JoinExistingGame();
 
+    void passName(QString name);
+
 private:
     Ui::JoinExistingGame *ui;
 
@@ -34,6 +37,11 @@ private:
      * Throws error for missing required field
      */
     void missingFieldError();
+
+    /**
+     * This should hold the player name passed in by the DetermineRole Dialog
+     */
+    QString playerName = "";
 
 private slots:
     /**

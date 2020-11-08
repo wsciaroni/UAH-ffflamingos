@@ -20,11 +20,20 @@ public:
     explicit Connecting(QWidget *parent = nullptr);
     ~Connecting();
 
+    void passName(QString name);
+    void passInfo(QString ipIn, QString portIn, QString roomCodeIn);
+
 private:
     Ui::Connecting *ui;
 
     /// QDialog for waiting screen
     WaitingToStart* waitingScreen;
+
+    QString playerName = "";
+
+    QString ip;
+    QString port;
+    QString roomCode;
 
 private slots:
     /**

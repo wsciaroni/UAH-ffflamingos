@@ -16,6 +16,16 @@ Connecting::~Connecting()
     delete waitingScreen;
 }
 
+void Connecting::passName(QString name) {
+    playerName = name;
+}
+
+void Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
+    ip = ipIn;
+    port = portIn;
+    roomCode = roomCodeIn;
+}
+
 void Connecting::goToWaitingScreen() {
     this->hide();
     waitingScreen->exec();

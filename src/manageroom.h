@@ -1,6 +1,7 @@
 #ifndef MANAGEROOM_H
 #define MANAGEROOM_H
 
+#include "hostmodel.h"
 #include "playermodel.h"
 #include "gamedialog.h"
 
@@ -31,6 +32,8 @@ public:
     Destructor
     */
     ~ManageRoom();
+
+    void passHost(HostModel* hostPlayer);
 
 private:
     ///ui pointer

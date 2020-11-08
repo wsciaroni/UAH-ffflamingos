@@ -31,8 +31,14 @@ JoinExistingGame::~JoinExistingGame()
     delete connectingScreen;
 }
 
+void JoinExistingGame::passName(QString name) {
+    playerName = name;
+}
+
 void JoinExistingGame::goToConnecting() {
     this->hide();
+    connectingScreen->passName(playerName);
+    connectingScreen->passInfo(ui->ip->text(),ui->port->text(),ui->roomCode->text());
     connectingScreen->exec();
     this->accept();
 }
@@ -42,6 +48,7 @@ void JoinExistingGame::missingFieldError(){
     missingField = new error;
     missingField->throwErrorMsg("ERROR: Missing required field");
     missingField->exec();
+    delete missingField;
     this->accept();
 }
 

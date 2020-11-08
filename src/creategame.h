@@ -1,10 +1,14 @@
 #ifndef CREATEGAME_H
 #define CREATEGAME_H
 
+#include "hostmodel.h"
 #include "manageroom.h"
 #include "error.h"
 
+#include "hostTCPhandler.h"
+
 #include <QDialog>
+#include <QString>
 #include <QTcpServer>
 
 namespace Ui {
@@ -22,6 +26,8 @@ public:
     explicit CreateGame(QWidget *parent = nullptr);
     ~CreateGame();
 
+    void passName(QString name);
+
 private:
     Ui::CreateGame *ui;
 
@@ -29,14 +35,35 @@ private:
     error* bindError;
     QTcpServer* TcpServer;
 
+    /**
+     * Function creates a dialog with an error
+     */
     void throwBindError();
+
+    /**
+     * Used to move to the next window
+     */
     void goToWaitingRoom();
+
+    /**
+     * This should hold the player name passed in by the DetermineRole Dialog
+     */
+    QString playerName = "";
+
+    /**
+     * Stores the PlayerModel for the host
+     */
+    HostModel* hostPlayer = nullptr;
+
+    /**
+     * Instantiates a PlayerModel for the Host with the information from the DetermineRole dialog and network connection
+     */
+    void createHost();
 
 private slots:
     /**
      * Slot that calls out to the next dialog and accepts this QDialog
      */
-
     void bindIP_Port();
 };
 

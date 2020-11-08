@@ -1,5 +1,10 @@
 #ifndef NETWORKCONFIGURATOR_H
 #define NETWORKCONFIGURATOR_H
+
+#include "hostmodel.h"
+#include "playermodel.h"
+#include "npgeneric.h"
+
 #include  <QNetworkConfiguration>
 
 /**
@@ -9,6 +14,8 @@ class NetworkConfigurator
 {
 public:
     NetworkConfigurator();
+    ~NetworkConfigurator();
+    void processNetworkPackets();
 
 };
 

@@ -102,6 +102,12 @@ public:
      * @param socket tcpsocket to communicate with player's machine
      */
     PlayerModel(int uid, QTcpSocket* socket);
+    
+    /**
+     * Constructor to instanciate a player without a Socket
+     * @param uid Unique User ID
+     */
+    PlayerModel(int uid);
 
     /**
      * Destructor
