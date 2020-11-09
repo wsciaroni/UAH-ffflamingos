@@ -1,9 +1,4 @@
 #include "creategame.h"
-#include "ui_creategame.h"
-#include <QIntValidator>
-#include <QNetworkInterface>
-#include <QAbstractSocket>
-
 
 CreateGame::CreateGame(QWidget *parent) :
     QDialog(parent),
@@ -11,6 +6,8 @@ CreateGame::CreateGame(QWidget *parent) :
 {
     ui->setupUi(this);
     waitingRoom = new ManageRoom;
+
+    handler = new HostNetworkHandler;
 
     connect(ui->buttonBox,&QDialogButtonBox::accepted, this,&CreateGame::bindIP_Port);
 
@@ -35,7 +32,7 @@ CreateGame::~CreateGame()
     delete ui;
     delete waitingRoom;
     delete hostPlayer;
-    delete TcpServer;
+    delete handler;
 }
 
 void CreateGame::passName(QString name) {
@@ -48,6 +45,7 @@ void CreateGame::goToWaitingRoom() {
     hostPlayer->setName(playerName);
     waitingRoom->passHost(hostPlayer);
     waitingRoom->exec();
+    
     this->accept();
 }
 
@@ -61,16 +59,21 @@ void CreateGame::throwBindError(){
 }
 
 void CreateGame::createHost() {
-    hostPlayer = new HostModel(0, TcpServer);
+    hostPlayer = new HostModel(0, handler->getTCPServer());
 }
 
 void CreateGame::bindIP_Port(){
     QHostAddress IP(ui->ipDropdown->currentText());
-    TcpServer = new QTcpServer(this);
-    if(TcpServer->listen(IP,(ui->port->text()).toUShort()))
+    
+    if(handler->startTCPServer(IP,(ui->port->text()).toUShort()))
     {
-        if(!(ui->port->text().isEmpty()) && !(ui->roomCode->text().isEmpty()))
+        if(!(ui->port->text().isEmpty()) && !(ui->roomCode->text().isEmpty())) {
             goToWaitingRoom();
+        }
+        else
+        {
+            handler->stopTCPServer();
+        }
     }
     else
         throwBindError();

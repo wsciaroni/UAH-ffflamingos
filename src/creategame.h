@@ -5,11 +5,16 @@
 #include "manageroom.h"
 #include "error.h"
 
-#include "hostTCPhandler.h"
+#include "hostnetworkhandler.h"
 
 #include <QDialog>
 #include <QString>
 #include <QTcpServer>
+
+#include "ui_creategame.h"
+#include <QIntValidator>
+#include <QNetworkInterface>
+#include <QAbstractSocket>
 
 namespace Ui {
 class CreateGame;
@@ -33,7 +38,8 @@ private:
 
     ManageRoom* waitingRoom;
     error* bindError;
-    QTcpServer* TcpServer;
+
+    HostNetworkHandler* handler;
 
     /**
      * Function creates a dialog with an error

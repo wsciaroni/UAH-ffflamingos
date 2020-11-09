@@ -30,6 +30,19 @@ public:
      * Used to get the user id of the player sending this message
      */
     int getUID();
+    
+    /**
+     * Reimplements the `<<` operator for QDataStream.
+     * This is used to send the data in a specific order
+     */
+    friend QDataStream& operator<<(QDataStream& ds, NPGuestToHost& packet);
+
+    /**
+     * Reimplements the `>>` operator for QDataStream.
+     * This is used to receive the data in a specific order.
+     * @warning Do not attempt to read in the Packet type as that will be done externally to determine what type of packet to read in for the remaining data.
+     */
+    friend QDataStream& operator>>(QDataStream& ds, NPGuestToHost& packet);
 };
 
 #endif // NPGUESTTOHOST_H

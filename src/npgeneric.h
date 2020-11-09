@@ -1,6 +1,8 @@
 #ifndef NPGENERIC_H
 #define NPGENERIC_H
 
+#include <QDataStream>
+
 /**
  * @brief Packet Type Enumeration
  * @details Used to determine what type of network packet the info is.  Allows for a packet's role to be determined
@@ -40,7 +42,20 @@ public:
      * Used to get what type of packet you're dealing with
      * @return the PacketType of the packet
      */
-    PacketType getPacketType();
+    PacketType getPacketType() const;
+
+    /**
+     * Reimplements the `<<` operator for QDataStream.
+     * This is used to send the data in a specific order
+     */
+    friend QDataStream& operator<<(QDataStream& ds, NPGeneric& packet);
+
+    /**
+     * Reimplements the `>>` operator for QDataStream.
+     * This is used to receive the data in a specific order.
+     * @warning Do not attempt to read in the Packet type as that will be done externally to determine what type of packet to read in for the remaining data.
+     */
+    friend QDataStream& operator>>(QDataStream& ds, NPGeneric& packet);
 };
 
 #endif // NPGENERIC_H

@@ -2,6 +2,8 @@
 #define CONNECTING_H
 
 #include "waitingtostart.h"
+#include "ui_connecting.h"
+#include "guestnetworkhandler.h"
 
 #include <QDialog>
 
@@ -29,11 +31,20 @@ private:
     /// QDialog for waiting screen
     WaitingToStart* waitingScreen;
 
+    /// Holds the name of the current user
     QString playerName = "";
 
+    /// Holds the IP of the host
     QString ip;
+
+    /// Holds the port to attempt to connect to and to listen on
     QString port;
+
+    /// Holds the value of the user entered room code
     QString roomCode;
+
+    /// Handles all networking on the Guest
+    GuestNetworkHandler* handler;
 
 private slots:
     /**

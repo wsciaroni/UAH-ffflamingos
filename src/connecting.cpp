@@ -1,5 +1,4 @@
 #include "connecting.h"
-#include "ui_connecting.h"
 
 Connecting::Connecting(QWidget *parent) :
     QDialog(parent),
@@ -8,12 +7,15 @@ Connecting::Connecting(QWidget *parent) :
     ui->setupUi(this);
     waitingScreen = new WaitingToStart;
     connect(ui->pushButton,&QPushButton::clicked,this,&Connecting::cancel);
+
+    handler = new GuestNetworkHandler;
 }
 
 Connecting::~Connecting()
 {
     delete ui;
     delete waitingScreen;
+    delete handler;
 }
 
 void Connecting::passName(QString name) {
@@ -24,6 +26,16 @@ void Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
     ip = ipIn;
     port = portIn;
     roomCode = roomCodeIn;
+    /// @todo Attempt Connection.  If it doesn't connect, show an error
+    if (handler->connectToHost(QHostAddress(ipIn), portIn))
+    {
+        // Send a provideRoomCodePacket
+    } else
+    {
+        // Throw an error
+    }
+    
+    
 }
 
 void Connecting::goToWaitingScreen() {
