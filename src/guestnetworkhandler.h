@@ -84,6 +84,11 @@ protected slots:
      */
     void onTCPBytesWritten();
 
+    /**
+     * Handle incoming UDP information
+     */
+    void onUDPReadPendingDatagrams();
+
 signals:
     /**
      * This is emitted when the status of the room code is receieved

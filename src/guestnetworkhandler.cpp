@@ -27,11 +27,19 @@ void GuestNetworkHandler::disconnectFromHost() {
 }
 
 bool GuestNetworkHandler::listenOnUDP() {
-
+    if (udpSocket.isOpen())
+    {
+        udpSocket.close();
+    }
+    
+    return udpSocket.bind(QHostAddress::AnyIPv4, port);
 }
 
 void GuestNetworkHandler::stopListeningOnUDP() {
-
+    if (udpSocket.isOpen())
+    {
+        udpSocket.close();
+    }
 }
 
 void GuestNetworkHandler::onTCPConnected() {
@@ -48,6 +56,18 @@ void GuestNetworkHandler::onTCPDataReady() {
 
 void GuestNetworkHandler::onTCPBytesWritten() {
 
+}
+
+void GuestNetworkHandler::onUDPReadPendingDatagrams() {
+    QByteArray datagram;
+
+    while (udpSocket.hasPendingDatagrams())
+    {
+        datagram.resize(int(udpSocket.pendingDatagramSize()));
+        udpSocket.readDatagram(datagram.data(), datagram.size());
+        
+        // Process the incoming datagram
+    }
 }
 
 void GuestNetworkHandler::recvRoomCodeStatus(NPRoomCodeStatus roomCodeStatus) {
@@ -67,10 +87,13 @@ void GuestNetworkHandler::recvEndGameInfo(NPEndGameInfo endGameInfo) {
 }
 
 void GuestNetworkHandler::provideRoomCode(NPProvideRoomCode provideRoomCodePacket) {
-
+    QByteArray datagram;
+    QDataStream out(&datagram, QIODevice::WriteOnly);
+    out << provideRoomCodePacket;
+    tcpSocket.write(datagram);
 }
 
-void GuestNetworkHandler::terminateMe(NPTerminateMe terminateMe) {
+void GuestNetworkHandler::terminateMe(NPTerminateMe terminateMePacket) {
 
 }
 
