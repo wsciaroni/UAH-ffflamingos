@@ -51,7 +51,32 @@ void GuestNetworkHandler::onTCPDisconnected() {
 }
 
 void GuestNetworkHandler::onTCPDataReady() {
+    qDebug() << "In onTCPDataReady()\n";
+    QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
 
+    // Read from socket here
+    PacketType pType;
+    BlockReader(tcpSocket).stream() >> pType;
+    if (pType == PacketType::ROOMCODESTATUS)
+    {
+        qDebug() << "pType == PROVIDEROOMCODE\n";
+        NPProvideRoomCode provideRoomCodePacket;
+        BlockReader(tcpSocket).stream() >> provideRoomCodePacket;
+        emit this->provideRoomCode(provideRoomCodePacket);
+    } else if (pType == PacketType::ENDGAMEINFO)
+    {
+        qDebug() << "pType == SPACEPRESSED\n";
+        NPSpacePressed spacePressedPacket;
+        BlockReader(tcpSocket).stream() >> spacePressedPacket;
+        emit this->spacePressed(spacePressedPacket);
+    } else if (pType == PacketType::NULLPACKETTYPE)
+    {
+        qDebug() << "pType == NULLPACKETTYPE\n";
+        // Throw an error
+    } else 
+    {
+        qDebug() << "Unknown packet type\n";
+    }
 }
 
 void GuestNetworkHandler::onTCPBytesWritten() {
@@ -87,16 +112,13 @@ void GuestNetworkHandler::recvEndGameInfo(NPEndGameInfo endGameInfo) {
 }
 
 void GuestNetworkHandler::provideRoomCode(NPProvideRoomCode provideRoomCodePacket) {
-    QByteArray datagram;
-    QDataStream out(&datagram, QIODevice::WriteOnly);
-    out << provideRoomCodePacket;
-    tcpSocket.write(datagram);
+   BlockWriter(&tcpSocket).stream() << provideRoomCodePacket;
 }
 
 void GuestNetworkHandler::terminateMe(NPTerminateMe terminateMePacket) {
-
+    BlockWriter(&tcpSocket).stream() << terminateMePacket;
 }
 
 void GuestNetworkHandler::spacePressed(NPSpacePressed spacePressedPacket) {
-
+    BlockWriter(&tcpSocket).stream() << spacePressedPacket;
 }

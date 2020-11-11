@@ -2,12 +2,13 @@
 #define NPGENERIC_H
 
 #include <QDataStream>
+#include "datastreamenum.h"
 
 /**
  * @brief Packet Type Enumeration
  * @details Used to determine what type of network packet the info is.  Allows for a packet's role to be determined
  */
-enum PacketType {
+enum class PacketType : qint32 {
     NULLPACKETTYPE = 0,               ///< Should never occur
     
     PROVIDEROOMCODE = 1,    ///< Guest->Host Providing Room Code
@@ -32,7 +33,7 @@ private:
     /**
      * Used to determine the role of the packet and how it will be handled (As well as the intended recipients)
      */
-    PacketType packetType = NULLPACKETTYPE;
+    PacketType packetType = PacketType::NULLPACKETTYPE;
 
 public:
     NPGeneric();

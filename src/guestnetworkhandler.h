@@ -12,6 +12,10 @@
 #include "npingameinfo.h"
 #include "npendgameinfo.h"
 
+#include "blockreader.h"
+#include "blockwriter.h"
+#include "datastreamenum.h"
+
 #include <QTcpSocket>
 #include <QUdpSocket>
 

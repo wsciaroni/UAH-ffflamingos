@@ -14,6 +14,10 @@
 
 #include "playerlist.h"
 
+#include "blockreader.h"
+#include "blockwriter.h"
+#include "datastreamenum.h"
+
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -108,14 +112,14 @@ signals:
      * @param terminateMePacket A Network Packet of type NPTerminateMe
      * @param uid The uid of the player who sent the packet
      */
-    void terminateMe(NPTerminateMe terminateMePacket, int uid);
+    void terminateMe(NPTerminateMe terminateMePacket);
 
     /**
      * @brief emitted when a space bar is pressed
      * @param spacePressedPacket A Network Packet of type NPSpacePressed
      * @param uid The uid of the player who sent the packet
      */
-    void spacePressed(NPSpacePressed spacePressedPacket, int uid);
+    void spacePressed(NPSpacePressed spacePressedPacket);
 
 public slots:
     /**

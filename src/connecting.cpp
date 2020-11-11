@@ -26,13 +26,21 @@ void Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
     ip = ipIn;
     port = portIn;
     roomCode = roomCodeIn;
-    /// @todo Attempt Connection.  If it doesn't connect, show an error
+    
+    handler->disconnectFromHost();
+    
     if (handler->connectToHost(QHostAddress(ipIn), portIn))
     {
         // Send a provideRoomCodePacket
+        qDebug() << "Connection successful on Client\n";
+        NPProvideRoomCode npProvideRoomCode;
+        npProvideRoomCode.setRoomCode(roomCode);
+        handler->provideRoomCode(npProvideRoomCode);
     } else
     {
+        qDebug() << "Unable to connect\n";
         // Throw an error
+        
     }
     
     

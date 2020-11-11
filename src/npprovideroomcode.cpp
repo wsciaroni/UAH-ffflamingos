@@ -1,5 +1,5 @@
 #include "npprovideroomcode.h"
-
+#include <QDebug>
 
 NPProvideRoomCode::NPProvideRoomCode(/* args */)
 {
@@ -18,12 +18,15 @@ QString NPProvideRoomCode::getRoomCode() {
 }
 
 QDataStream& operator<<(QDataStream& ds, NPProvideRoomCode& packet) {
-    ds << packet.getPacketType();
-
+    ds << PacketType::PROVIDEROOMCODE;
+    QString test("Hello my friend");
+    ds << test;
     return ds;
 }
 
 QDataStream& operator>>(QDataStream& ds, NPProvideRoomCode& packet) {
-    
+    QString test;
+    ds >> test;
+    qDebug() << "Received " << test << "\n";
     return ds;
 }

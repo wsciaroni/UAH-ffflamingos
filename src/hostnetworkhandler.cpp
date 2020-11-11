@@ -67,24 +67,28 @@ void HostNetworkHandler::onNewTCPConnection() {
         this,
         &HostNetworkHandler::onTCPDataReady
         );
+        /*
     connect(
         tcpSocket,
         SIGNAL(bytesWritten(qint64)),
         this,
-        SLOT(onTCPDataReady(qint64))
+        SLOT(onTCPBytesWritten(qint64))
         );
+        */
 }
 
 void HostNetworkHandler::onTCPConnected() {
     QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
     if (tcpSocket != nullptr)
     {
+        qDebug() << "In onTCPConnected()\n";
         // on connection
         // Add Player to PlayerList
         // Add player to multicast group
         // Handle the incoming ProvideRoomCode Packet
             //  If RoomCode Packet UID != -1, try to readd that player to the game
             // If the RoomCode Packet UID == -1, then create a new player
+        
     }
 }
 
@@ -92,14 +96,45 @@ void HostNetworkHandler::onTCPDisconnected() {
     // Disconnected
     // Remove player from player list?
     // Remove player from multicast group
+    qDebug() << "In onTCPDisconnected()\n";
 }
 
 void HostNetworkHandler::onTCPDataReady() {
+    qDebug() << "In onTCPDataReady()\n";
     QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
     // Read from socket here
+    PacketType pType;
+    BlockReader(tcpSocket).stream() >> pType;
+    if (pType == PacketType::PROVIDEROOMCODE)
+    {
+        qDebug() << "pType == PROVIDEROOMCODE\n";
+        NPProvideRoomCode provideRoomCodePacket;
+        BlockReader(tcpSocket).stream() >> provideRoomCodePacket;
+        emit this->provideRoomCode(provideRoomCodePacket);
+    } else if (pType == PacketType::TERMINATEME)
+    {
+        qDebug() << "pType == TERMINATEME\n";
+        NPTerminateMe terminateMePacket;
+        BlockReader(tcpSocket).stream() >> terminateMePacket;
+        emit this->terminateMe(terminateMePacket);
+    } else if (pType == PacketType::SPACEPRESSED)
+    {
+        qDebug() << "pType == SPACEPRESSED\n";
+        NPSpacePressed spacePressedPacket;
+        BlockReader(tcpSocket).stream() >> spacePressedPacket;
+        emit this->spacePressed(spacePressedPacket);
+    } else if (pType == PacketType::NULLPACKETTYPE)
+    {
+        qDebug() << "pType == NULLPACKETTYPE\n";
+        // Throw an error
+    } else 
+    {
+        qDebug() << "Unknown packet type\n";
+    }
 }
 
 void HostNetworkHandler::onTCPBytesWritten(qint64 bytes) {
+    qDebug() << "In onTCPBytesWritten()\n";
     /// @todo Implement the area that reads in data from the TCPSocket
     // Process the bytes that were written to the 
     // Create a Datastream, then:
@@ -108,24 +143,31 @@ void HostNetworkHandler::onTCPBytesWritten(qint64 bytes) {
     // Then emit a signal for each specific class so someone knows what kind of data needs to be processed
 
 }
+
 int HostNetworkHandler::getPort() {
     return port;
 }
 
+void HostNetworkHandler::provideRoomCode(NPProvideRoomCode provideRoomCodePacket) {
+    qDebug() << "In ProvideRoomCode handler\n";
+}
+
+void HostNetworkHandler::terminateMe(NPTerminateMe terminateMePacket) {
+    qDebug() << "In terminateMe handler\n";
+}
+
+void HostNetworkHandler::spacePressed(NPSpacePressed spacePressedPacket) {
+    qDebug() << "In spacePressed handler\n";
+}
+
 /// @todo Setup the TCP Server to send these packets back to the guest
 void HostNetworkHandler::sendRoomCodeStatus(NPRoomCodeStatus roomCodeStatus, QTcpSocket* socket) {
-    QByteArray datagram;
-    QDataStream out(&datagram, QIODevice::WriteOnly);
-    out << roomCodeStatus;
-    socket->write(datagram);
+    BlockWriter(socket).stream() << roomCodeStatus;
 }
 
 /// @todo setup the TCP Server to send these packets back to the guest
 void HostNetworkHandler::sendWelcomeToRoom(NPWelcomeToRoom welcomeToRoom, QTcpSocket* socket) {
-    QByteArray datagram;
-    QDataStream out(&datagram, QIODevice::WriteOnly);
-    out << welcomeToRoom;
-    socket->write(datagram);
+    BlockWriter(socket).stream() << welcomeToRoom;
 }
 
 void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo, QHostAddress destinationAddress) {
@@ -136,8 +178,5 @@ void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo, QHostAddress de
 }
 
 void HostNetworkHandler::sendEndGameInfo(NPEndGameInfo endGameInfo, QTcpSocket* socket) {
-    QByteArray datagram;
-    QDataStream out(&datagram, QIODevice::WriteOnly);
-    out << endGameInfo;
-    socket->write(datagram);
+    BlockWriter(socket).stream() << endGameInfo;
 }
