@@ -20,10 +20,25 @@ class Connecting : public QDialog
     Q_OBJECT
 
 public:
+    /**
+     * Constructor used to dynamically allocate memory
+     * @param parent
+     */
     explicit Connecting(QWidget *parent = nullptr);
     ~Connecting();
 
+    /**
+     * Used to Pass the name from the previous window.
+     * @param name The user's name
+     */
     void passName(QString name);
+
+    /**
+     * Used to pass the IP, Port, and RoomCode from the previous window.
+     * @param ipIn The IP input by the user.
+     * @param portIn The Port input by the user.
+     * @param roomCodeIn The RoomCode input by the user.
+     */
     void passInfo(QString ipIn, QString portIn, QString roomCodeIn);
 
 private:
@@ -47,6 +62,7 @@ private:
     /// Handles all networking on the Guest
     GuestNetworkHandler* handler;
     
+    /// Used to throw an error if there is an error connecting
     error* throwError;
 
 private slots:
