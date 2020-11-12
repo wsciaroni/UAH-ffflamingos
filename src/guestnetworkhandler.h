@@ -18,6 +18,8 @@
 
 #include <QTcpSocket>
 #include <QUdpSocket>
+#include <QDataStream>
+#include <QNetworkDatagram>
 
 class GuestNetworkHandler : public QObject
 {

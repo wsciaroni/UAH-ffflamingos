@@ -1,4 +1,5 @@
 #include "guestnetworkhandler.h"
+#include "error.h"
 
 GuestNetworkHandler::GuestNetworkHandler(QObject* parent) : QObject(parent)
 {
@@ -58,21 +59,44 @@ void GuestNetworkHandler::onTCPDataReady() {
     PacketType pType;
     BlockReader(tcpSocket).stream() >> pType;
     if (pType == PacketType::ROOMCODESTATUS)
-    {
-        qDebug() << "pType == PROVIDEROOMCODE\n";
-        NPProvideRoomCode provideRoomCodePacket;
-        BlockReader(tcpSocket).stream() >> provideRoomCodePacket;
-        emit this->provideRoomCode(provideRoomCodePacket);
+    {        
+        qDebug() << "pType == ROOMCODESTATUS\n";
+        NPRoomCodeStatus roomCodeStatus;
+        bool status;
+        BlockReader(tcpSocket).stream() >> status;
+        roomCodeStatus.setRoomCodeStatus(status);
+        emit this->recvRoomCodeStatus(roomCodeStatus);
     } else if (pType == PacketType::ENDGAMEINFO)
     {
-        qDebug() << "pType == SPACEPRESSED\n";
-        NPSpacePressed spacePressedPacket;
-        BlockReader(tcpSocket).stream() >> spacePressedPacket;
-        emit this->spacePressed(spacePressedPacket);
+        qDebug() << "pType == ENDGAMEINFO\n";
+        NPEndGameInfo endGameInfo;
+        //BlockReader(tcpSocket).stream() >> spacePressedPacket;
+        emit this->recvEndGameInfo(endGameInfo);
+    } else if (pType == PacketType::WELCOMETOROOM)
+    {
+        qDebug() << "pType == WELCOMETOROOM\n";
+        NPWelcomeToRoom welcomeToRoom;
+        //BlockReader(tcpSocket).stream() >> spacePressedPacket;
+        emit this->recvWelcomeToRoom(welcomeToRoom);
+    }else if (pType == PacketType::INGAMEINFO)
+    {
+        /*if(listenOnUDP());
+        {
+
+            QByteArray datagram;
+        }*/
+
+
+
+        //emit this->recvInGameInfo(inGameInfo);
     } else if (pType == PacketType::NULLPACKETTYPE)
     {
         qDebug() << "pType == NULLPACKETTYPE\n";
         // Throw an error
+        error* throwError = new error;
+        throwError->throwErrorMsg("ERROR: Received a NULL packet type");
+        throwError->exec();
+        delete throwError;
     } else 
     {
         qDebug() << "Unknown packet type\n";
@@ -112,13 +136,25 @@ void GuestNetworkHandler::recvEndGameInfo(NPEndGameInfo endGameInfo) {
 }
 
 void GuestNetworkHandler::provideRoomCode(NPProvideRoomCode provideRoomCodePacket) {
-   BlockWriter(&tcpSocket).stream() << provideRoomCodePacket;
+
+    QString roomcode = provideRoomCodePacket.getRoomCode();
+
+    int uid = provideRoomCodePacket.getUID();
+    BlockWriter(&tcpSocket).stream() << PacketType::PROVIDEROOMCODE;
+    BlockWriter(&tcpSocket).stream() << uid << roomcode;
+
 }
 
 void GuestNetworkHandler::terminateMe(NPTerminateMe terminateMePacket) {
-    BlockWriter(&tcpSocket).stream() << terminateMePacket;
+
+    int uid = terminateMePacket.getUID();
+    BlockWriter(&tcpSocket).stream() << PacketType::TERMINATEME;
+    BlockWriter(&tcpSocket).stream() << uid;
 }
 
 void GuestNetworkHandler::spacePressed(NPSpacePressed spacePressedPacket) {
-    BlockWriter(&tcpSocket).stream() << spacePressedPacket;
+
+    int uid = spacePressedPacket.getUID();
+    BlockWriter(&tcpSocket).stream() << PacketType::SPACEPRESSED;
+    BlockWriter(&tcpSocket).stream() << uid;
 }

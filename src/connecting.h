@@ -4,6 +4,7 @@
 #include "waitingtostart.h"
 #include "ui_connecting.h"
 #include "guestnetworkhandler.h"
+#include "error.h"
 
 #include <QDialog>
 
@@ -45,6 +46,8 @@ private:
 
     /// Handles all networking on the Guest
     GuestNetworkHandler* handler;
+    
+    error* throwError;
 
 private slots:
     /**

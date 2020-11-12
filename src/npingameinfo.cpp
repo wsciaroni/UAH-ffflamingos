@@ -15,6 +15,6 @@ QDataStream& operator<<(QDataStream& ds, NPInGameInfo& packet) {
 }
 
 QDataStream& operator>>(QDataStream& ds, NPInGameInfo& packet) {
-    
+
     return ds;
 }

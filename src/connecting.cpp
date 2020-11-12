@@ -40,7 +40,10 @@ void Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
     {
         qDebug() << "Unable to connect\n";
         // Throw an error
-        
+        /*throwError = new error;
+        throwError->throwErrorMsg("ERROR: Unable to connect");
+        throwError->exec();
+        delete throwError;*/
     }
     
     

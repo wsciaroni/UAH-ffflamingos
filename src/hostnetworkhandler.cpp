@@ -1,4 +1,5 @@
 #include "hostnetworkhandler.h"
+#include "error.h"
 
 HostNetworkHandler::HostNetworkHandler(QObject* parent) : QObject(parent)
 {
@@ -107,26 +108,46 @@ void HostNetworkHandler::onTCPDataReady() {
     BlockReader(tcpSocket).stream() >> pType;
     if (pType == PacketType::PROVIDEROOMCODE)
     {
+
+
         qDebug() << "pType == PROVIDEROOMCODE\n";
         NPProvideRoomCode provideRoomCodePacket;
-        BlockReader(tcpSocket).stream() >> provideRoomCodePacket;
+
+        QString roomcode;
+        int uid;
+        BlockReader(tcpSocket).stream() >> uid >> roomcode;
+        provideRoomCodePacket.setRoomCode(roomcode);
+        provideRoomCodePacket.setUID(uid);
+        qDebug() << "Room code provided" << uid << " " << roomcode;
         emit this->provideRoomCode(provideRoomCodePacket);
+
+
     } else if (pType == PacketType::TERMINATEME)
     {
         qDebug() << "pType == TERMINATEME\n";
         NPTerminateMe terminateMePacket;
-        BlockReader(tcpSocket).stream() >> terminateMePacket;
+
+        int uid;
+        BlockReader(tcpSocket).stream() >> uid;
+        terminateMePacket.setUID(uid);
         emit this->terminateMe(terminateMePacket);
     } else if (pType == PacketType::SPACEPRESSED)
     {
         qDebug() << "pType == SPACEPRESSED\n";
         NPSpacePressed spacePressedPacket;
-        BlockReader(tcpSocket).stream() >> spacePressedPacket;
+
+        int uid;
+        BlockReader(tcpSocket).stream() >> uid;
+        spacePressedPacket.setUID(uid);
         emit this->spacePressed(spacePressedPacket);
     } else if (pType == PacketType::NULLPACKETTYPE)
     {
         qDebug() << "pType == NULLPACKETTYPE\n";
         // Throw an error
+        error* throwError = new error;
+        throwError->throwErrorMsg("ERROR: Received a NULL packet type");
+        throwError->exec();
+        delete throwError;
     } else 
     {
         qDebug() << "Unknown packet type\n";
@@ -162,12 +183,18 @@ void HostNetworkHandler::spacePressed(NPSpacePressed spacePressedPacket) {
 
 /// @todo Setup the TCP Server to send these packets back to the guest
 void HostNetworkHandler::sendRoomCodeStatus(NPRoomCodeStatus roomCodeStatus, QTcpSocket* socket) {
-    BlockWriter(socket).stream() << roomCodeStatus;
+    //BlockWriter(socket).stream() << roomCodeStatus;
+
+    bool status = roomCodeStatus.getRoomCodeStatus();
+    BlockWriter(socket).stream() << PacketType::ROOMCODESTATUS;
+    BlockWriter(socket).stream() << status;
 }
 
 /// @todo setup the TCP Server to send these packets back to the guest
 void HostNetworkHandler::sendWelcomeToRoom(NPWelcomeToRoom welcomeToRoom, QTcpSocket* socket) {
-    BlockWriter(socket).stream() << welcomeToRoom;
+    //BlockWriter(socket).stream() << welcomeToRoom;
+
+    BlockWriter(socket).stream() << PacketType::WELCOMETOROOM;
 }
 
 void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo, QHostAddress destinationAddress) {
@@ -178,5 +205,6 @@ void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo, QHostAddress de
 }
 
 void HostNetworkHandler::sendEndGameInfo(NPEndGameInfo endGameInfo, QTcpSocket* socket) {
-    BlockWriter(socket).stream() << endGameInfo;
+    //BlockWriter(socket).stream() << endGameInfo;
+    BlockWriter(socket).stream() << PacketType::ENDGAMEINFO;
 }

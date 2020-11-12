@@ -68,7 +68,7 @@ private:
 
 private slots:
     /**
-     * Slot that calls out to the next dialog and accepts this QDialog
+     * Slot that attempts to bind IP and port
      */
     void bindIP_Port();
 };

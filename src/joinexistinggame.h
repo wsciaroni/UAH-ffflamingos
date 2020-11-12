@@ -45,7 +45,7 @@ private:
 
 private slots:
     /**
-     * Slot that calls out to the next dialog and accepts this QDialog
+     * slot that attempts to join game if IP and port are valid
      */
     void attemptToJoin();
 
