@@ -118,7 +118,7 @@ void HostNetworkHandler::onTCPDataReady() {
         BlockReader(tcpSocket).stream() >> uid >> roomcode;
         provideRoomCodePacket.setRoomCode(roomcode);
         provideRoomCodePacket.setUID(uid);
-        qDebug() << "Room code provided" << uid << " " << roomcode;
+        qDebug() << "Room code received" << uid << " " << roomcode;
         emit this->provideRoomCode(provideRoomCodePacket, tcpSocket);
 
 
@@ -175,10 +175,11 @@ int HostNetworkHandler::getPort() {
 /// @todo Setup the TCP Server to send these packets back to the guest
 void HostNetworkHandler::sendRoomCodeStatus(NPRoomCodeStatus roomCodeStatus, QTcpSocket* socket) {
     //BlockWriter(socket).stream() << roomCodeStatus;
-
+    qDebug() << "sent room code status\n";
     bool status = roomCodeStatus.getRoomCodeStatus();
     BlockWriter(socket).stream() << PacketType::ROOMCODESTATUS;
     BlockWriter(socket).stream() << status;
+
 }
 
 /// @todo setup the TCP Server to send these packets back to the guest

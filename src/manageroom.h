@@ -38,6 +38,8 @@ public:
 
     void passHandler(HostNetworkHandler* handlerIn);
 
+    void passRoomCode(QString roomCode);
+
 private:
     ///ui pointer
     Ui::ManageRoom *ui;
@@ -57,6 +59,8 @@ private:
     /// Holds the address of the host network handler
     HostNetworkHandler* handler;
 
+    QString hostRoomCode;
+
 private slots:
    /**
    Slot to send user to game play
@@ -69,15 +73,8 @@ private slots:
    */
    void closeLobby();
 
-    /**
-     * Used to send out the room code status in reply to the client
-     */
-    void sendRoomCodeStatusToClient(NPRoomCodeStatus roomCodeStatus, QTcpSocket* socket);
 
-    /**
-     * Used to send out the start game signal to the client
-     */
-    void sendWelcomeToRoomToClient(NPWelcomeToRoom welcomeToRoom, QTcpSocket* socket);
+
 
 public slots:
 
@@ -97,6 +94,18 @@ public slots:
      * Handles the receipt of a RoomCode packet
      */
     void handleProvideRoomCode(NPProvideRoomCode provideRoomCodePacket, QTcpSocket* socket);
+
+signals:
+
+    /**
+     * Used to send out the room code status in reply to the client
+     */
+    void sendRoomCodeStatusToClient(NPRoomCodeStatus roomCodeStatus, QTcpSocket* socket);
+
+    /**
+     * Used to send out the start game signal to the client
+     */
+    void sendWelcomeToRoomToClient(NPWelcomeToRoom welcomeToRoom, QTcpSocket* socket);
 };
 
 #endif // MANAGEROOM_H

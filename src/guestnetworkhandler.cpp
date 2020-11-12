@@ -92,6 +92,7 @@ void GuestNetworkHandler::onTCPDataReady() {
         bool status;
         BlockReader(tcpSocket).stream() >> status;
         roomCodeStatus.setRoomCodeStatus(status);
+        qDebug() << "Room Code Status Received";
         emit this->recvRoomCodeStatus(roomCodeStatus);
     }
     else if (pType == PacketType::ENDGAMEINFO)
@@ -168,6 +169,7 @@ void GuestNetworkHandler::provideRoomCode(NPProvideRoomCode provideRoomCodePacke
     int uid = provideRoomCodePacket.getUID();
     BlockWriter(&tcpSocket).stream() << PacketType::PROVIDEROOMCODE;
     BlockWriter(&tcpSocket).stream() << uid << roomcode;
+    qDebug() << "room code provided";
 
 }
 
