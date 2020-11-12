@@ -5,6 +5,9 @@
 
 #include <QString>
 
+/**
+ * Used to provide the roomcode from the Guest to the Host.
+ */
 class NPProvideRoomCode : public NPGuestToHost
 {
 private:
@@ -36,19 +39,6 @@ public:
     QString getRoomCode();
 
     QString getName();
-
-    /**
-     * Reimplements the `<<` operator for QDataStream.
-     * This is used to send the data in a specific order
-     */
-    friend QDataStream& operator<<(QDataStream& ds, NPProvideRoomCode& packet);
-
-    /**
-     * Reimplements the `>>` operator for QDataStream.
-     * This is used to receive the data in a specific order.
-     * @warning Do not attempt to read in the Packet type as that will be done externally to determine what type of packet to read in for the remaining data.
-     */
-    friend QDataStream& operator>>(QDataStream& ds, NPProvideRoomCode& packet);
 };
 
 #endif

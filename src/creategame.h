@@ -28,17 +28,39 @@ class CreateGame : public QDialog
     Q_OBJECT
 
 public:
+    /**
+     * Constructor used to dynamically allocate memory
+     * @param parent
+     */
     explicit CreateGame(QWidget *parent = nullptr);
+
+    /**
+     * Destructor used to deallocate memory
+     */
     ~CreateGame();
 
+    /**
+     * Used to Pass the name from the previous window.
+     * @param name The user's name
+     */
     void passName(QString name);
 
 private:
     Ui::CreateGame *ui;
 
+    /**
+     * The address of the next window to go to
+     */
     ManageRoom* waitingRoom;
+
+    /**
+     * The address of an error to throw
+     */
     error* bindError;
 
+    /**
+     * Takes care of all network related needs
+     */
     HostNetworkHandler* handler;
 
     /**

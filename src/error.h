@@ -15,8 +15,19 @@ class error : public QDialog
     Q_OBJECT
 
 public:
+    /**
+     * Used to define a new error
+     */
     explicit error(QWidget *parent = nullptr);
+
+    /**
+     * Destructor
+     */
     ~error();
+
+    /**
+     * Used to specify what message needs to be thrown
+     */
     void throwErrorMsg(QString msg);
 
 private:

@@ -3,6 +3,16 @@
 
 #include "nphosttoguest.h"
 
+/**
+ * Used to provide Mid-Game communication.
+ * @details These will include the 
+ * - location of every ball
+ * - Animation status of each player
+ * - Score of each player
+ * - Current High Score
+ * etc
+ * @todo Provide the necessary items here.
+ */
 class NPInGameInfo : public NPHostToGuest
 {
 private:

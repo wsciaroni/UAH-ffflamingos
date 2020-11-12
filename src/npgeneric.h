@@ -2,6 +2,7 @@
 #define NPGENERIC_H
 
 #include <QDataStream>
+#include <QString>
 #include "datastreamenum.h"
 
 /**
@@ -35,6 +36,11 @@ private:
      */
     PacketType packetType = PacketType::NULLPACKETTYPE;
 
+    /**
+     * User ID of the Client
+     */
+    int clientUID = -1;
+
 public:
     NPGeneric();
     ~NPGeneric();
@@ -46,17 +52,16 @@ public:
     PacketType getPacketType() const;
 
     /**
-     * Reimplements the `<<` operator for QDataStream.
-     * This is used to send the data in a specific order
+     * Used to set the UID of the client
+     * @param uidIn The UID of the client
      */
-    friend QDataStream& operator<<(QDataStream& ds, NPGeneric& packet);
+    void setUID(int uidIn);
 
     /**
-     * Reimplements the `>>` operator for QDataStream.
-     * This is used to receive the data in a specific order.
-     * @warning Do not attempt to read in the Packet type as that will be done externally to determine what type of packet to read in for the remaining data.
+     * Used to get the UID of the client
+     * @return UID of the client
      */
-    friend QDataStream& operator>>(QDataStream& ds, NPGeneric& packet);
+    int getUID();
 };
 
 #endif // NPGENERIC_H

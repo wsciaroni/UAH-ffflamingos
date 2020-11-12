@@ -52,10 +52,21 @@ private:
     int port;
 
 public:
+    /**
+     * Constructor used to dynamically allocate memory
+     * @param parent
+     */
     HostNetworkHandler(QObject* parent = nullptr);
+
+    /**
+     * Destructor used to deallocate memory
+     */
     ~HostNetworkHandler();
 
-    /// Returns the port that the TCP server is listening on
+    /**
+     * @brief Used to get the port that Host is listening on.
+     * @return Returns the port that the TCP server is listening on.
+     */
     int getPort();
 
     /**
@@ -72,7 +83,8 @@ public:
     void stopTCPServer();
 
     /**
-     * Returns the address of the TCPServer
+     * Used to work with the QTcpServer of the host
+     * @return Returns the address of the TCPServer
      */
     QTcpServer* getTCPServer();
 
@@ -94,12 +106,12 @@ protected slots:
     void onTCPDisconnected();
     
     /**
-     * Handles all incoming network connections on the QTcpServer
+     * Handles all incoming network connections on the QTcpServer.
      */
     void onTCPDataReady();
 
     /**
-     * Handles incoming bytes when data is written to the TCPSocket
+     * Handles incoming bytes when data is written to the TCPSocket.
      */
     void onTCPBytesWritten(qint64 bytes);
 
@@ -107,20 +119,21 @@ signals:
     /**
      * @brief emitted when a room code is provided
      * @param provideRoomCodePacket A Network Packet of type NPProvideRoomCode
+     * @param socket The QTcpSocket to communicate with that specific client on
      */
     void provideRoomCode(NPProvideRoomCode provideRoomCodePacket, QTcpSocket* socket);
 
     /**
      * @brief emitted when a request to leave is received
      * @param terminateMePacket A Network Packet of type NPTerminateMe
-     * @param uid The uid of the player who sent the packet
+     * @param socket The QTcpSocket to communicate with that specific client on
      */
     void terminateMe(NPTerminateMe terminateMePacket, QTcpSocket* socket);
 
     /**
      * @brief emitted when a space bar is pressed
      * @param spacePressedPacket A Network Packet of type NPSpacePressed
-     * @param uid The uid of the player who sent the packet
+     * @param socket The QTcpSocket to communicate with that specific client on
      */
     void spacePressed(NPSpacePressed spacePressedPacket, QTcpSocket* socket);
 

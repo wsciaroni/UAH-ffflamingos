@@ -25,6 +25,10 @@ public:
      * @param parent
      */
     explicit Connecting(QWidget *parent = nullptr);
+
+    /**
+     * Destructor used to deallocate memory
+     */
     ~Connecting();
 
     /**
@@ -76,6 +80,10 @@ private slots:
      */
     void cancel();
 
+    /**
+     * Slot that is called when a roomCodeStatus packet is received.
+     * @param roomCodeStatus Holds the user's uid and whether the room code was valid or invalid.
+     */
     void handleRoomCodeStatus(NPRoomCodeStatus roomCodeStatus);
 };
 
