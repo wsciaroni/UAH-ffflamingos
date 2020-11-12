@@ -3,6 +3,12 @@
 
 GuestNetworkHandler::GuestNetworkHandler(QObject* parent) : QObject(parent)
 {
+    listenOnUDP();
+    connect(&udpSocket,
+            SIGNAL(readyRead()),
+            this,
+            SLOT(onUDPReadPendingDatagrams()));
+
 }
 
 GuestNetworkHandler::~GuestNetworkHandler()
@@ -66,30 +72,22 @@ void GuestNetworkHandler::onTCPDataReady() {
         BlockReader(tcpSocket).stream() >> status;
         roomCodeStatus.setRoomCodeStatus(status);
         emit this->recvRoomCodeStatus(roomCodeStatus);
-    } else if (pType == PacketType::ENDGAMEINFO)
+    }
+    else if (pType == PacketType::ENDGAMEINFO)
     {
         qDebug() << "pType == ENDGAMEINFO\n";
         NPEndGameInfo endGameInfo;
         //BlockReader(tcpSocket).stream() >> spacePressedPacket;
         emit this->recvEndGameInfo(endGameInfo);
-    } else if (pType == PacketType::WELCOMETOROOM)
+    }
+    else if (pType == PacketType::WELCOMETOROOM)
     {
         qDebug() << "pType == WELCOMETOROOM\n";
         NPWelcomeToRoom welcomeToRoom;
         //BlockReader(tcpSocket).stream() >> spacePressedPacket;
         emit this->recvWelcomeToRoom(welcomeToRoom);
-    }else if (pType == PacketType::INGAMEINFO)
-    {
-        /*if(listenOnUDP());
-        {
-
-            QByteArray datagram;
-        }*/
-
-
-
-        //emit this->recvInGameInfo(inGameInfo);
-    } else if (pType == PacketType::NULLPACKETTYPE)
+    }
+    else if (pType == PacketType::NULLPACKETTYPE)
     {
         qDebug() << "pType == NULLPACKETTYPE\n";
         // Throw an error
@@ -97,7 +95,8 @@ void GuestNetworkHandler::onTCPDataReady() {
         throwError->throwErrorMsg("ERROR: Received a NULL packet type");
         throwError->exec();
         delete throwError;
-    } else 
+    }
+    else
     {
         qDebug() << "Unknown packet type\n";
     }
@@ -116,6 +115,12 @@ void GuestNetworkHandler::onUDPReadPendingDatagrams() {
         udpSocket.readDatagram(datagram.data(), datagram.size());
         
         // Process the incoming datagram
+
+        NPInGameInfo inGameInfo;
+        QDataStream in(&datagram, QIODevice::ReadOnly);
+
+        in >> inGameInfo;
+        emit this->recvInGameInfo(inGameInfo);
     }
 }
 

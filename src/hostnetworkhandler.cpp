@@ -131,7 +131,8 @@ void HostNetworkHandler::onTCPDataReady() {
         BlockReader(tcpSocket).stream() >> uid;
         terminateMePacket.setUID(uid);
         emit this->terminateMe(terminateMePacket);
-    } else if (pType == PacketType::SPACEPRESSED)
+    }
+    else if (pType == PacketType::SPACEPRESSED)
     {
         qDebug() << "pType == SPACEPRESSED\n";
         NPSpacePressed spacePressedPacket;
@@ -140,7 +141,8 @@ void HostNetworkHandler::onTCPDataReady() {
         BlockReader(tcpSocket).stream() >> uid;
         spacePressedPacket.setUID(uid);
         emit this->spacePressed(spacePressedPacket);
-    } else if (pType == PacketType::NULLPACKETTYPE)
+    }
+    else if (pType == PacketType::NULLPACKETTYPE)
     {
         qDebug() << "pType == NULLPACKETTYPE\n";
         // Throw an error
@@ -148,7 +150,8 @@ void HostNetworkHandler::onTCPDataReady() {
         throwError->throwErrorMsg("ERROR: Received a NULL packet type");
         throwError->exec();
         delete throwError;
-    } else 
+    }
+    else
     {
         qDebug() << "Unknown packet type\n";
     }
