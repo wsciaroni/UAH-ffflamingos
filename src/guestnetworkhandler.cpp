@@ -20,8 +20,29 @@ bool GuestNetworkHandler::connectToHost(QHostAddress hostAddress, QString portIn
     {
         port = portIn.toInt();
         tcpSocket.connectToHost(hostAddress, port);
-        tcpSocket.waitForConnected();
-        return true;
+        if(tcpSocket.waitForConnected(3000)) {
+            
+            connect(
+                &tcpSocket,
+                &QTcpSocket::connected,
+                this,
+                &GuestNetworkHandler::onTCPConnected
+                );
+                
+            connect(
+                &tcpSocket,
+                &QTcpSocket::disconnected,
+                this,
+                &GuestNetworkHandler::onTCPDisconnected
+                ); 
+            connect(
+                &tcpSocket,
+                &QTcpSocket::readyRead,
+                this,
+                &GuestNetworkHandler::onTCPDataReady
+                );
+            return true;
+        }
     }
     return false;
 }
@@ -50,11 +71,11 @@ void GuestNetworkHandler::stopListeningOnUDP() {
 }
 
 void GuestNetworkHandler::onTCPConnected() {
-
+    qDebug() << "In client onTCPConnected()";
 }
 
 void GuestNetworkHandler::onTCPDisconnected() {
-
+    qDebug() << "In client onTCPDisconnected()";
 }
 
 void GuestNetworkHandler::onTCPDataReady() {

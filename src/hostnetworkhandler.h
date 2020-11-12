@@ -32,6 +32,9 @@
  */
 class HostNetworkHandler : public QObject
 {
+
+    Q_OBJECT
+
 private:
     /**
      * Holds the TCP server to use to communicate
@@ -105,21 +108,21 @@ signals:
      * @brief emitted when a room code is provided
      * @param provideRoomCodePacket A Network Packet of type NPProvideRoomCode
      */
-    void provideRoomCode(NPProvideRoomCode provideRoomCodePacket);
+    void provideRoomCode(NPProvideRoomCode provideRoomCodePacket, QTcpSocket* socket);
 
     /**
      * @brief emitted when a request to leave is received
      * @param terminateMePacket A Network Packet of type NPTerminateMe
      * @param uid The uid of the player who sent the packet
      */
-    void terminateMe(NPTerminateMe terminateMePacket);
+    void terminateMe(NPTerminateMe terminateMePacket, QTcpSocket* socket);
 
     /**
      * @brief emitted when a space bar is pressed
      * @param spacePressedPacket A Network Packet of type NPSpacePressed
      * @param uid The uid of the player who sent the packet
      */
-    void spacePressed(NPSpacePressed spacePressedPacket);
+    void spacePressed(NPSpacePressed spacePressedPacket, QTcpSocket* socket);
 
 public slots:
     /**

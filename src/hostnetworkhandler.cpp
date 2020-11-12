@@ -119,7 +119,7 @@ void HostNetworkHandler::onTCPDataReady() {
         provideRoomCodePacket.setRoomCode(roomcode);
         provideRoomCodePacket.setUID(uid);
         qDebug() << "Room code provided" << uid << " " << roomcode;
-        emit this->provideRoomCode(provideRoomCodePacket);
+        emit this->provideRoomCode(provideRoomCodePacket, tcpSocket);
 
 
     } else if (pType == PacketType::TERMINATEME)
@@ -130,7 +130,7 @@ void HostNetworkHandler::onTCPDataReady() {
         int uid;
         BlockReader(tcpSocket).stream() >> uid;
         terminateMePacket.setUID(uid);
-        emit this->terminateMe(terminateMePacket);
+        emit this->terminateMe(terminateMePacket, tcpSocket);
     }
     else if (pType == PacketType::SPACEPRESSED)
     {
@@ -140,7 +140,7 @@ void HostNetworkHandler::onTCPDataReady() {
         int uid;
         BlockReader(tcpSocket).stream() >> uid;
         spacePressedPacket.setUID(uid);
-        emit this->spacePressed(spacePressedPacket);
+        emit this->spacePressed(spacePressedPacket, tcpSocket);
     }
     else if (pType == PacketType::NULLPACKETTYPE)
     {
@@ -170,18 +170,6 @@ void HostNetworkHandler::onTCPBytesWritten(qint64 bytes) {
 
 int HostNetworkHandler::getPort() {
     return port;
-}
-
-void HostNetworkHandler::provideRoomCode(NPProvideRoomCode provideRoomCodePacket) {
-    qDebug() << "In ProvideRoomCode handler\n";
-}
-
-void HostNetworkHandler::terminateMe(NPTerminateMe terminateMePacket) {
-    qDebug() << "In terminateMe handler\n";
-}
-
-void HostNetworkHandler::spacePressed(NPSpacePressed spacePressedPacket) {
-    qDebug() << "In spacePressed handler\n";
 }
 
 /// @todo Setup the TCP Server to send these packets back to the guest

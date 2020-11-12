@@ -44,6 +44,7 @@ void CreateGame::goToWaitingRoom() {
     this->createHost();
     hostPlayer->setName(playerName);
     waitingRoom->passHost(hostPlayer);
+    waitingRoom->passHandler(handler);
     waitingRoom->exec();
     
     this->accept();

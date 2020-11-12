@@ -4,6 +4,7 @@
 #include "hostmodel.h"
 #include "playermodel.h"
 #include "gamedialog.h"
+#include "hostnetworkhandler.h"
 
 #include <QDialog>
 #include <QString>
@@ -35,6 +36,8 @@ public:
 
     void passHost(HostModel* hostPlayer);
 
+    void passHandler(HostNetworkHandler* handlerIn);
+
 private:
     ///ui pointer
     Ui::ManageRoom *ui;
@@ -51,6 +54,9 @@ private:
     /// Map to hold user ids of players and their names in the table
     std::list<PlayerModel*> playerList;
 
+    /// Holds the address of the host network handler
+    HostNetworkHandler* handler;
+
 private slots:
    /**
    Slot to send user to game play
@@ -62,6 +68,16 @@ private slots:
    @todo will forcibly close the lobby, disconnecting all players
    */
    void closeLobby();
+
+    /**
+     * Used to send out the room code status in reply to the client
+     */
+    void sendRoomCodeStatusToClient(NPRoomCodeStatus roomCodeStatus, QTcpSocket* socket);
+
+    /**
+     * Used to send out the start game signal to the client
+     */
+    void sendWelcomeToRoomToClient(NPWelcomeToRoom welcomeToRoom, QTcpSocket* socket);
 
 public slots:
 
@@ -76,6 +92,11 @@ public slots:
    @param player Pass the player class of the player to remove
    */
    void removePlayer(PlayerModel* player);
+
+    /**
+     * Handles the receipt of a RoomCode packet
+     */
+    void handleProvideRoomCode(NPProvideRoomCode provideRoomCodePacket, QTcpSocket* socket);
 };
 
 #endif // MANAGEROOM_H
