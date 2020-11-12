@@ -100,19 +100,18 @@ void ManageRoom::closeLobby()
     this->accept();
 }
 
-/*void ManageRoom::sendRoomCodeStatusToClient(NPRoomCodeStatus roomCodeStatus, QTcpSocket* socket) {
-
-}
-
-void ManageRoom::sendWelcomeToRoomToClient(NPWelcomeToRoom welcomeToRoom, QTcpSocket* socket) {
-
-}*/
-
 void ManageRoom::handleProvideRoomCode(NPProvideRoomCode provideRoomCodePacket, QTcpSocket* socket) {
     /// @todo Logic for handling the incoming room code packet
     NPRoomCodeStatus statusPacket;
+    static int uidCount = 1;
     if(provideRoomCodePacket.getRoomCode() == hostRoomCode)
+    {
         statusPacket.setRoomCodeStatus(true);
+        PlayerModel* newPlayerModel = new PlayerModel(uidCount++, socket);
+        newPlayerModel->setName(provideRoomCodePacket.getName());
+        addPlayer(newPlayerModel);
+
+    }
     else
         statusPacket.setRoomCodeStatus(false);
     qDebug() << "in handling room code";

@@ -9,6 +9,8 @@ Connecting::Connecting(QWidget *parent) :
     connect(ui->pushButton,&QPushButton::clicked,this,&Connecting::cancel);
 
     handler = new GuestNetworkHandler;
+
+    connect(handler, &GuestNetworkHandler::recvRoomCodeStatus, this, &Connecting::handleRoomCodeStatus);
 }
 
 Connecting::~Connecting()
@@ -35,6 +37,7 @@ void Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
         qDebug() << "Connection successful on Client\n";
         NPProvideRoomCode npProvideRoomCode;
         npProvideRoomCode.setRoomCode(roomCode);
+        npProvideRoomCode.setName(playerName);
         handler->provideRoomCode(npProvideRoomCode);
     } else
     {
@@ -58,4 +61,17 @@ void Connecting::goToWaitingScreen() {
 void Connecting::cancel() {
     ///@todo disconnect the network here, maybe even send a message saying that you want to disconnect
     this->accept();
+}
+
+void Connecting::handleRoomCodeStatus(NPRoomCodeStatus roomCodeStatus){
+    if(roomCodeStatus.getRoomCodeStatus() == true){
+        goToWaitingScreen();
+    }
+    else{
+        error* throwError = new error;
+        throwError->throwErrorMsg("ERROR: Invalid Room Code");
+        throwError->exec();
+        delete throwError;
+        this->cancel();
+    }
 }

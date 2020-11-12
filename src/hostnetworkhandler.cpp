@@ -115,9 +115,11 @@ void HostNetworkHandler::onTCPDataReady() {
 
         QString roomcode;
         int uid;
-        BlockReader(tcpSocket).stream() >> uid >> roomcode;
+        QString name;
+        BlockReader(tcpSocket).stream() >> uid >> roomcode >> name;
         provideRoomCodePacket.setRoomCode(roomcode);
         provideRoomCodePacket.setUID(uid);
+        provideRoomCodePacket.setName(name);
         qDebug() << "Room code received" << uid << " " << roomcode;
         emit this->provideRoomCode(provideRoomCodePacket, tcpSocket);
 

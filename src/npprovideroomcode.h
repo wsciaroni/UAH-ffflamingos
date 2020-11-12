@@ -15,6 +15,8 @@ private:
 
     QString roomCode;
 
+    QString playerName;
+
 public:
     NPProvideRoomCode(/* args */);
     ~NPProvideRoomCode();
@@ -25,11 +27,15 @@ public:
      */
     void setRoomCode(QString roomcode);
 
+    void setName(QString name);
+
     /**
      * Used to get the room code from the packet
      * @return RoomCode from the packet
      */
     QString getRoomCode();
+
+    QString getName();
 
     /**
      * Reimplements the `<<` operator for QDataStream.

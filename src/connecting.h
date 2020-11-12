@@ -75,6 +75,8 @@ private slots:
      * Slot to cancel a network connection in process
      */
     void cancel();
+
+    void handleRoomCodeStatus(NPRoomCodeStatus roomCodeStatus);
 };
 
 #endif // CONNECTING_H

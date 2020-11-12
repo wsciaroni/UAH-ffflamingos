@@ -13,6 +13,14 @@ void NPProvideRoomCode::setRoomCode(QString roomcode) {
     roomCode = roomcode;
 }
 
+void NPProvideRoomCode::setName(QString name){
+    playerName = name;
+}
+
 QString NPProvideRoomCode::getRoomCode() {
     return roomCode;
+}
+
+QString NPProvideRoomCode::getName(){
+    return playerName;
 }

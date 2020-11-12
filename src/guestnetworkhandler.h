@@ -23,6 +23,9 @@
 
 class GuestNetworkHandler : public QObject
 {
+
+    Q_OBJECT
+
 private:
     /**
      * QTcpSocket to communicate with Host through

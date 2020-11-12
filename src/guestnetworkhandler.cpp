@@ -146,29 +146,15 @@ void GuestNetworkHandler::onUDPReadPendingDatagrams() {
     }
 }
 
-void GuestNetworkHandler::recvRoomCodeStatus(NPRoomCodeStatus roomCodeStatus) {
 
-}
-
-void GuestNetworkHandler::recvWelcomeToRoom(NPWelcomeToRoom welcomeToRoom) {
-
-}
-
-void GuestNetworkHandler::recvInGameInfo(NPInGameInfo inGameInfo) {
-
-}
-
-void GuestNetworkHandler::recvEndGameInfo(NPEndGameInfo endGameInfo) {
-
-}
 
 void GuestNetworkHandler::provideRoomCode(NPProvideRoomCode provideRoomCodePacket) {
 
     QString roomcode = provideRoomCodePacket.getRoomCode();
-
+    QString name = provideRoomCodePacket.getName();
     int uid = provideRoomCodePacket.getUID();
     BlockWriter(&tcpSocket).stream() << PacketType::PROVIDEROOMCODE;
-    BlockWriter(&tcpSocket).stream() << uid << roomcode;
+    BlockWriter(&tcpSocket).stream() << uid << roomcode << name;
     qDebug() << "room code provided";
 
 }
