@@ -1,10 +1,5 @@
 #include "npwelcometoroom.h"
 
+NPWelcomeToRoom::NPWelcomeToRoom(/* args */) {}
 
-NPWelcomeToRoom::NPWelcomeToRoom(/* args */)
-{
-}
-
-NPWelcomeToRoom::~NPWelcomeToRoom()
-{
-}
+NPWelcomeToRoom::~NPWelcomeToRoom() {}

@@ -6,17 +6,16 @@
 /**
  * Used to signal the start of the game.
  */
-class NPWelcomeToRoom : public NPHostToGuest
-{
-private:
-    /**
-     * @copydoc NPHostToGuest::packetType
-     */
-    PacketType packetType = PacketType::WELCOMETOROOM;
+class NPWelcomeToRoom : public NPHostToGuest {
+ private:
+  /**
+   * @copydoc NPHostToGuest::packetType
+   */
+  PacketType packetType = PacketType::WELCOMETOROOM;
 
-public:
-    NPWelcomeToRoom(/* args */);
-    ~NPWelcomeToRoom();
+ public:
+  NPWelcomeToRoom(/* args */);
+  ~NPWelcomeToRoom();
 };
 
-#endif // NPWELCOMETOROOM_H
+#endif  // NPWELCOMETOROOM_H

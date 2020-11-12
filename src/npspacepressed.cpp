@@ -1,9 +1,5 @@
 #include "npspacepressed.h"
 
-NPSpacePressed::NPSpacePressed(/* args */)
-{
-}
+NPSpacePressed::NPSpacePressed(/* args */) {}
 
-NPSpacePressed::~NPSpacePressed()
-{
-}
+NPSpacePressed::~NPSpacePressed() {}

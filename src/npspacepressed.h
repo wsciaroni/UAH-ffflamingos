@@ -6,17 +6,16 @@
 /**
  * Used to let the host know that the space was pressed on a client
  */
-class NPSpacePressed : public NPGuestToHost
-{
-private:
-    /**
-     * @copydoc NPGuestToHost::packetType
-     */
-    PacketType packetType = PacketType::SPACEPRESSED;
+class NPSpacePressed : public NPGuestToHost {
+ private:
+  /**
+   * @copydoc NPGuestToHost::packetType
+   */
+  PacketType packetType = PacketType::SPACEPRESSED;
 
-public:
-    NPSpacePressed(/* args */);
-    ~NPSpacePressed();
+ public:
+  NPSpacePressed(/* args */);
+  ~NPSpacePressed();
 };
 
-#endif // NPSPACEPRESSED_H
+#endif  // NPSPACEPRESSED_H

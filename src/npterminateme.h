@@ -6,17 +6,16 @@
 /**
  * Used to request a graceful exit from the game
  */
-class NPTerminateMe : public NPGuestToHost
-{
-private:
-    /**
-     * @copydoc NPGuestToHost::packetType
-     */
-    PacketType packetType = PacketType::TERMINATEME;
+class NPTerminateMe : public NPGuestToHost {
+ private:
+  /**
+   * @copydoc NPGuestToHost::packetType
+   */
+  PacketType packetType = PacketType::TERMINATEME;
 
-public:
-    NPTerminateMe(/* args */);
-    ~NPTerminateMe();
+ public:
+  NPTerminateMe(/* args */);
+  ~NPTerminateMe();
 };
 
-#endif // NPTERMINATEME_H
+#endif  // NPTERMINATEME_H

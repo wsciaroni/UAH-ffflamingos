@@ -8,37 +8,37 @@
 /**
  * Used to provide the roomcode from the Guest to the Host.
  */
-class NPProvideRoomCode : public NPGuestToHost
-{
-private:
-    /**
-     * @copydoc NPGuestToHost::packetType
-     */
-    PacketType packetType = PacketType::PROVIDEROOMCODE;
+class NPProvideRoomCode : public NPGuestToHost {
+ private:
+  /**
+   * @copydoc NPGuestToHost::packetType
+   */
+  PacketType packetType = PacketType::PROVIDEROOMCODE;
 
-    QString roomCode;
+  QString roomCode;
 
-    QString playerName;
+  QString playerName;
 
-public:
-    NPProvideRoomCode(/* args */);
-    ~NPProvideRoomCode();
+ public:
+  NPProvideRoomCode(/* args */);
+  ~NPProvideRoomCode();
 
-    /**
-     * Used to put the room code into the packet
-     * @param roomcode Holds the new value of the room code to be checked with the host
-     */
-    void setRoomCode(QString roomcode);
+  /**
+   * Used to put the room code into the packet
+   * @param roomcode Holds the new value of the room code to be checked with the
+   * host
+   */
+  void setRoomCode(QString roomcode);
 
-    void setName(QString name);
+  void setName(QString name);
 
-    /**
-     * Used to get the room code from the packet
-     * @return RoomCode from the packet
-     */
-    QString getRoomCode();
+  /**
+   * Used to get the room code from the packet
+   * @return RoomCode from the packet
+   */
+  QString getRoomCode();
 
-    QString getName();
+  QString getName();
 };
 
 #endif

@@ -1,10 +1,5 @@
 #include "npterminateme.h"
 
+NPTerminateMe::NPTerminateMe(/* args */) {}
 
-NPTerminateMe::NPTerminateMe(/* args */)
-{
-}
-
-NPTerminateMe::~NPTerminateMe()
-{
-}
+NPTerminateMe::~NPTerminateMe() {}

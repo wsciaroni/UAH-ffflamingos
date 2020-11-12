@@ -1,16 +1,10 @@
 #include "hostmodel.h"
 
-HostModel::HostModel(int uid, QTcpServer* server) 
-    : PlayerModel::PlayerModel(uid)
-{
-    tcpServer = server;
+HostModel::HostModel(int uid, QTcpServer* server)
+    : PlayerModel::PlayerModel(uid) {
+  tcpServer = server;
 }
 
-HostModel::~HostModel() {
+HostModel::~HostModel() {}
 
-}
-
-
-QTcpServer* HostModel::getTcpServer() {
-    return tcpServer;
-}
+QTcpServer* HostModel::getTcpServer() { return tcpServer; }

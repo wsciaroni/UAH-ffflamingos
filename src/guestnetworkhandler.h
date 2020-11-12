@@ -23,138 +23,145 @@
 
 /**
  * @brief Handles all the networking needs of the guest.
- * @details Throws signals for specific types of message handling when certain messages are received.
+ * @details Throws signals for specific types of message handling when certain
+ * messages are received.
  */
-class GuestNetworkHandler : public QObject
-{
+class GuestNetworkHandler : public QObject {
 
-    Q_OBJECT
+  Q_OBJECT
 
-private:
-    /**
-     * QTcpSocket to communicate with Host through
-     */
-    QTcpSocket tcpSocket;
-    
-    /**
-     * QUdpSocket to listen for incoming packets on
-     */
-    QUdpSocket udpSocket;
+ private:
+  /**
+   * QTcpSocket to communicate with Host through
+   */
+  QTcpSocket tcpSocket;
 
-    /**
-     * Holds the port that the TCP server is listening on on the Host
-     */
-    int port;
-    
-public:
-    /**
-     * Constructor used to dynamically allocate memory
-     * @param parent
-     */
-    GuestNetworkHandler(QObject* parent = nullptr);
+  /**
+   * QUdpSocket to listen for incoming packets on
+   */
+  QUdpSocket udpSocket;
 
-    /**
-     * Destructor used to deallocate memory
-     */
-    ~GuestNetworkHandler();
+  /**
+   * Holds the port that the TCP server is listening on on the Host
+   */
+  int port;
 
-    /**
-     * Connects to the provided QHostAddress and Port combination
-     * @param hostAddress the QHostAddress of the host you want to connect to
-     * @param portIn the port that the Host is listening on
-     */
-    bool connectToHost(QHostAddress hostAddress, QString portIn);
+ public:
+  /**
+   * Constructor used to dynamically allocate memory
+   * @param parent
+   */
+  GuestNetworkHandler(QObject* parent = nullptr);
 
-    /**
-     * Close the TCP Connection with the Host
-     */
-    void disconnectFromHost();
+  /**
+   * Destructor used to deallocate memory
+   */
+  ~GuestNetworkHandler();
 
-    /**
-     * Makes the QUdpSocket list on the GuestNetworkHandler::port and QHostAddress::anyIPv4
-     */
-    bool listenOnUDP();
+  /**
+   * Connects to the provided QHostAddress and Port combination
+   * @param hostAddress the QHostAddress of the host you want to connect to
+   * @param portIn the port that the Host is listening on
+   */
+  bool connectToHost(QHostAddress hostAddress, QString portIn);
 
-    /**
-     * Stop the QUdpSocket from listening on the port
-     */
-    void stopListeningOnUDP();
+  /**
+   * Close the TCP Connection with the Host
+   */
+  void disconnectFromHost();
 
-protected slots:
+  /**
+   * Makes the QUdpSocket list on the GuestNetworkHandler::port and
+   * QHostAddress::anyIPv4
+   */
+  bool listenOnUDP();
 
-    /**
-     * @brief Handles what to do when a connection is made witht the Host
-     */
-    void onTCPConnected();
+  /**
+   * Stop the QUdpSocket from listening on the port
+   */
+  void stopListeningOnUDP();
 
-    /**
-     * @brief handles what to do when a connection is disconnected
-     * @todo This exit out of the game if the connection is terminated
-     */
-    void onTCPDisconnected();
+ protected
+slots:
 
-    /**
-     * Handles all incoming network information from the Host to this player
-     */
-    void onTCPDataReady();
+  /**
+   * @brief Handles what to do when a connection is made witht the Host
+   */
+  void onTCPConnected();
 
-    /**
-     * Handles incoming bytes when data is written to the TCPSocket
-     */
-    void onTCPBytesWritten();
+  /**
+   * @brief handles what to do when a connection is disconnected
+   * @todo This exit out of the game if the connection is terminated
+   */
+  void onTCPDisconnected();
 
-    /**
-     * Handle incoming UDP information
-     */
-    void onUDPReadPendingDatagrams();
+  /**
+   * Handles all incoming network information from the Host to this player
+   */
+  void onTCPDataReady();
+
+  /**
+   * Handles incoming bytes when data is written to the TCPSocket
+   */
+  void onTCPBytesWritten();
+
+  /**
+   * Handle incoming UDP information
+   */
+  void onUDPReadPendingDatagrams();
 
 signals:
-    /**
-     * This is emitted when the status of the room code is receieved
-     * @param roomCodeStatus Holds the incoming packet of type NPRoomCodeStatus
-     */
-    void recvRoomCodeStatus(NPRoomCodeStatus roomCodeStatus);
+  /**
+   * This is emitted when the status of the room code is receieved
+   * @param roomCodeStatus Holds the incoming packet of type NPRoomCodeStatus
+   */
+  void recvRoomCodeStatus(NPRoomCodeStatus roomCodeStatus);
 
-    /**
-     * This is the signal to start the game on the client machine
-     * @param welcomeToRoom Holds the incoming packet of type NPWelcomeToRoom
-     * @details This is used to signal that the game is beginning.
-     */
-    void recvWelcomeToRoom(NPWelcomeToRoom welcomeToRoom);
+  /**
+   * This is the signal to start the game on the client machine
+   * @param welcomeToRoom Holds the incoming packet of type NPWelcomeToRoom
+   * @details This is used to signal that the game is beginning.
+   */
+  void recvWelcomeToRoom(NPWelcomeToRoom welcomeToRoom);
 
-    /**
-     * This is emitted when in game information is received
-     * @param inGameInfo Holds the incoming packet of type NPInGameInfo
-     * @details These are received regularly over UDP to show the location of balls and the current scores.
-     */
-    void recvInGameInfo(NPInGameInfo inGameInfo);
+  /**
+   * This is emitted when in game information is received
+   * @param inGameInfo Holds the incoming packet of type NPInGameInfo
+   * @details These are received regularly over UDP to show the location of
+   * balls and the current scores.
+   */
+  void recvInGameInfo(NPInGameInfo inGameInfo);
 
-    /**
-     * This is emitted when the end of game information is received
-     * @param endGameInfo Holds the incoming packet of type NPEndGameInfo
-     * @details This signals the end of the game and includes the winner info and such.
-     */
-    void recvEndGameInfo(NPEndGameInfo endGameInfo);
+  /**
+   * This is emitted when the end of game information is received
+   * @param endGameInfo Holds the incoming packet of type NPEndGameInfo
+   * @details This signals the end of the game and includes the winner info and
+   * such.
+   */
+  void recvEndGameInfo(NPEndGameInfo endGameInfo);
 
-public slots:
-    /**
-     * Execute this to send a room code to the host
-     * @param provideRoomCodePacket Holds the outgoing packet of type NPProvideRoomCode
-     */
-    void provideRoomCode(NPProvideRoomCode provideRoomCodePacket);
+ public
+slots:
+  /**
+   * Execute this to send a room code to the host
+   * @param provideRoomCodePacket Holds the outgoing packet of type
+   * NPProvideRoomCode
+   */
+  void provideRoomCode(NPProvideRoomCode provideRoomCodePacket);
 
-    /**
-     * Execute this to request to be disconnected
-     * @param terminateMe Holds the outgoing packet of type NPTerminateMe
-     * @details This is a request to exit the game gracefully.  If this is not called, the Host should still be able to drop the player appropriately.
-     */
-    void terminateMe(NPTerminateMe terminateMe);
+  /**
+   * Execute this to request to be disconnected
+   * @param terminateMe Holds the outgoing packet of type NPTerminateMe
+   * @details This is a request to exit the game gracefully.  If this is not
+   * called, the Host should still be able to drop the player appropriately.
+   */
+  void terminateMe(NPTerminateMe terminateMe);
 
-    /**
-     * Execute this to send a space notification to the Host
-     * @param spacePressedPacket Holds the outgoing packet of type NPSpacePressed
-     */
-    void spacePressed(NPSpacePressed spacePressedPacket);
+  /**
+   * Execute this to send a space notification to the Host
+   * @param spacePressedPacket Holds the outgoing packet of type NPSpacePressed
+   */
+  void spacePressed(NPSpacePressed spacePressedPacket);
 };
 
-#endif // GUESTNETWORKHANDLER_H
+#endif  // GUESTNETWORKHANDLER_H

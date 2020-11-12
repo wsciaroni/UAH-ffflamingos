@@ -6,33 +6,33 @@
 /**
  * Used to provide the roomcode from the Guest to the Host.
  */
-class NPRoomCodeStatus : public NPHostToGuest
-{
-private:
-    /**
-     * @copydoc NPHostToGuest::packetType
-     */
-    PacketType packetType = PacketType::ROOMCODESTATUS;
+class NPRoomCodeStatus : public NPHostToGuest {
+ private:
+  /**
+   * @copydoc NPHostToGuest::packetType
+   */
+  PacketType packetType = PacketType::ROOMCODESTATUS;
 
-    /**
-     * Holds True if the room code provided by the client matched the room code on the host
-     */
-    bool roomCodeStatus;
+  /**
+   * Holds True if the room code provided by the client matched the room code on
+   * the host
+   */
+  bool roomCodeStatus;
 
-public:
-    NPRoomCodeStatus(/* args */);
-    ~NPRoomCodeStatus();
+ public:
+  NPRoomCodeStatus(/* args */);
+  ~NPRoomCodeStatus();
 
-    /**
-     * Set True when the room codes match
-     */
-    void setRoomCodeStatus(bool newStatus);
+  /**
+   * Set True when the room codes match
+   */
+  void setRoomCodeStatus(bool newStatus);
 
-    /**
-     * Used to determine the status of the room codes
-     * @return true when the room codes match
-     */
-    bool getRoomCodeStatus();
+  /**
+   * Used to determine the status of the room codes
+   * @return true when the room codes match
+   */
+  bool getRoomCodeStatus();
 };
 
-#endif // NPROOMCODESTATUS_H
+#endif  // NPROOMCODESTATUS_H

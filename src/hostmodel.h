@@ -7,36 +7,33 @@
 #include <QTcpServer>
 #include "playermodel.h"
 
-
 /**
  * Host-specific version of the PlayerModel Class
  */
-class HostModel : public PlayerModel
-{
-private:
-    QTcpServer* tcpServer;
+class HostModel : public PlayerModel {
+ private:
+  QTcpServer* tcpServer;
 
-public:
-// Constructors / Destructors
+ public:
+  // Constructors / Destructors
 
-    /**
-     * Constructor to instantiate a host player
-     * @param uid Unique User ID
-     * @param server tcpsocket to communicate with players' machines
-     */
-    HostModel(int uid, QTcpServer* server);
+  /**
+   * Constructor to instantiate a host player
+   * @param uid Unique User ID
+   * @param server tcpsocket to communicate with players' machines
+   */
+  HostModel(int uid, QTcpServer* server);
 
-    /**
-     * Destructor
-     */
-    ~HostModel();
+  /**
+   * Destructor
+   */
+  ~HostModel();
 
-    /**
-     * @brief getTcpServer
-     * @return QTcpServer
-     */
-    QTcpServer* getTcpServer();
-
+  /**
+   * @brief getTcpServer
+   * @return QTcpServer
+   */
+  QTcpServer* getTcpServer();
 };
 
-#endif // HOSTMODEL_H
+#endif  // HOSTMODEL_H

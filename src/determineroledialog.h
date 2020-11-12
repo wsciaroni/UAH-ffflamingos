@@ -13,52 +13,52 @@ class DetermineRoleDialog;
 /**
  * Dialog to determine the user's Name and the user's Role
  */
-class DetermineRoleDialog : public QDialog
-{
-    Q_OBJECT
+class DetermineRoleDialog : public QDialog {
+  Q_OBJECT
 
-public:
-    /**
-     * Constructor used to dynamically allocate memory
-     * @param parent
-     */
-    explicit DetermineRoleDialog(QWidget *parent = nullptr);
+ public:
+  /**
+   * Constructor used to dynamically allocate memory
+   * @param parent
+   */
+  explicit DetermineRoleDialog(QWidget* parent = nullptr);
 
-    /**
-     * Destructor used to deallocate memory
-     */
-    ~DetermineRoleDialog();
+  /**
+   * Destructor used to deallocate memory
+   */
+  ~DetermineRoleDialog();
 
-private:
-    Ui::DetermineRoleDialog *ui;
-    
-    /**
-     * Holds the address of the next dialog
-     */
-    CreateGame* createGameDialog;
+ private:
+  Ui::DetermineRoleDialog* ui;
 
-    /**
-     * Holds the address of the next dialog
-     */
-    JoinExistingGame* joinGameDialog;
+  /**
+   * Holds the address of the next dialog
+   */
+  CreateGame* createGameDialog;
 
-    /**
-     * Navigates the user to the CreateGame dialog.
-     * This causes this dialog to be hidden until the new dialog returns.
-     */
-    void createGame();
+  /**
+   * Holds the address of the next dialog
+   */
+  JoinExistingGame* joinGameDialog;
 
-    /**
-     * Navigates the user to the JoinGame dialog.
-     * This causes this dialog to be hidden until the new dialog returns.
-     */
-    void joinGame();
+  /**
+   * Navigates the user to the CreateGame dialog.
+   * This causes this dialog to be hidden until the new dialog returns.
+   */
+  void createGame();
 
-public slots:
-    /**
-     * Slot that calls out to the next dialog and accepts this QDialog
-     */
-    void moveForward();
+  /**
+   * Navigates the user to the JoinGame dialog.
+   * This causes this dialog to be hidden until the new dialog returns.
+   */
+  void joinGame();
+
+ public
+slots:
+  /**
+   * Slot that calls out to the next dialog and accepts this QDialog
+   */
+  void moveForward();
 };
 
-#endif // DETERMINEROLEDIALOG_H
+#endif  // DETERMINEROLEDIALOG_H

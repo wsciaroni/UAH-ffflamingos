@@ -1,9 +1,5 @@
 #include "nphosttoguest.h"
 
-NPHostToGuest::NPHostToGuest(/* args */)
-{
-}
+NPHostToGuest::NPHostToGuest(/* args */) {}
 
-NPHostToGuest::~NPHostToGuest()
-{
-}
+NPHostToGuest::~NPHostToGuest() {}

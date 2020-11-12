@@ -6,13 +6,11 @@
 /**
  * Used to provide End of Game Information.
  */
-class NPEndGameInfo : public NPHostToGuest
-{
-private:
-    
-public:
-    NPEndGameInfo();
-    ~NPEndGameInfo();
+class NPEndGameInfo : public NPHostToGuest {
+ private:
+ public:
+  NPEndGameInfo();
+  ~NPEndGameInfo();
 };
 
-#endif // NPENDGAMEINFO_H
+#endif  // NPENDGAMEINFO_H

@@ -1,20 +1,13 @@
 #include "npingameinfo.h"
 
-NPInGameInfo::NPInGameInfo(/* args */)
-{
-}
+NPInGameInfo::NPInGameInfo(/* args */) {}
 
-NPInGameInfo::~NPInGameInfo()
-{
-}
+NPInGameInfo::~NPInGameInfo() {}
 
 QDataStream& operator<<(QDataStream& ds, NPInGameInfo& packet) {
-    ds << packet.getPacketType();
+  ds << packet.getPacketType();
 
-    return ds;
+  return ds;
 }
 
-QDataStream& operator>>(QDataStream& ds, NPInGameInfo& packet) {
-
-    return ds;
-}
+QDataStream& operator>>(QDataStream& ds, NPInGameInfo& packet) { return ds; }
