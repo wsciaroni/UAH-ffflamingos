@@ -67,6 +67,12 @@ slots:
    * @todo Needs to launch gameplay window and handle other things appropriately
    */
   void playGame();
+
+  /**
+   * Executes when the host exits
+   */
+  void dropMe();
+
 signals:
   /**
   * Used to trigger the sending of a disonnect packet

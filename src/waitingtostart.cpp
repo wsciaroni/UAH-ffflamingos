@@ -37,4 +37,12 @@ void WaitingToStart::passHandler(GuestNetworkHandler* handlerIn) {
   handler = handlerIn;
   connect(this, &WaitingToStart::terminateMe, handler,
           &GuestNetworkHandler::terminateMe);
+  connect(handler, &GuestNetworkHandler::tcpConnectionDropped, this,
+          &WaitingToStart::dropMe);
+}
+
+void WaitingToStart::dropMe() {
+  /// @todo put an error here if the connection is dropped.  Or some message
+  /// like "OOpsie, the server has gone poopsie"
+  this->reject();
 }

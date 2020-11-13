@@ -51,14 +51,9 @@ void HostNetworkHandler::onNewTCPConnection() {
           &HostNetworkHandler::onTCPDisconnected);
   connect(tcpSocket, &QTcpSocket::readyRead, this,
           &HostNetworkHandler::onTCPDataReady);
-  /*
-connect(
-  tcpSocket,
-  SIGNAL(bytesWritten(qint64)),
-  this,
-  SLOT(onTCPBytesWritten(qint64))
-  );
-  */
+
+  connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this,
+          SLOT(onTCPBytesWritten(qint64)));
 }
 
 void HostNetworkHandler::onTCPConnected() {
@@ -125,10 +120,13 @@ void HostNetworkHandler::onTCPDataReady() {
   } else {
     qDebug() << "Unknown packet type\n";
   }
+
+  qDebug() << "out of onTCPDataReady()\n";
 }
 
 void HostNetworkHandler::onTCPBytesWritten(qint64 bytes) {
   qDebug() << "In onTCPBytesWritten()\n";
+
   /// @todo Implement the area that reads in data from the TCPSocket
   // Process the bytes that were written to the
   // Create a Datastream, then:

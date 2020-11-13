@@ -15,7 +15,7 @@ class BlockWriter {
    * @param io The QTcpSocket to Write to
    */
   BlockWriter(QIODevice *io) {
-    buffer.open(QIODevice::WriteOnly);
+    buffer.open(QIODevice::ReadWrite);
     this->io = io;
     _stream.setVersion(QDataStream::Qt_4_8);
     _stream.setDevice(&buffer);
