@@ -33,6 +33,8 @@ void ManageRoom::passHandler(HostNetworkHandler* handlerIn) {
 
   connect(handlerIn, &HostNetworkHandler::provideRoomCode, this,
           &ManageRoom::handleProvideRoomCode);
+  connect(handlerIn, &HostNetworkHandler::terminateMe, this,
+          &ManageRoom::handleTerminateMe);
   connect(this, &ManageRoom::sendRoomCodeStatusToClient, handlerIn,
           &HostNetworkHandler::sendRoomCodeStatus);
   connect(this, &ManageRoom::sendWelcomeToRoomToClient, handlerIn,
@@ -50,8 +52,8 @@ void ManageRoom::addPlayer(PlayerModel* player) {
 }
 
 void ManageRoom::removePlayer(PlayerModel* player) {
-  playerList->removePlayer(player);
   list.removeOne(player->getName());
+  playerList->removePlayer(player);
   model.setStringList(list);
 }
 
@@ -63,7 +65,7 @@ void ManageRoom::startGame() {
   // Tell all lobby players to go to game
 
   // Set all player positions
-    NPWelcomeToRoom sendToRoom;
+  NPWelcomeToRoom sendToRoom;
 
   closeLobby();
 }
@@ -88,4 +90,9 @@ void ManageRoom::handleProvideRoomCode(NPProvideRoomCode provideRoomCodePacket,
     statusPacket.setRoomCodeStatus(false);
   qDebug() << "in handling room code";
   emit this->sendRoomCodeStatusToClient(statusPacket, socket);
+}
+
+void ManageRoom::handleTerminateMe(NPTerminateMe terminateMePacket,
+                                   QTcpSocket* socket) {
+  removePlayer(playerList->getPlayer(terminateMePacket.getUID()));
 }

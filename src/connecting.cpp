@@ -16,6 +16,7 @@ Connecting::~Connecting() {
   delete ui;
   delete waitingScreen;
   delete handler;
+  delete player;
 }
 
 void Connecting::passName(QString name) { playerName = name; }
@@ -47,7 +48,8 @@ bool Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
 
 void Connecting::goToWaitingScreen() {
   this->hide();
-    waitingScreen->passHandler(handler);
+  waitingScreen->passHandler(handler);
+  waitingScreen->passPlayerModel(player);
   waitingScreen->exec();
   this->accept();
 }
@@ -60,6 +62,7 @@ void Connecting::cancel() {
 
 void Connecting::handleRoomCodeStatus(NPRoomCodeStatus roomCodeStatus) {
   if (roomCodeStatus.getRoomCodeStatus() == true) {
+    player = new PlayerModel(roomCodeStatus.getUID());
     goToWaitingScreen();
   } else {
     error* throwError = new error;

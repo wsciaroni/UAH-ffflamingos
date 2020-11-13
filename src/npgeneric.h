@@ -23,7 +23,7 @@ enum class PacketType : qint32 {
   INGAMEINFO = 1001,  ///< Host->Guest Providing Ball location, all player
   /// animation status,
   ENDGAMEINFO = 9999  ///< Host->Guest Providing All player scores, the high
-  /// score, Winner, etc
+                      /// score, Winner, etc
 };
 
 /**

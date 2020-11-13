@@ -67,12 +67,12 @@ class GameDialog : public QDialog {
    */
   bool isHost();
 
-protected:
+ protected:
   /**
    * @brief A Key Press Event handler (will be used for escape)
    * @param key
    */
-  void keyPressEvent(QKeyEvent * key);
+  void keyPressEvent(QKeyEvent* key);
 
   /**
    * @brief Called when the escape key is pressed

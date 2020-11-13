@@ -85,6 +85,13 @@ slots:
   */
   void closeLobby();
 
+  /**
+  Handle an incoming request to be termintaed
+  @param terminateMePacket
+  @param socket
+  */
+  void handleTerminateMe(NPTerminateMe terminateMePacket, QTcpSocket* socket);
+
  public
 slots:
 

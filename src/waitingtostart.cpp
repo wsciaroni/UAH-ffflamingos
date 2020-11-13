@@ -1,7 +1,7 @@
 #include "waitingtostart.h"
 #include "ui_waitingtostart.h"
 
-WaitingToStart::WaitingToStart(QWidget *parent)
+WaitingToStart::WaitingToStart(QWidget* parent)
     : QDialog(parent), ui(new Ui::WaitingToStart) {
   ui->setupUi(this);
   gameWindow = new GameDialog;
@@ -14,12 +14,15 @@ WaitingToStart::~WaitingToStart() {
   delete gameWindow;
 }
 
+void WaitingToStart::passPlayerModel(PlayerModel* playerIn) {
+  player = playerIn;
+}
+
 void WaitingToStart::disconnect() {
-  /// @todo Handle a graceful disconnect here
   NPTerminateMe npTerminate;
+  npTerminate.setUID(player->getUID());
   handler->terminateMe(npTerminate);
   handler->disconnectFromHost();
-
   this->accept();
 }
 
@@ -31,5 +34,5 @@ void WaitingToStart::playGame() {
 }
 
 void WaitingToStart::passHandler(GuestNetworkHandler* handlerIn) {
-    handler = handlerIn;
+  handler = handlerIn;
 }

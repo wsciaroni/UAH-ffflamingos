@@ -69,6 +69,9 @@ class Connecting : public QDialog {
   /// Used to throw an error if there is an error connecting
   error* throwError;
 
+  /// Holds this client's player information
+  PlayerModel* player;
+
  private
 slots:
   /**

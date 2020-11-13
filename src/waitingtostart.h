@@ -2,6 +2,7 @@
 #define WAITINGTOSTART_H
 
 #include "gamedialog.h"
+#include "playermodel.h"
 
 #include <QDialog>
 
@@ -20,29 +21,37 @@ class WaitingToStart : public QDialog {
    * @brief WaitingToStart
    * @param parent
    */
-  explicit WaitingToStart(QWidget *parent = nullptr);
+  explicit WaitingToStart(QWidget* parent = nullptr);
   /**
    *Destructor
    */
   ~WaitingToStart();
 
-    /**
-     * Used to pass a GuestNetworkHandler from the previous dialog.
-     * @param handlerIn The address of the GuestNetworkHandler
-     */
-    void passHandler(GuestNetworkHandler* handlerIn);
+  /**
+   * Used to pass a GuestNetworkHandler from the previous dialog.
+   * @param handlerIn The address of the GuestNetworkHandler
+   */
+  void passHandler(GuestNetworkHandler* handlerIn);
+
+  /**
+  Used to pass the Client's individual player model onward
+  @param playerIn The pointer to the player's individual model
+  */
+  void passPlayerModel(PlayerModel* playerIn);
 
  private:
-  Ui::WaitingToStart *ui;
+  Ui::WaitingToStart* ui;
 
   /**
    * Holds the address of the game window
    */
-  GameDialog *gameWindow;
-
+  GameDialog* gameWindow;
 
   /// Holds the address of the guest network handler
   GuestNetworkHandler* handler;
+
+  /// Holds the player model of this client
+  PlayerModel* player;
 
  private
 slots:
