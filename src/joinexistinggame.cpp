@@ -36,9 +36,11 @@ void JoinExistingGame::passName(QString name) { playerName = name; }
 void JoinExistingGame::goToConnecting() {
   this->hide();
   connectingScreen->passName(playerName);
-  connectingScreen->passInfo(ui->ip->text(), ui->port->text(),
-                             ui->roomCode->text());
-  connectingScreen->exec();
+  bool connected = connectingScreen->passInfo(ui->ip->text(), ui->port->text(),
+                                              ui->roomCode->text());
+  if (connected) {
+    connectingScreen->exec();
+  }
   this->accept();
 }
 

@@ -20,7 +20,7 @@ Connecting::~Connecting() {
 
 void Connecting::passName(QString name) { playerName = name; }
 
-void Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
+bool Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
   ip = ipIn;
   port = portIn;
   roomCode = roomCodeIn;
@@ -34,13 +34,13 @@ void Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
     npProvideRoomCode.setRoomCode(roomCode);
     npProvideRoomCode.setName(playerName);
     handler->provideRoomCode(npProvideRoomCode);
+    return 1;
   } else {
-    qDebug() << "Unable to connect\n";
-    // Throw an error
-    /*throwError = new error;
+    throwError = new error;
     throwError->throwErrorMsg("ERROR: Unable to connect");
     throwError->exec();
-    delete throwError;*/
+    delete throwError;
+    return 0;
   }
 }
 
@@ -52,7 +52,7 @@ void Connecting::goToWaitingScreen() {
 
 void Connecting::cancel() {
   ///@todo disconnect the network here, maybe even send a message saying that
-  ///you want to disconnect
+  /// you want to disconnect
   this->accept();
 }
 

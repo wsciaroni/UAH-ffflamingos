@@ -41,8 +41,9 @@ class Connecting : public QDialog {
    * @param ipIn The IP input by the user.
    * @param portIn The Port input by the user.
    * @param roomCodeIn The RoomCode input by the user.
+   * @return True if the connection succeeded in connecting
    */
-  void passInfo(QString ipIn, QString portIn, QString roomCodeIn);
+  bool passInfo(QString ipIn, QString portIn, QString roomCodeIn);
 
  private:
   Ui::Connecting* ui;
