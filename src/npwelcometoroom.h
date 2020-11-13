@@ -13,9 +13,26 @@ class NPWelcomeToRoom : public NPHostToGuest {
    */
   PacketType packetType = PacketType::WELCOMETOROOM;
 
+  /**
+   * The position of the user
+   */
+  int position = 0;
+
  public:
   NPWelcomeToRoom(/* args */);
   ~NPWelcomeToRoom();
+
+  /**
+   * Sets the position in the packet
+   * @param position the position of the player as relates to PlayerPosition
+   */
+  void setPositionId(int positionIn);
+
+  /**
+   * Gets the position from the packet
+   * @return the position of the player as realtes to PlayerPosition
+   */
+  int getPositionId();
 };
 
 #endif  // NPWELCOMETOROOM_H

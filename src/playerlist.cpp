@@ -60,3 +60,15 @@ PlayerModel* PlayerList::getPlayerByPosition(PlayerPosition position) {
 int PlayerList::getPlayerCount() {
   return playerList.keys().length();  // Return the current number of keys
 }
+
+void PlayerList::setPositionsAndStartGame(HostNetworkHandler* handlerIn) {
+  int pos = 1;
+  connect(this, &PlayerList::sendStartGame, handlerIn,
+          &HostNetworkHandler::sendWelcomeToRoom);
+  for (PlayerModel* temp : playerList.keys()) {
+    temp->setPositionId(static_cast<PlayerPosition>(pos));
+    NPWelcomeToRoom packet;
+    packet.setPositionId(pos);
+    emit this->sendStartGame(packet, temp->getTCPSocket());
+  }
+}

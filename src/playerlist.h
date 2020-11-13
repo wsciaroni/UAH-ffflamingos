@@ -2,16 +2,18 @@
 #define PLAYERLIST_H
 
 #include <QMap>
+#include "hostnetworkhandler.h"
 #include "hostmodel.h"
 #include "playermodel.h"
 
-#include "npgeneric.h"
+class HostNetworkHandler;
 
 /**
  * @brief The PlayerList class
  * @details Contains a map of players to UIDs, with supporting methods
  */
-class PlayerList {
+class PlayerList : public QObject {
+  Q_OBJECT
  private:
   /// Map containing the PlayerModel that have joined, with dynamically updated
   /// UIDs
@@ -75,6 +77,21 @@ class PlayerList {
    * @return returns the current number of players in the game
    */
   int getPlayerCount();
+
+  /**
+   * Loops through all the players and sets each player's position.  Then, sends
+   * each player a welcometoroom packet to signal the start of the game.
+   * @param handlerIn the network handler to use to send the packets
+   */
+  void setPositionsAndStartGame(HostNetworkHandler* handlerIn);
+
+signals:
+  /**
+   * Signal used to send the packet to the Guest
+   * @param welcomeToRoom
+   * @param socket
+   */
+  void sendStartGame(NPWelcomeToRoom welcomeToRoom, QTcpSocket* socket);
 };
 
 #endif  // PLAYERLIST_H

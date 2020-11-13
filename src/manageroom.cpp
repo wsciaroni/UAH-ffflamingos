@@ -58,15 +58,13 @@ void ManageRoom::removePlayer(PlayerModel* player) {
 }
 
 void ManageRoom::startGame() {
-  this->hide();
-  gameWindow->passHandler(handler);
-  gameWindow->exec();
-
-  // Tell all lobby players to go to game
-
-  // Set all player positions
+  // Set all player positions and tell them to start the game
+  playerList->setPositionsAndStartGame(handler);
   NPWelcomeToRoom sendToRoom;
 
+  gameWindow->passHandler(handler);
+  this->hide();
+  gameWindow->exec();
   closeLobby();
 }
 
