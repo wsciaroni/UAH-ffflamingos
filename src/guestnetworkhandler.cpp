@@ -131,7 +131,6 @@ void GuestNetworkHandler::provideRoomCode(
 }
 
 void GuestNetworkHandler::terminateMe(NPTerminateMe terminateMePacket) {
-
   int uid = terminateMePacket.getUID();
   BlockWriter(&tcpSocket).stream() << PacketType::TERMINATEME;
   BlockWriter(&tcpSocket).stream() << uid;

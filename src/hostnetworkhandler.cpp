@@ -80,6 +80,9 @@ void HostNetworkHandler::onTCPDisconnected() {
   // Remove player from player list?
   // Remove player from multicast group
   qDebug() << "In onTCPDisconnected()\n";
+  QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
+  NPTerminateMe dummyPacket;
+  emit this->terminateMe(dummyPacket, tcpSocket);
 }
 
 void HostNetworkHandler::onTCPDataReady() {
@@ -104,14 +107,6 @@ void HostNetworkHandler::onTCPDataReady() {
     qDebug() << "Room code received" << uid << " " << roomcode;
     emit this->provideRoomCode(provideRoomCodePacket, tcpSocket);
 
-  } else if (pType == PacketType::TERMINATEME) {
-    qDebug() << "pType == TERMINATEME\n";
-    NPTerminateMe terminateMePacket;
-
-    int uid;
-    BlockReader(tcpSocket).stream() >> uid;
-    terminateMePacket.setUID(uid);
-    emit this->terminateMe(terminateMePacket, tcpSocket);
   } else if (pType == PacketType::SPACEPRESSED) {
     qDebug() << "pType == SPACEPRESSED\n";
     NPSpacePressed spacePressedPacket;

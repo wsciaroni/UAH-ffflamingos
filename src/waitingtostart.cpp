@@ -21,7 +21,7 @@ void WaitingToStart::passPlayerModel(PlayerModel* playerIn) {
 void WaitingToStart::disconnect() {
   NPTerminateMe npTerminate;
   npTerminate.setUID(player->getUID());
-  handler->terminateMe(npTerminate);
+  emit this->terminateMe(npTerminate);
   handler->disconnectFromHost();
   this->accept();
 }
@@ -35,4 +35,6 @@ void WaitingToStart::playGame() {
 
 void WaitingToStart::passHandler(GuestNetworkHandler* handlerIn) {
   handler = handlerIn;
+  connect(this, &WaitingToStart::terminateMe, handler,
+          &GuestNetworkHandler::terminateMe);
 }

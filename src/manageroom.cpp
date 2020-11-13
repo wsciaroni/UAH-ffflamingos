@@ -31,13 +31,13 @@ void ManageRoom::passHost(HostModel* hostPlayer) {
 void ManageRoom::passHandler(HostNetworkHandler* handlerIn) {
   handler = handlerIn;
 
-  connect(handlerIn, &HostNetworkHandler::provideRoomCode, this,
+  connect(handler, &HostNetworkHandler::provideRoomCode, this,
           &ManageRoom::handleProvideRoomCode);
-  connect(handlerIn, &HostNetworkHandler::terminateMe, this,
+  connect(handler, &HostNetworkHandler::terminateMe, this,
           &ManageRoom::handleTerminateMe);
-  connect(this, &ManageRoom::sendRoomCodeStatusToClient, handlerIn,
+  connect(this, &ManageRoom::sendRoomCodeStatusToClient, handler,
           &HostNetworkHandler::sendRoomCodeStatus);
-  connect(this, &ManageRoom::sendWelcomeToRoomToClient, handlerIn,
+  connect(this, &ManageRoom::sendWelcomeToRoomToClient, handler,
           &HostNetworkHandler::sendWelcomeToRoom);
 }
 
@@ -94,5 +94,7 @@ void ManageRoom::handleProvideRoomCode(NPProvideRoomCode provideRoomCodePacket,
 
 void ManageRoom::handleTerminateMe(NPTerminateMe terminateMePacket,
                                    QTcpSocket* socket) {
-  removePlayer(playerList->getPlayer(terminateMePacket.getUID()));
+  qDebug() << "Player id to be removed: " << playerList->getPlayer(socket)
+                                                 ->getUID();
+  removePlayer(playerList->getPlayer(socket));
 }

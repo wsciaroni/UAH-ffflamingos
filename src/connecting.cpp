@@ -41,8 +41,8 @@ bool Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
     throwError->throwErrorMsg("ERROR: Unable to connect");
     throwError->exec();
     delete throwError;
+    this->cancel();
     return 0;
-    this->reject();
   }
 }
 

@@ -67,6 +67,11 @@ slots:
    * @todo Needs to launch gameplay window and handle other things appropriately
    */
   void playGame();
+signals:
+  /**
+  * Used to trigger the sending of a disonnect packet
+  */
+  void terminateMe(NPTerminateMe terminateMePacket);
 };
 
 #endif  // WAITINGTOSTART_H

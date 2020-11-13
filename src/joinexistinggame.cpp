@@ -7,9 +7,6 @@ JoinExistingGame::JoinExistingGame(QWidget* parent)
     : QDialog(parent), ui(new Ui::JoinExistingGame) {
   ui->setupUi(this);
 
-  // missingField = new error;
-
-  this->connectingScreen = new Connecting;
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
           &JoinExistingGame::attemptToJoin);
 
@@ -26,27 +23,26 @@ JoinExistingGame::JoinExistingGame(QWidget* parent)
   ui->roomCode->setValidator(roomCodeValidator);
 }
 
-JoinExistingGame::~JoinExistingGame() {
-  delete ui;
-  delete connectingScreen;
-}
+JoinExistingGame::~JoinExistingGame() { delete ui; }
 
 void JoinExistingGame::passName(QString name) { playerName = name; }
 
 void JoinExistingGame::goToConnecting() {
   this->hide();
+  this->connectingScreen = new Connecting;
   connectingScreen->passName(playerName);
   bool connected = connectingScreen->passInfo(ui->ip->text(), ui->port->text(),
                                               ui->roomCode->text());
   if (connected) {
     connectingScreen->exec();
   }
+  delete connectingScreen;
   this->accept();
 }
 
 void JoinExistingGame::missingFieldError() {
   this->hide();
-  missingField = new error;
+  error* missingField = new error;
   missingField->throwErrorMsg("ERROR: Missing required field");
   missingField->exec();
   delete missingField;

@@ -57,6 +57,13 @@ class PlayerList {
   PlayerModel* getPlayer(int uid);
 
   /**
+   * Return the player model based on QTcpSocket
+   * @param socket the QTcpSocket of the player to get the Player Model of
+   * @return The Player Model if found, otherwise nullptr
+   */
+  PlayerModel* getPlayer(QTcpSocket* socket);
+
+  /**
    * Return a player model based on the given position
    * @param position The PlayerPosition of the player modoel to get
    * @return the Player Model if found, otherwise nullptr

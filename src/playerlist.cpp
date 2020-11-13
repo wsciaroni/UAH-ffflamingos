@@ -36,6 +36,15 @@ PlayerModel* PlayerList::getPlayer(int uid) {
   return playerList.key(uid);  // Return the player model with uid
 }
 
+PlayerModel* PlayerList::getPlayer(QTcpSocket* socket) {
+  for (PlayerModel* temp : playerList.keys()) {
+    if (temp->getTCPSocket() == socket) {
+      return temp;
+    }
+  }
+  return nullptr;
+}
+
 PlayerModel* PlayerList::getPlayerByPosition(PlayerPosition position) {
   // Iterate through the map, and if we find a position return it.
 
