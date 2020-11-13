@@ -97,6 +97,11 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>ipDropdown</tabstop>
+  <tabstop>port</tabstop>
+  <tabstop>roomCode</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

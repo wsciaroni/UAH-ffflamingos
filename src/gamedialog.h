@@ -5,6 +5,7 @@
 #include "guestnetworkhandler.h"
 
 #include <QDialog>
+#include <QKeyEvent>
 
 namespace Ui {
 class GameDialog;
@@ -65,6 +66,18 @@ class GameDialog : public QDialog {
    * @return Returns True if the user is the Host
    */
   bool isHost();
+
+protected:
+  /**
+   * @brief A Key Press Event handler (will be used for escape)
+   * @param key
+   */
+  void keyPressEvent(QKeyEvent * key);
+
+  /**
+   * @brief Called when the escape key is pressed
+   */
+  void escapePress();
 };
 
 #endif  // GAMEDIALOG_H
