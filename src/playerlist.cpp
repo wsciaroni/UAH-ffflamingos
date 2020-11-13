@@ -62,13 +62,17 @@ int PlayerList::getPlayerCount() {
 }
 
 void PlayerList::setPositionsAndStartGame(HostNetworkHandler* handlerIn) {
-  int pos = 1;
+  int pos = 2;
   connect(this, &PlayerList::sendStartGame, handlerIn,
           &HostNetworkHandler::sendWelcomeToRoom);
   for (PlayerModel* temp : playerList.keys()) {
-    temp->setPositionId(static_cast<PlayerPosition>(pos));
-    NPWelcomeToRoom packet;
-    packet.setPositionId(pos);
-    emit this->sendStartGame(packet, temp->getTCPSocket());
+    if (temp->getUID() != 0) {
+      temp->setPositionId(static_cast<PlayerPosition>(pos));
+      NPWelcomeToRoom packet;
+      packet.setPositionId(pos);
+      emit this->sendStartGame(packet, temp->getTCPSocket());
+    } else {
+      temp->setPositionId(static_cast<PlayerPosition>(1));
+    }
   }
 }
