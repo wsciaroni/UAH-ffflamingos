@@ -1,10 +1,14 @@
 #include "guestnetworkhandler.h"
 #include "error.h"
+#include <QNetworkProxy>
 
 GuestNetworkHandler::GuestNetworkHandler(QObject* parent) : QObject(parent) {
   listenOnUDP();
   connect(&udpSocket, SIGNAL(readyRead()), this,
           SLOT(onUDPReadPendingDatagrams()));
+
+  tcpSocket.setProxy(QNetworkProxy::NoProxy);
+  udpSocket.setProxy(QNetworkProxy::NoProxy);
 }
 
 GuestNetworkHandler::~GuestNetworkHandler() {}

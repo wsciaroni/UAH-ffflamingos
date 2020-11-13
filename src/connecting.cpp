@@ -41,6 +41,7 @@ bool Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
     throwError->exec();
     delete throwError;
     return 0;
+    this->reject();
   }
 }
 

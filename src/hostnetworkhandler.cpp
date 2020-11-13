@@ -1,9 +1,13 @@
 #include "hostnetworkhandler.h"
 #include "error.h"
+#include <QNetworkProxy>
 
 HostNetworkHandler::HostNetworkHandler(QObject* parent) : QObject(parent) {
   connect(&tcpServer, &QTcpServer::newConnection, this,
           &HostNetworkHandler::onNewTCPConnection);
+
+  udpServer.setProxy(QNetworkProxy::NoProxy);
+
 }
 
 HostNetworkHandler::~HostNetworkHandler() {
@@ -36,8 +40,11 @@ void HostNetworkHandler::stopTCPServer() {
 QTcpServer* HostNetworkHandler::getTCPServer() { return &tcpServer; }
 
 void HostNetworkHandler::onNewTCPConnection() {
+
   QTcpSocket* tcpSocket =
       tcpServer.nextPendingConnection();  // Pass this tcp socket to the
+
+  tcpSocket->setProxy(QNetworkProxy::NoProxy);
 
   connect(tcpSocket, &QTcpSocket::connected, this,
           &HostNetworkHandler::onTCPConnected);
@@ -57,6 +64,7 @@ connect(
 
 void HostNetworkHandler::onTCPConnected() {
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
+  tcpSocket->setProxy(QNetworkProxy::NoProxy);
   if (tcpSocket != nullptr) {
     qDebug() << "In onTCPConnected()\n";
     // on connection
@@ -78,6 +86,7 @@ void HostNetworkHandler::onTCPDisconnected() {
 void HostNetworkHandler::onTCPDataReady() {
   qDebug() << "In onTCPDataReady()\n";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
+  tcpSocket->setProxy(QNetworkProxy::NoProxy);
   // Read from socket here
   PacketType pType;
   BlockReader(tcpSocket).stream() >> pType;
