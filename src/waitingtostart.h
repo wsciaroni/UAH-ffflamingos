@@ -26,6 +26,12 @@ class WaitingToStart : public QDialog {
    */
   ~WaitingToStart();
 
+    /**
+     * Used to pass a GuestNetworkHandler from the previous dialog.
+     * @param handlerIn The address of the GuestNetworkHandler
+     */
+    void passHandler(GuestNetworkHandler* handlerIn);
+
  private:
   Ui::WaitingToStart *ui;
 
@@ -33,6 +39,10 @@ class WaitingToStart : public QDialog {
    * Holds the address of the game window
    */
   GameDialog *gameWindow;
+
+
+  /// Holds the address of the guest network handler
+  GuestNetworkHandler* handler;
 
  private
 slots:

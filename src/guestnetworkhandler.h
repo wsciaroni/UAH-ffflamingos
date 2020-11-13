@@ -140,6 +140,11 @@ signals:
    */
   void recvEndGameInfo(NPEndGameInfo endGameInfo);
 
+  /**
+   * @brief Signal emitted when guest connection is dropped
+   */
+  void tcpConnectionDropped();
+
  public
 slots:
   /**

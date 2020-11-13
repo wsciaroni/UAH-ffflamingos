@@ -16,11 +16,20 @@ WaitingToStart::~WaitingToStart() {
 
 void WaitingToStart::disconnect() {
   /// @todo Handle a graceful disconnect here
+  NPTerminateMe npTerminate;
+  handler->terminateMe(npTerminate);
+  handler->disconnectFromHost();
+
   this->accept();
 }
 
 void WaitingToStart::playGame() {
   this->hide();
+  gameWindow->passHandler(handler);
   gameWindow->exec();
   this->accept();
+}
+
+void WaitingToStart::passHandler(GuestNetworkHandler* handlerIn) {
+    handler = handlerIn;
 }

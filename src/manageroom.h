@@ -65,7 +65,7 @@ class ManageRoom : public QDialog {
   QStringListModel model;
 
   /// Map to hold user ids of players and their names in the table
-  std::list<PlayerModel*> playerList;
+  PlayerList* playerList;
 
   /// Holds the address of the host network handler
   HostNetworkHandler* handler;

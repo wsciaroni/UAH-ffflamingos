@@ -68,6 +68,7 @@ class PlayerList {
    * @return returns the current number of players in the game
    */
   int getPlayerCount();
+
 };
 
 #endif  // PLAYERLIST_H

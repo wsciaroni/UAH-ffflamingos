@@ -59,6 +59,8 @@ void GuestNetworkHandler::onTCPConnected() {
 
 void GuestNetworkHandler::onTCPDisconnected() {
   qDebug() << "In client onTCPDisconnected()";
+
+  emit this->tcpConnectionDropped();
 }
 
 void GuestNetworkHandler::onTCPDataReady() {

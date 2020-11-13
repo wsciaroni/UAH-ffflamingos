@@ -10,10 +10,14 @@ GameDialog::~GameDialog() { delete ui; }
 
 void GameDialog::passHandler(HostNetworkHandler* hostHandlerIn) {
   hostHandler = hostHandlerIn;
+
+  setRole(true);
 }
 
 void GameDialog::passHandler(GuestNetworkHandler* guestHandlerIn) {
   guestHandler = guestHandlerIn;
+
+  setRole(false);
 }
 
 void GameDialog::setRole(bool isHost) { isHostRole = isHost; }
@@ -28,16 +32,15 @@ void GameDialog::keyPressEvent(QKeyEvent *key) {
 
 void GameDialog::escapePress() {
     // Disconnect from the server
-
     qDebug() << "Is Host: " << isHostRole << endl;
 
     if(isHostRole) {
         hostHandler->stopTCPServer(); // Disconnect all clients
     } else {
+        NPTerminateMe npTerminate;
+        guestHandler->terminateMe(npTerminate);
         guestHandler->disconnectFromHost();
-        //guestHandler->send
     }
-
 
     // Close the window
     this->accept(); // Maybe accept?

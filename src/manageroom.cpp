@@ -12,11 +12,14 @@ ManageRoom::ManageRoom(QWidget* parent)
   gameWindow = new GameDialog;
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
           &ManageRoom::startGame);
+
+  playerList = new PlayerList();
 }
 
 ManageRoom::~ManageRoom() {
   delete ui;
   delete gameWindow;
+  delete playerList;
 }
 
 void ManageRoom::passHost(HostModel* hostPlayer) {
@@ -39,14 +42,7 @@ void ManageRoom::passHandler(HostNetworkHandler* handlerIn) {
 void ManageRoom::passRoomCode(QString roomCode) { hostRoomCode = roomCode; }
 
 void ManageRoom::addPlayer(PlayerModel* player) {
-  std::list<PlayerModel*>::iterator it;
-  for (it = playerList.begin(); it != playerList.end(); it++) {
-    if (*it == player) {
-      /// @todo Throw an exception if attempting to add a player twice to the UI
-      return;
-    }
-  }
-  playerList.insert(it, player);
+  playerList->addPlayer(player);
 
   QString name = player->getName();
   list.append(name);
@@ -54,20 +50,21 @@ void ManageRoom::addPlayer(PlayerModel* player) {
 }
 
 void ManageRoom::removePlayer(PlayerModel* player) {
-  for (std::list<PlayerModel*>::iterator it = playerList.begin();
-       it != playerList.end(); it++) {
-    if (*it == player) {
-      playerList.erase(it);
-      continue;
-    }
-  }
+  playerList->removePlayer(player);
   list.removeOne(player->getName());
   model.setStringList(list);
 }
 
 void ManageRoom::startGame() {
   this->hide();
+  gameWindow->passHandler(handler);
   gameWindow->exec();
+
+  // Tell all lobby players to go to game
+
+  // Set all player positions
+    NPWelcomeToRoom sendToRoom;
+
   closeLobby();
 }
 

@@ -47,6 +47,7 @@ bool Connecting::passInfo(QString ipIn, QString portIn, QString roomCodeIn) {
 
 void Connecting::goToWaitingScreen() {
   this->hide();
+    waitingScreen->passHandler(handler);
   waitingScreen->exec();
   this->accept();
 }
