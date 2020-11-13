@@ -21,9 +21,9 @@ enum class PacketType : qint32 {
   SPACEPRESSED =
       1000,  ///< Guest->Host Letting Host Know EVERY time space is pressed
   INGAMEINFO = 1001,  ///< Host->Guest Providing Ball location, all player
-                      ///animation status,
+  /// animation status,
   ENDGAMEINFO = 9999  ///< Host->Guest Providing All player scores, the high
-                      ///score, Winner, etc
+  /// score, Winner, etc
 };
 
 /**

@@ -7,7 +7,6 @@ HostNetworkHandler::HostNetworkHandler(QObject* parent) : QObject(parent) {
           &HostNetworkHandler::onNewTCPConnection);
 
   udpServer.setProxy(QNetworkProxy::NoProxy);
-
 }
 
 HostNetworkHandler::~HostNetworkHandler() {
