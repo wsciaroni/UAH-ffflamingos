@@ -7,7 +7,9 @@ JoinExistingGame::JoinExistingGame(QWidget* parent)
     : QDialog(parent), ui(new Ui::JoinExistingGame) {
   ui->setupUi(this);
 
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
+  connect(ui->buttonBox,
+          &QDialogButtonBox::accepted,
+          this,
           &JoinExistingGame::attemptToJoin);
 
   QRegularExpression ipExpression(
@@ -31,8 +33,8 @@ void JoinExistingGame::goToConnecting() {
   this->hide();
   this->connectingScreen = new Connecting;
   connectingScreen->passName(playerName);
-  bool connected = connectingScreen->passInfo(ui->ip->text(), ui->port->text(),
-                                              ui->roomCode->text());
+  bool connected = connectingScreen->passInfo(
+      ui->ip->text(), ui->port->text(), ui->roomCode->text());
   if (connected) {
     connectingScreen->exec();
   }

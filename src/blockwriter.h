@@ -14,7 +14,7 @@ class BlockWriter {
    * we are using a QTcpSocket as our IO device.
    * @param io The QTcpSocket to Write to
    */
-  BlockWriter(QIODevice *io) {
+  BlockWriter(QIODevice* io) {
     buffer.open(QIODevice::ReadWrite);
     this->io = io;
     _stream.setVersion(QDataStream::Qt_4_8);
@@ -42,7 +42,7 @@ class BlockWriter {
    * Used to operate with the stream.
    * @return The QDataStream to work with
    */
-  QDataStream &stream() { return _stream; }
+  QDataStream& stream() { return _stream; }
 
  private:
   /// Used to hold the info while the writing is taking place
@@ -52,7 +52,7 @@ class BlockWriter {
   QDataStream _stream;
 
   /// The io device that is operated with
-  QIODevice *io;
+  QIODevice* io;
 };
 
 #endif  // BLOCKWRITER_H

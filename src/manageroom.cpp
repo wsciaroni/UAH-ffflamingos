@@ -10,8 +10,8 @@ ManageRoom::ManageRoom(QWidget* parent)
   ui->players->setModel(&model);
 
   gameWindow = new GameDialog;
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
-          &ManageRoom::startGame);
+  connect(
+      ui->buttonBox, &QDialogButtonBox::accepted, this, &ManageRoom::startGame);
 
   playerList = new PlayerList();
 }
@@ -31,21 +31,29 @@ void ManageRoom::passHost(HostModel* hostPlayer) {
 void ManageRoom::passHandler(HostNetworkHandler* handlerIn) {
   handler = handlerIn;
 
-  connect(handler, &HostNetworkHandler::provideRoomCode, this,
+  connect(handler,
+          &HostNetworkHandler::provideRoomCode,
+          this,
           &ManageRoom::handleProvideRoomCode);
-  connect(handler, &HostNetworkHandler::terminateMe, this,
+  connect(handler,
+          &HostNetworkHandler::terminateMe,
+          this,
           &ManageRoom::handleTerminateMe);
-  connect(this, &ManageRoom::sendRoomCodeStatusToClient, handler,
+  connect(this,
+          &ManageRoom::sendRoomCodeStatusToClient,
+          handler,
           &HostNetworkHandler::sendRoomCodeStatus);
-  connect(this, &ManageRoom::sendWelcomeToRoomToClient, handler,
+  connect(this,
+          &ManageRoom::sendWelcomeToRoomToClient,
+          handler,
           &HostNetworkHandler::sendWelcomeToRoom);
 }
 
 void ManageRoom::passHostInfo(QString ip, QString port, QString roomCode) {
-    hostRoomCode = roomCode;
-    ui->ipLabel->setText(ip);
-    ui->portLabel->setText(port);
-    ui->codeLabel->setText(roomCode);
+  hostRoomCode = roomCode;
+  ui->ipLabel->setText(ip);
+  ui->portLabel->setText(port);
+  ui->codeLabel->setText(roomCode);
 }
 
 void ManageRoom::addPlayer(PlayerModel* player) {

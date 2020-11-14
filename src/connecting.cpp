@@ -8,7 +8,9 @@ Connecting::Connecting(QWidget* parent)
 
   handler = new GuestNetworkHandler;
 
-  connect(handler, &GuestNetworkHandler::recvRoomCodeStatus, this,
+  connect(handler,
+          &GuestNetworkHandler::recvRoomCodeStatus,
+          this,
           &Connecting::handleRoomCodeStatus);
 }
 

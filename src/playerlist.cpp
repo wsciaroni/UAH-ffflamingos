@@ -63,7 +63,9 @@ int PlayerList::getPlayerCount() {
 
 void PlayerList::setPositionsAndStartGame(HostNetworkHandler* handlerIn) {
   int pos = 2;
-  connect(this, &PlayerList::sendStartGame, handlerIn,
+  connect(this,
+          &PlayerList::sendStartGame,
+          handlerIn,
           &HostNetworkHandler::sendWelcomeToRoom);
   for (PlayerModel* temp : playerList.keys()) {
     if (temp->getUID() != 0) {

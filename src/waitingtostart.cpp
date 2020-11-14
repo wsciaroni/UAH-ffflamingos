@@ -5,8 +5,8 @@ WaitingToStart::WaitingToStart(QWidget* parent)
     : QDialog(parent), ui(new Ui::WaitingToStart) {
   ui->setupUi(this);
   gameWindow = new GameDialog;
-  connect(ui->disconnect, &QPushButton::clicked, this,
-          &WaitingToStart::disconnect);
+  connect(
+      ui->disconnect, &QPushButton::clicked, this, &WaitingToStart::disconnect);
 }
 
 WaitingToStart::~WaitingToStart() {
@@ -35,9 +35,13 @@ void WaitingToStart::playGame() {
 
 void WaitingToStart::passHandler(GuestNetworkHandler* handlerIn) {
   handler = handlerIn;
-  connect(this, &WaitingToStart::terminateMe, handler,
+  connect(this,
+          &WaitingToStart::terminateMe,
+          handler,
           &GuestNetworkHandler::terminateMe);
-  connect(handler, &GuestNetworkHandler::tcpConnectionDropped, this,
+  connect(handler,
+          &GuestNetworkHandler::tcpConnectionDropped,
+          this,
           &WaitingToStart::dropMe);
 }
 

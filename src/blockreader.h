@@ -16,7 +16,7 @@ class BlockReader {
    * we are using a QTcpSocket as our IO device.
    * @param io The QTcpSocket to read from
    */
-  BlockReader(QIODevice *io) {
+  BlockReader(QIODevice* io) {
     buffer.open(QIODevice::ReadWrite);
     _stream.setVersion(QDataStream::Qt_4_8);
     _stream.setDevice(&buffer);
@@ -37,7 +37,7 @@ class BlockReader {
    * Used to operate with the stream.
    * @return The QDataStream to work with
    */
-  QDataStream &stream() { return _stream; }
+  QDataStream& stream() { return _stream; }
 
  private:
   /**
@@ -47,7 +47,7 @@ class BlockReader {
    * @warning This can lock in an infinite loop if you do not read the correct
    * amount of data.
    */
-  void readMax(QIODevice *io, int n) {
+  void readMax(QIODevice* io, int n) {
     while (buffer.size() < n) {
       if (!io->bytesAvailable()) {
         io->waitForReadyRead(30000);

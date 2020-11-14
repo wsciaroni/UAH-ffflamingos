@@ -17,7 +17,7 @@ class error : public QDialog {
   /**
    * Used to define a new error
    */
-  explicit error(QWidget *parent = nullptr);
+  explicit error(QWidget* parent = nullptr);
 
   /**
    * Destructor
@@ -30,7 +30,7 @@ class error : public QDialog {
   void throwErrorMsg(QString msg);
 
  private:
-  Ui::error *ui;
+  Ui::error* ui;
 };
 
 #endif  // ERROR_H

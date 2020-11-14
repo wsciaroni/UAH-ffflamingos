@@ -4,8 +4,8 @@
 
 GuestNetworkHandler::GuestNetworkHandler(QObject* parent) : QObject(parent) {
   listenOnUDP();
-  connect(&udpSocket, SIGNAL(readyRead()), this,
-          SLOT(onUDPReadPendingDatagrams()));
+  connect(
+      &udpSocket, SIGNAL(readyRead()), this, SLOT(onUDPReadPendingDatagrams()));
 
   tcpSocket.setProxy(QNetworkProxy::NoProxy);
   udpSocket.setProxy(QNetworkProxy::NoProxy);
@@ -20,12 +20,18 @@ bool GuestNetworkHandler::connectToHost(QHostAddress hostAddress,
     tcpSocket.connectToHost(hostAddress, port);
     if (tcpSocket.waitForConnected(3000)) {
 
-      connect(&tcpSocket, &QTcpSocket::connected, this,
+      connect(&tcpSocket,
+              &QTcpSocket::connected,
+              this,
               &GuestNetworkHandler::onTCPConnected);
 
-      connect(&tcpSocket, &QTcpSocket::disconnected, this,
+      connect(&tcpSocket,
+              &QTcpSocket::disconnected,
+              this,
               &GuestNetworkHandler::onTCPDisconnected);
-      connect(&tcpSocket, &QTcpSocket::readyRead, this,
+      connect(&tcpSocket,
+              &QTcpSocket::readyRead,
+              this,
               &GuestNetworkHandler::onTCPDataReady);
       return true;
     }

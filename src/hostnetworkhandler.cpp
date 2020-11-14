@@ -3,7 +3,9 @@
 #include <QNetworkProxy>
 
 HostNetworkHandler::HostNetworkHandler(QObject* parent) : QObject(parent) {
-  connect(&tcpServer, &QTcpServer::newConnection, this,
+  connect(&tcpServer,
+          &QTcpServer::newConnection,
+          this,
           &HostNetworkHandler::onNewTCPConnection);
 
   udpServer.setProxy(QNetworkProxy::NoProxy);
@@ -45,14 +47,22 @@ void HostNetworkHandler::onNewTCPConnection() {
 
   tcpSocket->setProxy(QNetworkProxy::NoProxy);
 
-  connect(tcpSocket, &QTcpSocket::connected, this,
+  connect(tcpSocket,
+          &QTcpSocket::connected,
+          this,
           &HostNetworkHandler::onTCPConnected);
-  connect(tcpSocket, &QTcpSocket::disconnected, this,
+  connect(tcpSocket,
+          &QTcpSocket::disconnected,
+          this,
           &HostNetworkHandler::onTCPDisconnected);
-  connect(tcpSocket, &QTcpSocket::readyRead, this,
+  connect(tcpSocket,
+          &QTcpSocket::readyRead,
+          this,
           &HostNetworkHandler::onTCPDataReady);
 
-  connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this,
+  connect(tcpSocket,
+          SIGNAL(bytesWritten(qint64)),
+          this,
           SLOT(onTCPBytesWritten(qint64)));
 }
 

@@ -7,7 +7,9 @@ CreateGame::CreateGame(QWidget* parent)
 
   handler = new HostNetworkHandler;
 
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
+  connect(ui->buttonBox,
+          &QDialogButtonBox::accepted,
+          this,
           &CreateGame::bindIP_Port);
 
   QIntValidator* portValidator = new QIntValidator(1024, 65535, ui->port);
@@ -40,7 +42,8 @@ void CreateGame::goToWaitingRoom() {
   hostPlayer->setName(playerName);
   waitingRoom->passHost(hostPlayer);
   waitingRoom->passHandler(handler);
-  waitingRoom->passHostInfo(ui->ipDropdown->currentText(),ui->port->text(),ui->roomCode->text());
+  waitingRoom->passHostInfo(
+      ui->ipDropdown->currentText(), ui->port->text(), ui->roomCode->text());
   waitingRoom->exec();
 
   this->accept();

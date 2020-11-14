@@ -1,11 +1,13 @@
 #include "determineroledialog.h"
 #include "ui_determineroledialog.h"
 
-DetermineRoleDialog::DetermineRoleDialog(QWidget *parent)
+DetermineRoleDialog::DetermineRoleDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::DetermineRoleDialog) {
   ui->setupUi(this);
 
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
+  connect(ui->buttonBox,
+          &QDialogButtonBox::accepted,
+          this,
           &DetermineRoleDialog::moveForward);
 }
 
