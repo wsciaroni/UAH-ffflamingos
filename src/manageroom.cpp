@@ -41,7 +41,12 @@ void ManageRoom::passHandler(HostNetworkHandler* handlerIn) {
           &HostNetworkHandler::sendWelcomeToRoom);
 }
 
-void ManageRoom::passRoomCode(QString roomCode) { hostRoomCode = roomCode; }
+void ManageRoom::passHostInfo(QString ip, QString port, QString roomCode) {
+    hostRoomCode = roomCode;
+    ui->ipLabel->setText(ip);
+    ui->portLabel->setText(port);
+    ui->codeLabel->setText(roomCode);
+}
 
 void ManageRoom::addPlayer(PlayerModel* player) {
   playerList->addPlayer(player);

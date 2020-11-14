@@ -49,7 +49,7 @@ class ManageRoom : public QDialog {
    * Used to pass the roomCode entered in the previous dialog to this class.
    * @param roomCode the Room code entered by the user.
    */
-  void passRoomCode(QString roomCode);
+  void passHostInfo(QString ip, QString port, QString roomCode);
 
  private:
   /// ui pointer

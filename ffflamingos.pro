@@ -52,3 +52,7 @@ CONFIG(debug, debug|release) {
 
 # Add QT Libraries
 QT += network sql
+
+RESOURCES +=
+
+DISTFILES +=
