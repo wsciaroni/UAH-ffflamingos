@@ -4,49 +4,10 @@
 WaitingToStart::WaitingToStart(QWidget* parent)
     : QDialog(parent), ui(new Ui::WaitingToStart) {
   ui->setupUi(this);
-  gameWindow = new GameDialog;
-  connect(
-      ui->disconnect, &QPushButton::clicked, this, &WaitingToStart::disconnect);
+  connect(ui->disconnect, &QPushButton::clicked, this,
+          &WaitingToStart::disconnect);
 }
 
-WaitingToStart::~WaitingToStart() {
-  delete ui;
-  delete gameWindow;
-}
+WaitingToStart::~WaitingToStart() { delete ui; }
 
-void WaitingToStart::passPlayerModel(PlayerModel* playerIn) {
-  player = playerIn;
-}
-
-void WaitingToStart::disconnect() {
-  NPTerminateMe npTerminate;
-  npTerminate.setUID(player->getUID());
-  emit this->terminateMe(npTerminate);
-  handler->disconnectFromHost();
-  this->accept();
-}
-
-void WaitingToStart::playGame() {
-  this->hide();
-  gameWindow->passHandler(handler);
-  gameWindow->exec();
-  this->accept();
-}
-
-void WaitingToStart::passHandler(GuestNetworkHandler* handlerIn) {
-  handler = handlerIn;
-  connect(this,
-          &WaitingToStart::terminateMe,
-          handler,
-          &GuestNetworkHandler::terminateMe);
-  connect(handler,
-          &GuestNetworkHandler::tcpConnectionDropped,
-          this,
-          &WaitingToStart::dropMe);
-}
-
-void WaitingToStart::dropMe() {
-  /// @todo put an error here if the connection is dropped.  Or some message
-  /// like "OOpsie, the server has gone poopsie"
-  this->reject();
-}
+void WaitingToStart::disconnect() { emit this->WSQuitGame(); }

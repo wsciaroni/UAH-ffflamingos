@@ -33,106 +33,53 @@ class ManageRoom : public QDialog {
   */
   ~ManageRoom();
 
-  /**
-   * Used to pass a Host from the previous dialog.
-   * @param hostPlayer The address of the Host's  HostModel.
-   */
-  void passHost(HostModel* hostPlayer);
-
-  /**
-   * Used to pass a HostNetworkHandler from the previous dialog.
-   * @param handlerIn The address of the HostNetworkHandler
-   */
-  void passHandler(HostNetworkHandler* handlerIn);
-
-  /**
-   * Used to pass the roomCode entered in the previous dialog to this class.
-   * @param roomCode the Room code entered by the user.
-   */
-  void passHostInfo(QString ip, QString port, QString roomCode);
-
  private:
   /// ui pointer
   Ui::ManageRoom* ui;
 
-  /// Gameplay Window
-  GameDialog* gameWindow;
-
-  /// Holds the list of playernames to be displayed
-  QStringList list;
-
   /// Model for list
   QStringListModel model;
-
-  /// Map to hold user ids of players and their names in the table
-  PlayerList* playerList;
-
-  /// Holds the address of the host network handler
-  HostNetworkHandler* handler;
-
-  /// Holds the roomCode set by the Host
-  QString hostRoomCode;
 
  private
 slots:
   /**
-  Slot to send user to game play
-  */
+   * Slot to send user to game play
+   */
   void startGame();
 
   /**
-  @todo will forcibly close the lobby, disconnecting all players
-  */
+   * Closes the lobby for all
+   */
   void closeLobby();
-
-  /**
-  Handle an incoming request to be termintaed
-  @param terminateMePacket
-  @param socket
-  */
-  void handleTerminateMe(NPTerminateMe terminateMePacket, QTcpSocket* socket);
 
  public
 slots:
 
   /**
-  addPlayer should be called when a player has successfully connected
-  @param player Pass the player class
-  */
-  void addPlayer(PlayerModel* player);
-
-  /**
-  removePlayer should be called when a player disconnects either via connection
-  drop or self disconnect.
-  @param player Pass the player class of the player to remove
-  */
-  void removePlayer(PlayerModel* player);
-
-  /**
-   * Handles the receipt of a RoomCode packet
-   * @param provideRoomCodePacket
-   * @param socket The socket that communicates with that specific player.
+   * Used to let the ManageRoom know that there was a change in PlayerList from
+   * the FlowChamp
    */
-  void handleProvideRoomCode(NPProvideRoomCode provideRoomCodePacket,
-                             QTcpSocket* socket);
+  void MRUpdatePlayerList(QStringList usernameListIn);
+
+  /**
+   * Used to pass the roomCode entered in the previous dialog to this class.
+   * @param ip The IP that the user entered
+   * @param port The Port that the user entered
+   * @param roomCode The RoomCode that the user entered
+   */
+  void MRPassHostInfo(QString ip, QString port, QString roomCode);
 
 signals:
 
   /**
-   * Used to send out the room code status in reply to the client
-   * @param roomCodeStatus
-   * @param socket The socket of the client to communicate with
+   * Informs FlowChamp that the user is ready to start the game for all players
    */
-  void sendRoomCodeStatusToClient(NPRoomCodeStatus roomCodeStatus,
-                                  QTcpSocket* socket);
+  void MRStartGameForAll();
 
   /**
-   * Used to send out the start game signal to the client
-   * @param welcomeToRoom
-   * @param socket The socket of the client to communicate with
+   * Informs FlowChamp that the user wishes to end the game for all players
    */
-  void sendWelcomeToRoomToClient(NPWelcomeToRoom welcomeToRoom,
-                                 QTcpSocket* socket);
+  void MRQuitGame();
 };
 
 #endif  // MANAGEROOM_H

@@ -1,16 +1,14 @@
 #include "joinexistinggame.h"
 #include "ui_joinexistinggame.h"
-#include <QIntValidator>
-#include <QRegularExpressionValidator>
 
 JoinExistingGame::JoinExistingGame(QWidget* parent)
     : QDialog(parent), ui(new Ui::JoinExistingGame) {
   ui->setupUi(this);
 
-  connect(ui->buttonBox,
-          &QDialogButtonBox::accepted,
-          this,
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
           &JoinExistingGame::attemptToJoin);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this,
+          &JoinExistingGame::cancel);
 
   QRegularExpression ipExpression(
       "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})");
@@ -27,35 +25,12 @@ JoinExistingGame::JoinExistingGame(QWidget* parent)
 
 JoinExistingGame::~JoinExistingGame() { delete ui; }
 
-void JoinExistingGame::passName(QString name) { playerName = name; }
-
-void JoinExistingGame::goToConnecting() {
-  this->hide();
-  this->connectingScreen = new Connecting;
-  connectingScreen->passName(playerName);
-  bool connected = connectingScreen->passInfo(
-      ui->ip->text(), ui->port->text(), ui->roomCode->text());
-  if (connected) {
-    connectingScreen->exec();
-  }
-  delete connectingScreen;
-  this->accept();
-}
-
-void JoinExistingGame::missingFieldError() {
-  this->hide();
-  error* missingField = new error;
-  missingField->throwErrorMsg("ERROR: Missing required field");
-  missingField->exec();
-  delete missingField;
-  this->accept();
-}
-
 void JoinExistingGame::attemptToJoin() {
-  if ((ui->ip->text().isEmpty()) || (ui->port->text().isEmpty()) ||
-      (ui->roomCode->text().isEmpty())) {
-    missingFieldError();
-  } else {
-    goToConnecting();
+  if (!((ui->ip->text().isEmpty()) || (ui->port->text().isEmpty()) ||
+        (ui->roomCode->text().isEmpty()))) {
+    emit this->JGGoToWaitingToStart(QHostAddress(ui->ip->text()),
+                                    ui->port->text(), ui->roomCode->text());
   }
 }
+
+void JoinExistingGame::cancel() { emit this->JGQuitGame(); }

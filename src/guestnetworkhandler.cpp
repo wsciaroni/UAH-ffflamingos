@@ -4,8 +4,8 @@
 
 GuestNetworkHandler::GuestNetworkHandler(QObject* parent) : QObject(parent) {
   listenOnUDP();
-  connect(
-      &udpSocket, SIGNAL(readyRead()), this, SLOT(onUDPReadPendingDatagrams()));
+  connect(&udpSocket, SIGNAL(readyRead()), this,
+          SLOT(onUDPReadPendingDatagrams()));
 
   tcpSocket.setProxy(QNetworkProxy::NoProxy);
   udpSocket.setProxy(QNetworkProxy::NoProxy);
@@ -20,18 +20,12 @@ bool GuestNetworkHandler::connectToHost(QHostAddress hostAddress,
     tcpSocket.connectToHost(hostAddress, port);
     if (tcpSocket.waitForConnected(3000)) {
 
-      connect(&tcpSocket,
-              &QTcpSocket::connected,
-              this,
+      connect(&tcpSocket, &QTcpSocket::connected, this,
               &GuestNetworkHandler::onTCPConnected);
 
-      connect(&tcpSocket,
-              &QTcpSocket::disconnected,
-              this,
+      connect(&tcpSocket, &QTcpSocket::disconnected, this,
               &GuestNetworkHandler::onTCPDisconnected);
-      connect(&tcpSocket,
-              &QTcpSocket::readyRead,
-              this,
+      connect(&tcpSocket, &QTcpSocket::readyRead, this,
               &GuestNetworkHandler::onTCPDataReady);
       return true;
     }
@@ -72,37 +66,38 @@ void GuestNetworkHandler::onTCPDisconnected() {
 void GuestNetworkHandler::onTCPDataReady() {
   qDebug() << "In onTCPDataReady()\n";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
-
-  // Read from socket here
-  PacketType pType;
-  BlockReader(tcpSocket).stream() >> pType;
-  if (pType == PacketType::ROOMCODESTATUS) {
-    qDebug() << "pType == ROOMCODESTATUS\n";
-    NPRoomCodeStatus roomCodeStatus;
-    bool status;
-    BlockReader(tcpSocket).stream() >> status;
-    roomCodeStatus.setRoomCodeStatus(status);
-    qDebug() << "Room Code Status Received";
-    emit this->recvRoomCodeStatus(roomCodeStatus);
-  } else if (pType == PacketType::ENDGAMEINFO) {
-    qDebug() << "pType == ENDGAMEINFO\n";
-    NPEndGameInfo endGameInfo;
-    // BlockReader(tcpSocket).stream() >> spacePressedPacket;
-    emit this->recvEndGameInfo(endGameInfo);
-  } else if (pType == PacketType::WELCOMETOROOM) {
-    qDebug() << "pType == WELCOMETOROOM\n";
-    NPWelcomeToRoom welcomeToRoom;
-    // BlockReader(tcpSocket).stream() >> spacePressedPacket;
-    emit this->recvWelcomeToRoom(welcomeToRoom);
-  } else if (pType == PacketType::NULLPACKETTYPE) {
-    qDebug() << "pType == NULLPACKETTYPE\n";
-    // Throw an error
-    error* throwError = new error;
-    throwError->throwErrorMsg("ERROR: Received a NULL packet type");
-    throwError->exec();
-    delete throwError;
-  } else {
-    qDebug() << "Unknown packet type\n";
+  while (tcpSocket->bytesAvailable()) {
+    // Read from socket here
+    PacketType pType;
+    BlockReader(tcpSocket).stream() >> pType;
+    if (pType == PacketType::ROOMCODESTATUS) {
+      qDebug() << "pType == ROOMCODESTATUS\n";
+      NPRoomCodeStatus roomCodeStatus;
+      bool status;
+      BlockReader(tcpSocket).stream() >> status;
+      roomCodeStatus.setRoomCodeStatus(status);
+      qDebug() << "Room Code Status Received";
+      emit this->recvRoomCodeStatus(roomCodeStatus);
+    } else if (pType == PacketType::ENDGAMEINFO) {
+      qDebug() << "pType == ENDGAMEINFO\n";
+      NPEndGameInfo endGameInfo;
+      // BlockReader(tcpSocket).stream() >> spacePressedPacket;
+      emit this->recvEndGameInfo(endGameInfo);
+    } else if (pType == PacketType::WELCOMETOROOM) {
+      qDebug() << "pType == WELCOMETOROOM\n";
+      NPWelcomeToRoom welcomeToRoom;
+      // BlockReader(tcpSocket).stream() >> spacePressedPacket;
+      emit this->recvWelcomeToRoom(welcomeToRoom);
+    } else if (pType == PacketType::NULLPACKETTYPE) {
+      qDebug() << "pType == NULLPACKETTYPE\n";
+      // Throw an error
+      error* throwError = new error;
+      throwError->throwErrorMsg("ERROR: Received a NULL packet type");
+      throwError->exec();
+      delete throwError;
+    } else {
+      qDebug() << "Unknown packet type\n";
+    }
   }
 }
 

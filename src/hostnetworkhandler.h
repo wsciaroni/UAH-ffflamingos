@@ -139,6 +139,11 @@ signals:
    */
   void spacePressed(NPSpacePressed spacePressedPacket, QTcpSocket* socket);
 
+  /**
+   *
+   */
+  void hostHandleGuestTerminated(QTcpSocket* socket);
+
  public
 slots:
   /**

@@ -3,9 +3,7 @@
 #include <QNetworkProxy>
 
 HostNetworkHandler::HostNetworkHandler(QObject* parent) : QObject(parent) {
-  connect(&tcpServer,
-          &QTcpServer::newConnection,
-          this,
+  connect(&tcpServer, &QTcpServer::newConnection, this,
           &HostNetworkHandler::onNewTCPConnection);
 
   udpServer.setProxy(QNetworkProxy::NoProxy);
@@ -47,22 +45,14 @@ void HostNetworkHandler::onNewTCPConnection() {
 
   tcpSocket->setProxy(QNetworkProxy::NoProxy);
 
-  connect(tcpSocket,
-          &QTcpSocket::connected,
-          this,
+  connect(tcpSocket, &QTcpSocket::connected, this,
           &HostNetworkHandler::onTCPConnected);
-  connect(tcpSocket,
-          &QTcpSocket::disconnected,
-          this,
+  connect(tcpSocket, &QTcpSocket::disconnected, this,
           &HostNetworkHandler::onTCPDisconnected);
-  connect(tcpSocket,
-          &QTcpSocket::readyRead,
-          this,
+  connect(tcpSocket, &QTcpSocket::readyRead, this,
           &HostNetworkHandler::onTCPDataReady);
 
-  connect(tcpSocket,
-          SIGNAL(bytesWritten(qint64)),
-          this,
+  connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this,
           SLOT(onTCPBytesWritten(qint64)));
 }
 
@@ -71,85 +61,69 @@ void HostNetworkHandler::onTCPConnected() {
   tcpSocket->setProxy(QNetworkProxy::NoProxy);
   if (tcpSocket != nullptr) {
     qDebug() << "In onTCPConnected()\n";
-    // on connection
-    // Add Player to PlayerList
-    // Add player to multicast group
-    // Handle the incoming ProvideRoomCode Packet
-    //  If RoomCode Packet UID != -1, try to readd that player to the game
-    // If the RoomCode Packet UID == -1, then create a new player
   }
 }
 
 void HostNetworkHandler::onTCPDisconnected() {
-  // Disconnected
-  // Remove player from player list?
-  // Remove player from multicast group
   qDebug() << "In onTCPDisconnected()\n";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
-  NPTerminateMe dummyPacket;
-  emit this->terminateMe(dummyPacket, tcpSocket);
+  emit this->hostHandleGuestTerminated(tcpSocket);
 }
 
 void HostNetworkHandler::onTCPDataReady() {
-  qDebug() << "In onTCPDataReady()\n";
+  qDebug() << "In onTCPDataReady()";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
-  tcpSocket->setProxy(QNetworkProxy::NoProxy);
-  // Read from socket here
-  PacketType pType;
-  BlockReader(tcpSocket).stream() >> pType;
-  if (pType == PacketType::PROVIDEROOMCODE) {
+  while (tcpSocket->bytesAvailable()) {
+    qDebug() << "In LOOP onTCPDataReady()";
+    tcpSocket->setProxy(QNetworkProxy::NoProxy);
+    // Read from socket here
+    PacketType pType;
+    BlockReader(tcpSocket).stream() >> pType;
+    if (pType == PacketType::PROVIDEROOMCODE) {
 
-    qDebug() << "pType == PROVIDEROOMCODE\n";
-    NPProvideRoomCode provideRoomCodePacket;
+      qDebug() << "pType == PROVIDEROOMCODE";
+      NPProvideRoomCode provideRoomCodePacket;
 
-    QString roomcode;
-    int uid;
-    QString name;
-    BlockReader(tcpSocket).stream() >> uid >> roomcode >> name;
-    provideRoomCodePacket.setRoomCode(roomcode);
-    provideRoomCodePacket.setUID(uid);
-    provideRoomCodePacket.setName(name);
-    qDebug() << "Room code received" << uid << " " << roomcode;
-    emit this->provideRoomCode(provideRoomCodePacket, tcpSocket);
+      QString roomcode;
+      int uid;
+      QString name;
+      BlockReader(tcpSocket).stream() >> uid >> roomcode >> name;
+      provideRoomCodePacket.setRoomCode(roomcode);
+      provideRoomCodePacket.setUID(uid);
+      provideRoomCodePacket.setName(name);
+      qDebug() << "Room code received" << uid << " " << roomcode;
+      emit this->provideRoomCode(provideRoomCodePacket, tcpSocket);
 
-  } else if (pType == PacketType::SPACEPRESSED) {
-    qDebug() << "pType == SPACEPRESSED\n";
-    NPSpacePressed spacePressedPacket;
+    } else if (pType == PacketType::SPACEPRESSED) {
+      qDebug() << "pType == SPACEPRESSED";
+      NPSpacePressed spacePressedPacket;
 
-    int uid;
-    BlockReader(tcpSocket).stream() >> uid;
-    spacePressedPacket.setUID(uid);
-    emit this->spacePressed(spacePressedPacket, tcpSocket);
-  } else if (pType == PacketType::NULLPACKETTYPE) {
-    qDebug() << "pType == NULLPACKETTYPE\n";
-    // Throw an error
-    error* throwError = new error;
-    throwError->throwErrorMsg("ERROR: Received a NULL packet type");
-    throwError->exec();
-    delete throwError;
-  } else {
-    qDebug() << "Unknown packet type\n";
+      int uid;
+      BlockReader(tcpSocket).stream() >> uid;
+      spacePressedPacket.setUID(uid);
+      emit this->spacePressed(spacePressedPacket, tcpSocket);
+    } else if (pType == PacketType::NULLPACKETTYPE) {
+      qDebug() << "pType == NULLPACKETTYPE";
+      // Throw an error
+      error* throwError = new error;
+      throwError->throwErrorMsg("ERROR: Received a NULL packet type");
+      throwError->exec();
+      delete throwError;
+    } else {
+      qDebug() << "Unknown packet type";
+    }
+
+    qDebug() << "In LOOP onTCPDataReady()";
   }
-
-  qDebug() << "out of onTCPDataReady()\n";
+  qDebug() << "out of onTCPDataReady()";
 }
 
 void HostNetworkHandler::onTCPBytesWritten(qint64 bytes) {
   qDebug() << "In onTCPBytesWritten()\n";
-
-  /// @todo Implement the area that reads in data from the TCPSocket
-  // Process the bytes that were written to the
-  // Create a Datastream, then:
-  // First read in the Packet type,
-  // Read the rest of the data into the specific class that it's supposed to be
-  // handled by
-  // Then emit a signal for each specific class so someone knows what kind of
-  // data needs to be processed
 }
 
 int HostNetworkHandler::getPort() { return port; }
 
-/// @todo Setup the TCP Server to send these packets back to the guest
 void HostNetworkHandler::sendRoomCodeStatus(NPRoomCodeStatus roomCodeStatus,
                                             QTcpSocket* socket) {
   // BlockWriter(socket).stream() << roomCodeStatus;
@@ -159,11 +133,8 @@ void HostNetworkHandler::sendRoomCodeStatus(NPRoomCodeStatus roomCodeStatus,
   BlockWriter(socket).stream() << status;
 }
 
-/// @todo setup the TCP Server to send these packets back to the guest
 void HostNetworkHandler::sendWelcomeToRoom(NPWelcomeToRoom welcomeToRoom,
                                            QTcpSocket* socket) {
-  // BlockWriter(socket).stream() << welcomeToRoom;
-
   BlockWriter(socket).stream() << PacketType::WELCOMETOROOM;
 }
 

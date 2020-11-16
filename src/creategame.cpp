@@ -3,14 +3,11 @@
 CreateGame::CreateGame(QWidget* parent)
     : QDialog(parent), ui(new Ui::CreateGame) {
   ui->setupUi(this);
-  waitingRoom = new ManageRoom;
 
-  handler = new HostNetworkHandler;
-
-  connect(ui->buttonBox,
-          &QDialogButtonBox::accepted,
-          this,
-          &CreateGame::bindIP_Port);
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
+          &CreateGame::goToWaitingRoom);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this,
+          &CreateGame::cancel);
 
   QIntValidator* portValidator = new QIntValidator(1024, 65535, ui->port);
   ui->port->setValidator(portValidator);
@@ -27,50 +24,11 @@ CreateGame::CreateGame(QWidget* parent)
   }
 }
 
-CreateGame::~CreateGame() {
-  delete ui;
-  delete waitingRoom;
-  delete hostPlayer;
-  delete handler;
-}
-
-void CreateGame::passName(QString name) { playerName = name; }
+CreateGame::~CreateGame() { delete ui; }
 
 void CreateGame::goToWaitingRoom() {
-  this->hide();
-  this->createHost();
-  hostPlayer->setName(playerName);
-  waitingRoom->passHost(hostPlayer);
-  waitingRoom->passHandler(handler);
-  waitingRoom->passHostInfo(
-      ui->ipDropdown->currentText(), ui->port->text(), ui->roomCode->text());
-  waitingRoom->exec();
-
-  this->accept();
+  emit this->CGGoToManageRoom(QHostAddress(ui->ipDropdown->currentText()),
+                              ui->port->text(), ui->roomCode->text());
 }
 
-void CreateGame::throwBindError() {
-  this->hide();
-  bindError = new error;
-  bindError->throwErrorMsg("ERROR: Could not bind IP and Port");
-  bindError->exec();
-  delete bindError;
-  this->accept();
-}
-
-void CreateGame::createHost() {
-  hostPlayer = new HostModel(0, handler->getTCPServer());
-}
-
-void CreateGame::bindIP_Port() {
-  QHostAddress IP(ui->ipDropdown->currentText());
-
-  if (handler->startTCPServer(IP, (ui->port->text()).toUShort())) {
-    if (!(ui->port->text().isEmpty()) && !(ui->roomCode->text().isEmpty())) {
-      goToWaitingRoom();
-    } else {
-      handler->stopTCPServer();
-    }
-  } else
-    throwBindError();
-}
+void CreateGame::cancel() { emit this->CGQuitGame(); }

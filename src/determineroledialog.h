@@ -1,9 +1,6 @@
 #ifndef DETERMINEROLEDIALOG_H
 #define DETERMINEROLEDIALOG_H
 
-#include "creategame.h"
-#include "joinexistinggame.h"
-
 #include <QDialog>
 
 namespace Ui {
@@ -30,35 +27,34 @@ class DetermineRoleDialog : public QDialog {
 
  private:
   Ui::DetermineRoleDialog* ui;
-
-  /**
-   * Holds the address of the next dialog
-   */
-  CreateGame* createGameDialog;
-
-  /**
-   * Holds the address of the next dialog
-   */
-  JoinExistingGame* joinGameDialog;
-
-  /**
-   * Navigates the user to the CreateGame dialog.
-   * This causes this dialog to be hidden until the new dialog returns.
-   */
-  void createGame();
-
-  /**
-   * Navigates the user to the JoinGame dialog.
-   * This causes this dialog to be hidden until the new dialog returns.
-   */
-  void joinGame();
-
- public
+ private
 slots:
   /**
-   * Slot that calls out to the next dialog and accepts this QDialog
+   * Used to handle the input on this form and emit the appropriate signals
    */
   void moveForward();
+
+  /**
+   * Triggered by the Cancel button and emits the DRQuitGame signal
+   */
+  void cancel();
+
+signals:
+  /**
+   * Used to let the FlowChamp know that the user is requesting to be the Host
+   * Ties to FlowChamp::DRPlayAsHost()
+   */
+  void DRPlayAsHost(QString playerNameIn);
+
+  /**
+   * Used to let the FlowChamp know that the user is requesting to be a Guests
+   */
+  void DRPlayAsGuest(QString playerNameIn);
+
+  /**
+   * Used to let the FlowChamp know that the user is attempting to quit
+   */
+  void DRQuitGame();
 };
 
 #endif  // DETERMINEROLEDIALOG_H

@@ -53,7 +53,6 @@ PlayerModel* PlayerList::getPlayerByPosition(PlayerPosition position) {
       return temp;  // Return the player at the given position
     }
   }
-
   return nullptr;  // If no player at the given position, return null
 }
 
@@ -61,11 +60,18 @@ int PlayerList::getPlayerCount() {
   return playerList.keys().length();  // Return the current number of keys
 }
 
+int PlayerList::getMaxUID() {
+  int max = 0;
+  for (PlayerModel* temp : playerList.keys()) {
+    if (temp->getUID() > max) {
+      max = temp->getUID();
+    }
+  }
+  return max;
+}
 void PlayerList::setPositionsAndStartGame(HostNetworkHandler* handlerIn) {
   int pos = 2;
-  connect(this,
-          &PlayerList::sendStartGame,
-          handlerIn,
+  connect(this, &PlayerList::sendStartGame, handlerIn,
           &HostNetworkHandler::sendWelcomeToRoom);
   for (PlayerModel* temp : playerList.keys()) {
     if (temp->getUID() != 0) {

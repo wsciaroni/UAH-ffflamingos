@@ -1,9 +1,6 @@
 #ifndef GAMEDIALOG_H
 #define GAMEDIALOG_H
 
-#include "hostnetworkhandler.h"
-#include "guestnetworkhandler.h"
-
 #include <QDialog>
 #include <QKeyEvent>
 
@@ -31,41 +28,8 @@ class GameDialog : public QDialog {
    */
   ~GameDialog();
 
-  /**
-   * Used to pass a HostNetworkHandler along to the gameDialog to make the
-   * appropriate connection
-   */
-  void passHandler(HostNetworkHandler* hostHandlerIn);
-
-  /**
-   * Used to pass a HostNetworkHandler along to the gameDialog to make the
-   * appropriate connection
-   */
-  void passHandler(GuestNetworkHandler* guestHandlerIn);
-
-  /**
-   * Used to set the role of the player in the GameDialog.
-   * @param isHost True if the player is the host player
-   */
-  void setRole(bool isHost);
-
  private:
   Ui::GameDialog* ui;
-
-  /// True if the user is the Host
-  bool isHostRole = false;
-
-  /// Holds the address of the HostNetworkHandler
-  HostNetworkHandler* hostHandler;
-
-  /// Holds the address of the GuestNetworkHandler
-  GuestNetworkHandler* guestHandler;
-
-  /**
-   * Used to get the role of the player.
-   * @return Returns True if the user is the Host
-   */
-  bool isHost();
 
  protected:
   /**
@@ -74,10 +38,29 @@ class GameDialog : public QDialog {
    */
   void keyPressEvent(QKeyEvent* key);
 
+signals:
   /**
-   * @brief Called when the escape key is pressed
+   * Informs FlowChamp that the user has pressed the space bar
    */
-  void escapePress();
+  void GDSpacePressed();
+
+  /**
+   * Informs FlowChamp that the user has pressed the escape key
+   */
+  void GDEscPressed();
+
+  /**
+   * Informs FlowChamp that the user desires to leave the game
+   * @deprecated
+   */
+  void GDQuitGame();
+
+ public
+slots:
+  /**
+   * Slot to be triggered when
+   */
+  void HandleInfoIn(/*TBD*/);
 };
 
 #endif  // GAMEDIALOG_H

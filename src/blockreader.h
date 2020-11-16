@@ -49,9 +49,11 @@ class BlockReader {
    */
   void readMax(QIODevice* io, int n) {
     while (buffer.size() < n) {
+      /*
       if (!io->bytesAvailable()) {
         io->waitForReadyRead(30000);
       }
+      */
       buffer.write(io->read(n - buffer.size()));
     }
   }

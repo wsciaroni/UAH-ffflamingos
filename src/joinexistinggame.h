@@ -1,11 +1,11 @@
 #ifndef JOINEXISTINGGAME_H
 #define JOINEXISTINGGAME_H
 
-#include "connecting.h"
-#include "error.h"
-
+#include <QHostAddress>
 #include <QDialog>
 #include <QString>
+#include <QIntValidator>
+#include <QRegularExpressionValidator>
 
 namespace Ui {
 class JoinExistingGame;
@@ -38,34 +38,33 @@ class JoinExistingGame : public QDialog {
  private:
   Ui::JoinExistingGame* ui;
 
-  /// Holds the address of the next screen.  Used to move forward into the next
-  /// dialog.
-  Connecting* connectingScreen;
-
-  /// Holds the address of an error.  Used to throw that error.
-  error* missingField;
-
-  /**
-   * Go to connecting window
-   */
-  void goToConnecting();
-
-  /**
-   * Throws error for missing required field
-   */
-  void missingFieldError();
-
-  /**
-   * This should hold the player name passed in by the DetermineRole Dialog
-   */
-  QString playerName = "";
-
  private
 slots:
   /**
    * slot that attempts to join game if IP and port are valid
    */
   void attemptToJoin();
+
+  /**
+   * Exits back to a higher dialog
+   */
+  void cancel();
+
+signals:
+  /**
+   * Informs FlowChamp that the user wants to join a specific game
+   * @param addressIn The QHostAddress that the user wants to connect to
+   * @param portIn The port that the user wants to connect to
+   * @param roomCodeIn The room code that will be validated with the Host
+   */
+  void JGGoToWaitingToStart(QHostAddress addressIn, QString portIn,
+                            QString roomCodeIn);
+
+  /**
+   * Informs FlowChamp that the user wishes to quit back to the
+   * DetermineRoleDialog
+   */
+  void JGQuitGame();
 };
 
 #endif  // JOINEXISTINGGAME_H

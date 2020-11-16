@@ -1,12 +1,6 @@
 #ifndef CREATEGAME_H
 #define CREATEGAME_H
 
-#include "hostmodel.h"
-#include "manageroom.h"
-#include "error.h"
-
-#include "hostnetworkhandler.h"
-
 #include <QDialog>
 #include <QString>
 #include <QTcpServer>
@@ -38,62 +32,32 @@ class CreateGame : public QDialog {
    */
   ~CreateGame();
 
-  /**
-   * Used to Pass the name from the previous window.
-   * @param name The user's name
-   */
-  void passName(QString name);
-
  private:
   Ui::CreateGame* ui;
 
-  /**
-   * The address of the next window to go to
-   */
-  ManageRoom* waitingRoom;
-
-  /**
-   * The address of an error to throw
-   */
-  error* bindError;
-
-  /**
-   * Takes care of all network related needs
-   */
-  HostNetworkHandler* handler;
-
-  /**
-   * Function creates a dialog with an error
-   */
-  void throwBindError();
-
+ private
+slots:
   /**
    * Used to move to the next window
    */
   void goToWaitingRoom();
 
   /**
-   * This should hold the player name passed in by the DetermineRole Dialog
+   * Triggered by the Cancel button and emits the CGQuitGame signal
    */
-  QString playerName = "";
+  void cancel();
+
+signals:
+  /**
+   * Informs FlowChamp of the information input by the user
+   */
+  void CGGoToManageRoom(QHostAddress addressIn, QString portIn,
+                        QString roomCodeIn);
 
   /**
-   * Stores the PlayerModel for the host
+   * Informs FlowChamp the user wants to quit back to the DetermineDialog
    */
-  HostModel* hostPlayer = nullptr;
-
-  /**
-   * Instantiates a PlayerModel for the Host with the information from the
-   * DetermineRole dialog and network connection
-   */
-  void createHost();
-
- private
-slots:
-  /**
-   * Slot that attempts to bind IP and port
-   */
-  void bindIP_Port();
+  void CGQuitGame();
 };
 
 #endif  // CREATEGAME_H

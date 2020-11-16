@@ -79,6 +79,13 @@ class PlayerList : public QObject {
   int getPlayerCount();
 
   /**
+   * Used to loop through all players.
+   * Returns the maximum UID of any player connected
+   * @return the Max UID of all players.
+   */
+  int getMaxUID();
+
+  /**
    * Loops through all the players and sets each player's position.  Then, sends
    * each player a welcometoroom packet to signal the start of the game.
    * @param handlerIn the network handler to use to send the packets
