@@ -3,10 +3,6 @@
 #include <QNetworkProxy>
 
 GuestNetworkHandler::GuestNetworkHandler(QObject* parent) : QObject(parent) {
-  listenOnUDP();
-  connect(&udpSocket, SIGNAL(readyRead()), this,
-          SLOT(onUDPReadPendingDatagrams()));
-
   tcpSocket.setProxy(QNetworkProxy::NoProxy);
   udpSocket.setProxy(QNetworkProxy::NoProxy);
 }
@@ -43,8 +39,11 @@ bool GuestNetworkHandler::listenOnUDP() {
   if (udpSocket.isOpen()) {
     udpSocket.close();
   }
-
-  return udpSocket.bind(QHostAddress::AnyIPv4, port);
+  bool status = udpSocket.bind(QHostAddress::AnyIPv4, port);
+  status = udpSocket.joinMulticastGroup(multicastAddress);
+  connect(&udpSocket, &QUdpSocket::readyRead, this,
+          &GuestNetworkHandler::onUDPReadPendingDatagrams);
+  return status;
 }
 
 void GuestNetworkHandler::stopListeningOnUDP() {
@@ -104,6 +103,7 @@ void GuestNetworkHandler::onTCPDataReady() {
 void GuestNetworkHandler::onTCPBytesWritten() {}
 
 void GuestNetworkHandler::onUDPReadPendingDatagrams() {
+  qDebug() << "In onUDPReadPendingDatagrams()";
   QByteArray datagram;
 
   while (udpSocket.hasPendingDatagrams()) {

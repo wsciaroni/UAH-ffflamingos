@@ -68,6 +68,9 @@ FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
           &HostNetworkHandler::sendInGameInfo);
   connect(this, &FlowChamp::hostSendEndGameInfo, hostHandler,
           &HostNetworkHandler::sendEndGameInfo);
+
+  connect(sendInGameInfoTimer, &QTimer::timeout, this,
+          QOverload<>::of(&FlowChamp::prepareAndSendInGameInfo));
 }
 
 FlowChamp::~FlowChamp() {
@@ -96,6 +99,10 @@ void FlowChamp::removePlayer(PlayerModel* player) {
   playerList.removePlayer(player);
   emit this->MRUpdatePlayerList(playerNames);
 }
+
+void FlowChamp::startSendInGameInfo() { sendInGameInfoTimer->start(10); }
+
+void FlowChamp::stopSendInGameInfo() { sendInGameInfoTimer->stop(); }
 
 void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   qDebug() << "In DRPlayAsHost()";
@@ -152,16 +159,18 @@ void FlowChamp::MRStartGameForAll() {
   // for (PlayerModel* temp : playerList.keys()) {
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
-    if (temp->getUID() > 0 && temp->getTCPSocket()) {
+    if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
       emit this->hostSendWelcomeToRoom(packet, temp->getTCPSocket());
     }
   }
   dialogMR->hide();
   dialogGD->show();
+  startSendInGameInfo();
 }
 
 void FlowChamp::MRQuitGame() {
   qDebug() << "In MRQuitGame()";
+  stopSendInGameInfo();
   dialogMR->hide();
   dialogDR->show();
 }
@@ -191,6 +200,9 @@ void FlowChamp::JGQuitGame() {
 void FlowChamp::WSStartClientGame() {
   qDebug() << "In WSStartClientGame()";
   /// @todo Send the packet to the client to have them start the game
+  dialogWS->hide();
+  dialogGD->show();
+  guestHandler->listenOnUDP();
 }
 
 void FlowChamp::WSQuitGame() {
@@ -270,8 +282,7 @@ void FlowChamp::guestHandleRoomCodeStatus(NPRoomCodeStatus packet) {
 }
 
 void FlowChamp::guestHandleWelcomeToRoom(NPWelcomeToRoom packet) {
-  dialogWS->hide();
-  dialogGD->show();
+  WSStartClientGame();
 }
 
 void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
@@ -284,4 +295,10 @@ void FlowChamp::guestHandleEndGameInfo(NPEndGameInfo packet) {
 void FlowChamp::guestHandleTCPDropOut() {
   this->activeWindow()->hide();
   dialogDR->show();
+}
+
+void FlowChamp::prepareAndSendInGameInfo() {
+  NPInGameInfo packet;
+  /// @todo set the inGameInfoInformation
+  emit this->hostSendInGameInfo(packet, multicastAddress);
 }

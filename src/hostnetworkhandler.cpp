@@ -140,10 +140,12 @@ void HostNetworkHandler::sendWelcomeToRoom(NPWelcomeToRoom welcomeToRoom,
 
 void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo,
                                         QHostAddress destinationAddress) {
+  static int ttl = 1;
+  udpServer.setSocketOption(QAbstractSocket::MulticastTtlOption, ttl++);
   QByteArray datagram;
   QDataStream out(&datagram, QIODevice::WriteOnly);
   out << inGameInfo;
-  udpServer.writeDatagram(datagram, destinationAddress, port);
+  udpServer.writeDatagram(datagram, destinationAddress, 45454);
 }
 
 void HostNetworkHandler::sendEndGameInfo(NPEndGameInfo endGameInfo,

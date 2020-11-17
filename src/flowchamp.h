@@ -19,6 +19,7 @@
 #include "hostmodel.h"
 
 #include <QApplication>
+#include <QTimer>
 
 class FlowChamp : public QApplication {
   Q_OBJECT
@@ -86,6 +87,24 @@ class FlowChamp : public QApplication {
    * @param player The PlayerModel of the player to be removed
    */
   void removePlayer(PlayerModel* player);
+
+  /// For sending the UDP packets on interval from the Host to the Guests
+  QTimer* sendInGameInfoTimer = new QTimer(this);
+
+  /**
+   * Used to start sending NPInGameInfo packets
+   */
+  void startSendInGameInfo();
+
+  /**
+   * Used to stop sending NPInGameInfo packets
+   */
+  void stopSendInGameInfo();
+
+  /**
+   * Multicast address to send from host and recieve on guests for UDP
+   */
+  QHostAddress multicastAddress = QHostAddress("239.255.43.21");
 
  public:
   FlowChamp(int& argc, char** argv);
@@ -244,6 +263,12 @@ slots:
    * Used to handle when the QTcpSocket is dropped
    */
   void guestHandleTCPDropOut();
+
+  /**
+   * Used to build and send the inGameInfoPackets
+   */
+  void prepareAndSendInGameInfo();
+
 signals:
   // Guest To Host
   /**

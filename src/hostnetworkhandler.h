@@ -51,6 +51,11 @@ class HostNetworkHandler : public QObject {
    */
   int port;
 
+  /**
+   * Multicast address to send from host and recieve on guests for UDP
+   */
+  QHostAddress multicastAddress = QHostAddress("239.255.43.21");
+
  public:
   /**
    * Constructor used to dynamically allocate memory
