@@ -90,19 +90,35 @@ bool FlowChamp::isHost() { return isHostPlayer; }
 void FlowChamp::setRole(bool isPlayerHost) { isHostPlayer = isPlayerHost; }
 
 void FlowChamp::addPlayer(PlayerModel* player) {
+  if (!player) {
+    return;
+  }
   playerList.addPlayer(player);
   playerNames.append(player->getName());
   emit this->MRUpdatePlayerList(playerNames);
 }
 void FlowChamp::removePlayer(PlayerModel* player) {
+  if (!player) {
+    return;
+  }
   playerNames.removeOne(player->getName());
   playerList.removePlayer(player);
   emit this->MRUpdatePlayerList(playerNames);
 }
 
-void FlowChamp::startSendInGameInfo() { sendInGameInfoTimer->start(10); }
+void FlowChamp::startSendInGameInfo() {
+  if (!sendInGameInfoTimer) {
+    return;
+  }
+  sendInGameInfoTimer->start(10);
+}
 
-void FlowChamp::stopSendInGameInfo() { sendInGameInfoTimer->stop(); }
+void FlowChamp::stopSendInGameInfo() {
+  if (!sendInGameInfoTimer) {
+    return;
+  }
+  sendInGameInfoTimer->stop();
+}
 
 void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   qDebug() << "In DRPlayAsHost()";
@@ -130,6 +146,10 @@ void FlowChamp::DRQuitGame() {
 void FlowChamp::CGGoToManageRoom(QHostAddress addressIn, QString portIn,
                                  QString roomCodeIn) {
   qDebug() << "In CGGoToManageRoom()";
+  if (!hostHandler) {
+    return;
+  }
+
   if (hostHandler->startTCPServer(addressIn, portIn.toUShort())) {
     // Success
     QStringList newList;
@@ -141,8 +161,12 @@ void FlowChamp::CGGoToManageRoom(QHostAddress addressIn, QString portIn,
     dialogCG->hide();
     dialogMR->show();
   } else {
-    /// @todo Throw an error with network information
+    error networkError;
+    QString errorMessage = "Error setting up QTcpServer: " +
+                           hostHandler->getTCPServer()->errorString();
+    networkError.throwErrorMsg(errorMessage);
     dialogCG->hide();
+    networkError.exec();
     dialogDR->show();
   }
 }
@@ -171,6 +195,7 @@ void FlowChamp::MRStartGameForAll() {
 void FlowChamp::MRQuitGame() {
   qDebug() << "In MRQuitGame()";
   stopSendInGameInfo();
+  hostHandler->stopTCPServer();
   dialogMR->hide();
   dialogDR->show();
 }
@@ -178,6 +203,10 @@ void FlowChamp::MRQuitGame() {
 void FlowChamp::JGGoToWaitingToStart(QHostAddress addressIn, QString portIn,
                                      QString roomCodeIn) {
   qDebug() << "In JGGoToWaitingToStart()";
+  if (!guestHandler) {
+    return;
+  }
+
   if (guestHandler->connectToHost(addressIn, portIn)) {
     NPProvideRoomCode packet;
     packet.setRoomCode(roomCodeIn);
@@ -199,14 +228,26 @@ void FlowChamp::JGQuitGame() {
 
 void FlowChamp::WSStartClientGame() {
   qDebug() << "In WSStartClientGame()";
-  /// @todo Send the packet to the client to have them start the game
   dialogWS->hide();
   dialogGD->show();
-  guestHandler->listenOnUDP();
+  if (!guestHandler->listenOnUDP()) {
+    error networkError;
+    QString errorMessage =
+        "Error Listening for QUdpSocket on Multicast Port: " +
+        guestHandler->getUdpSocket()->errorString();
+    networkError.throwErrorMsg(errorMessage);
+    dialogCG->hide();
+    networkError.exec();
+    dialogDR->show();
+  }
 }
 
 void FlowChamp::WSQuitGame() {
   qDebug() << "In WSQuitGame()";
+  if (!guestHandler) {
+    return;
+  }
+
   guestHandler->disconnectFromHost();
   dialogWS->hide();
   dialogDR->show();
@@ -229,8 +270,6 @@ void FlowChamp::GDEscPressed() { qDebug() << "In GDEscPressed()"; }
 void FlowChamp::GDQuitGame() {
   qDebug() << "In GDQuitGame()";
   dialogGD->hide();
-  delete dialogGD;
-  dialogGD = new GameDialog();
   dialogDR->show();
 }
 
@@ -294,7 +333,13 @@ void FlowChamp::guestHandleEndGameInfo(NPEndGameInfo packet) {
   /// @todo Handle all the end of game info stuff
 }
 void FlowChamp::guestHandleTCPDropOut() {
-  this->activeWindow()->hide();
+  dialogCG->hide();
+  dialogDR->hide();
+  dialogGD->hide();
+  dialogJG->hide();
+  dialogMR->hide();
+  dialogWS->hide();
+
   dialogDR->show();
 }
 

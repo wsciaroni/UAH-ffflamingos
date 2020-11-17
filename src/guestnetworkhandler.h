@@ -86,6 +86,12 @@ class GuestNetworkHandler : public QObject {
    */
   void stopListeningOnUDP();
 
+  /**
+   * Used to interact directly with the QUdpSocket.
+   * @return The QUdpSocket used by the guest.
+   */
+  QUdpSocket* getUdpSocket();
+
  protected
 slots:
 

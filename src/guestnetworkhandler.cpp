@@ -40,7 +40,7 @@ bool GuestNetworkHandler::listenOnUDP() {
     udpSocket.close();
   }
   bool status = udpSocket.bind(QHostAddress::AnyIPv4, 45454);
-  status = !udpSocket.joinMulticastGroup(multicastAddress);
+  status = status && udpSocket.joinMulticastGroup(multicastAddress);
   connect(&udpSocket, &QUdpSocket::readyRead, this,
           &GuestNetworkHandler::onUDPReadPendingDatagrams);
   return status;
@@ -51,6 +51,8 @@ void GuestNetworkHandler::stopListeningOnUDP() {
     udpSocket.close();
   }
 }
+
+QUdpSocket* GuestNetworkHandler::getUdpSocket() { return &udpSocket; }
 
 void GuestNetworkHandler::onTCPConnected() {
   qDebug() << "In client onTCPConnected()";

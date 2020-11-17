@@ -34,6 +34,7 @@ void HostNetworkHandler::stopTCPServer() {
   if (tcpServer.isListening()) {
     tcpServer.close();
   }
+  ///@todo kill all current client connections
 }
 
 QTcpServer* HostNetworkHandler::getTCPServer() { return &tcpServer; }
