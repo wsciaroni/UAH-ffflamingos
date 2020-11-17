@@ -287,6 +287,7 @@ void FlowChamp::guestHandleWelcomeToRoom(NPWelcomeToRoom packet) {
 
 void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
   /// @todo Handle all the in game info stuff
+  qDebug() << "Packet received and processed";
 }
 
 void FlowChamp::guestHandleEndGameInfo(NPEndGameInfo packet) {
