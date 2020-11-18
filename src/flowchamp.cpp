@@ -265,10 +265,19 @@ void FlowChamp::GDSpacePressed() {
   }
 }
 
-void FlowChamp::GDEscPressed() { qDebug() << "In GDEscPressed()"; }
+void FlowChamp::GDEscPressed() {
+    qDebug() << "In GDEscPressed()";
+    emit GDQuitGame();
+}
 
 void FlowChamp::GDQuitGame() {
   qDebug() << "In GDQuitGame()";
+  if(isHost()) {
+    hostHandler->stopTCPServer();
+  } else {
+      guestHandler->stopListeningOnUDP();
+    guestHandler->disconnectFromHost();
+  }
   dialogGD->hide();
   dialogDR->show();
 }
