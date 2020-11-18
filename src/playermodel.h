@@ -10,7 +10,7 @@
  * Used to determine which spot the player will be displayed in and able to
  * control
  */
-enum PlayerPosition {
+enum class PlayerPosition {
   NONE = 0,
   LOWER_LEFT = 1,
   UPPER_LEFT = 2,
@@ -46,7 +46,7 @@ class PlayerModel {
   int score = 0;
 
   /// Determines which of the 5 flamingos the player will be.
-  PlayerPosition positionID = NONE;
+  PlayerPosition positionID = PlayerPosition::NONE;
 
   // Gameplay - Cool Down Calc
 

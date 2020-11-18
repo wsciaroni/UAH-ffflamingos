@@ -335,7 +335,19 @@ void FlowChamp::guestHandleWelcomeToRoom(NPWelcomeToRoom packet) {
 
 void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
   /// @todo Handle all the in game info stuff
-  qDebug() << "Packet received and processed";
+  for (int i = 0; i < 25; i++) {
+    qint32 xPos, yPos;
+    xPos = packet.getBallPosX(i);
+    yPos = packet.getBallPosY(i);
+  }
+
+  for (int i = 0; i < 6; i++) {
+    bool isExtended = packet.isPlayerExtended(i);
+    qint32 playerScore = packet.getPlayerScore(i);
+    qDebug() << "Player " << i << " has a score of " << playerScore;
+  }
+
+   qDebug() << "Packet received and processed";
 }
 
 void FlowChamp::guestHandleEndGameInfo(NPEndGameInfo packet) {
@@ -354,6 +366,19 @@ void FlowChamp::guestHandleTCPDropOut() {
 
 void FlowChamp::prepareAndSendInGameInfo() {
   NPInGameInfo packet;
-  /// @todo set the inGameInfoInformation
+  for (int i = 0; i < 25; i++) {
+    packet.setBallPosition(i, 0, 0);
+  }
+
+  for (int i = 0; i < 6; i++) {
+    if (i == 1) {
+      packet.setPlayerExtension(i, true);
+      packet.setPlayerScore(i, 0);
+    } else {
+      packet.setPlayerExtension(i, false);
+      packet.setPlayerScore(i, qint32(1000));
+    }
+  }
+
   emit this->hostSendInGameInfo(packet, multicastAddress);
 }
