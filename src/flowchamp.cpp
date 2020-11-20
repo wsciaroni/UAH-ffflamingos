@@ -202,6 +202,12 @@ void FlowChamp::MRStartGameForAll() {
     }
   }
   dialogMR->hide();
+  dialogGD->drawBoard();
+
+  // Spawn each player
+  for (int i = 1; i <= playerList.getMaxUID(); i++) {
+    dialogGD->spawnPlayer(i);
+  }
   dialogGD->show();
   startSendInGameInfo();
 }

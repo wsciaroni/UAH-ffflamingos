@@ -2,8 +2,13 @@
 #define GAMEDIALOG_H
 
 #include <QDialog>
-#include <QKeyEvent>
-
+#include "playermodel.h"
+#include <QGraphicsScene>
+#include <QGraphicsEllipseItem>
+#include <QtGui>
+#include <QDebug>
+#include <QPen>
+#include <QBrush>
 
 namespace Ui {
 class GameDialog;
@@ -22,22 +27,63 @@ class GameDialog : public QDialog {
    * Constructor used to dynamically allocate memory
    * @param parent
    */
-  explicit GameDialog(QWidget* parent = nullptr);
+  explicit GameDialog(QWidget *parent = nullptr);
 
   /**
    * Destructor used to deallocate memory
    */
   ~GameDialog();
 
+  /**
+   * Draws the board onto the dialog
+   */
+  void drawBoard();
+
+  /**
+   * Extends the given players head
+   * @param PlayerPosition to retract
+   */
+  void extendHead(int playerPos);
+
+  /**
+   * Retracts the given players head
+   * @param PlayerPosition to retract
+   */
+  void retractHead(int playerPos);
+
+  /**
+  * Place the given player on the board
+  * @param PlayerPosition to place
+  */
+  void spawnPlayer(int playerPos);
+
  private:
-  Ui::GameDialog* ui;
+  Ui::GameDialog *ui;
+  QGraphicsScene *scene;
+  QGraphicsEllipseItem *gameBoard;
+
+  QGraphicsItem *player1Body;
+  QGraphicsItem *player1Head;
+  QGraphicsItem *player2Body;
+  QGraphicsItem *player2Head;
+  QGraphicsItem *player3Body;
+  QGraphicsItem *player3Head;
+  QGraphicsItem *player4Body;
+  QGraphicsItem *player4Head;
+  QGraphicsItem *player5Body;
+  QGraphicsItem *player5Head;
 
  protected:
   /**
    * @brief A Key Press Event handler (will be used for escape)
    * @param key
    */
-  void keyPressEvent(QKeyEvent* key);
+  void keyPressEvent(QKeyEvent *key);
+
+/*
+ * Repaint the scene
+ */
+// void paintEvent(QPaintEvent* e);
 
 signals:
   /**
