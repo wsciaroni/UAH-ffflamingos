@@ -2,6 +2,7 @@
 #define DETERMINEROLEDIALOG_H
 
 #include <QDialog>
+#include <QRegularExpressionValidator>
 
 namespace Ui {
 class DetermineRoleDialog;
