@@ -6,7 +6,7 @@ NPInGameInfo::~NPInGameInfo() {}
 
 QDataStream& operator<<(QDataStream& ds, NPInGameInfo& packet) {
   for (int i = 0; i < 25; i++) {
-    ds << packet.getBallPosX(i), packet.getBallPosY(i);
+    ds << packet.getBallPosX(i) << packet.getBallPosY(i);
   }
   for (int i = 0; i < 6; i++) {
     ds << packet.getPlayerScore(i) << packet.isPlayerExtended(i);

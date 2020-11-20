@@ -344,10 +344,7 @@ void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
   for (int i = 0; i < 6; i++) {
     bool isExtended = packet.isPlayerExtended(i);
     qint32 playerScore = packet.getPlayerScore(i);
-    qDebug() << "Player " << i << " has a score of " << playerScore;
   }
-
-   qDebug() << "Packet received and processed";
 }
 
 void FlowChamp::guestHandleEndGameInfo(NPEndGameInfo packet) {
