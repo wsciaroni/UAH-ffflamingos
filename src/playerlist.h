@@ -66,6 +66,13 @@ class PlayerList : public QObject {
   PlayerModel* getPlayer(QTcpSocket* socket);
 
   /**
+   * Used to determine what UID to assign to a new player
+   * @return UID of the new player (UIDs range from 1-5)
+   * @note Returns 6 if there are already 5 total players
+   */
+  int getNewPlayerID();
+
+  /**
    * Return a player model based on the given position
    * @param position The PlayerPosition of the player modoel to get
    * @return the Player Model if found, otherwise nullptr

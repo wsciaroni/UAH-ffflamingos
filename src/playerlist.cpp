@@ -45,6 +45,16 @@ PlayerModel* PlayerList::getPlayer(QTcpSocket* socket) {
   return nullptr;
 }
 
+int PlayerList::getNewPlayerID() {
+  for (int i = 1; i < 6; i++) {
+    if (!getPlayer(i))  // If the player does not exist yet, return that number
+    {
+      return i;
+    }
+  }
+  return -1;
+}
+
 PlayerModel* PlayerList::getPlayerByPosition(PlayerPosition position) {
   // Iterate through the map, and if we find a position return it.
 

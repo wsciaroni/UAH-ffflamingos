@@ -44,6 +44,9 @@ class NPInGameInfo : public NPHostToGuest {
    */
   bool isPlayerNumValid(qint32 playerNum);
 
+  /// Holds the number of seconds remaining
+  qint32 timeRemaining;
+
  public:
   NPInGameInfo(/* args */);
   ~NPInGameInfo();
@@ -105,6 +108,18 @@ class NPInGameInfo : public NPHostToGuest {
    * @param isExtended True if the player is extended.
    */
   void setPlayerExtension(qint32 playerNum, bool isExtended);
+
+  /**
+   * Used to set the amount of time remaining in Seconds.
+   *
+   */
+  void setTimeRemaining(qint32 secondsRemaining);
+
+  /**
+   * Used to determine how much time is reamining in Seconds.
+   * @return Seconds remaining.
+   */
+  qint32 getTimeRemaining();
 
   /**
    * Reimplements the `<<` operator for QDataStream.

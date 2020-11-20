@@ -124,7 +124,8 @@ void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   qDebug() << "In DRPlayAsHost()";
   playerName = playerNameIn;
   setRole(true);
-  HostModel* hostPlayer = new HostModel(0, hostHandler->getTCPServer());
+  HostModel* hostPlayer = new HostModel(1, hostHandler->getTCPServer());
+  hostPlayer->setPositionId(static_cast<PlayerPosition>(1));
   playerList.addPlayer(hostPlayer);
   dialogDR->hide();
   dialogCG->show();
@@ -266,16 +267,16 @@ void FlowChamp::GDSpacePressed() {
 }
 
 void FlowChamp::GDEscPressed() {
-    qDebug() << "In GDEscPressed()";
-    emit GDQuitGame();
+  qDebug() << "In GDEscPressed()";
+  emit GDQuitGame();
 }
 
 void FlowChamp::GDQuitGame() {
   qDebug() << "In GDQuitGame()";
-  if(isHost()) {
+  if (isHost()) {
     hostHandler->stopTCPServer();
   } else {
-      guestHandler->stopListeningOnUDP();
+    guestHandler->stopListeningOnUDP();
     guestHandler->disconnectFromHost();
   }
   dialogGD->hide();
@@ -286,11 +287,12 @@ void FlowChamp::GDQuitGame() {
 void FlowChamp::hostHandleRoomCode(NPProvideRoomCode packet,
                                    QTcpSocket* socket) {
   NPRoomCodeStatus statusPacket;
-  static int uidCount = 1;
-  if (packet.getRoomCode() == hostRoomCode) {
+  int newPlayerID = playerList.getNewPlayerID();
+  if (packet.getRoomCode() == hostRoomCode && newPlayerID != -1) {
     statusPacket.setRoomCodeStatus(true);
-    PlayerModel* newPlayer = new PlayerModel(uidCount++, socket);
+    PlayerModel* newPlayer = new PlayerModel(newPlayerID, socket);
     newPlayer->setName(packet.getName());
+    newPlayer->setPositionId(static_cast<PlayerPosition>(newPlayerID));
     addPlayer(newPlayer);
   } else {
     statusPacket.setRoomCodeStatus(false);
@@ -322,7 +324,7 @@ void FlowChamp::guestHandleRoomCodeStatus(NPRoomCodeStatus packet) {
   } else {
     /// @todo throw an error if the room code is invalid
     error* throwError = new error;
-    throwError->throwErrorMsg("ERROR: Invalid Room Code");
+    throwError->throwErrorMsg("ERROR: Invalid Room Code or the Room is Full");
     throwError->exec();
     delete throwError;
     JGQuitGame();
@@ -335,6 +337,8 @@ void FlowChamp::guestHandleWelcomeToRoom(NPWelcomeToRoom packet) {
 
 void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
   /// @todo Handle all the in game info stuff
+  /// @note ball ranges from 0-24 while player ranges from 1-5 in UID. 0
+  /// Represents the High Score
   for (int i = 0; i < 25; i++) {
     qint32 xPos, yPos;
     xPos = packet.getBallPosX(i);
@@ -368,13 +372,8 @@ void FlowChamp::prepareAndSendInGameInfo() {
   }
 
   for (int i = 0; i < 6; i++) {
-    if (i == 1) {
-      packet.setPlayerExtension(i, true);
-      packet.setPlayerScore(i, 0);
-    } else {
-      packet.setPlayerExtension(i, false);
-      packet.setPlayerScore(i, qint32(1000));
-    }
+    packet.setPlayerExtension(i, false);
+    packet.setPlayerScore(i, qint32(1000));
   }
 
   emit this->hostSendInGameInfo(packet, multicastAddress);

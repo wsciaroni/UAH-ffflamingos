@@ -100,3 +100,13 @@ void NPInGameInfo::setPlayerExtension(qint32 playerNum, bool isExtended) {
   }
   playerExtended[playerNum] = isExtended;
 }
+
+void NPInGameInfo::setTimeRemaining(qint32 secondsRemaining) {
+  if (secondsRemaining >= 0) {
+    timeRemaining = secondsRemaining;
+  } else {
+    timeRemaining = 0;
+  }
+}
+
+qint32 NPInGameInfo::getTimeRemaining() { return timeRemaining; }
