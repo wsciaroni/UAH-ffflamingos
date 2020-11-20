@@ -106,6 +106,17 @@ void FlowChamp::removePlayer(PlayerModel* player) {
   emit this->MRUpdatePlayerList(playerNames);
 }
 
+void FlowChamp::makePlayerLunge(PlayerModel* player) {
+  if (!player) {
+    return;
+  }
+
+  if (player->spacePressed()) {
+    /// @todo Then space was allowed to be pressed so make the animation happen
+    /// and check to see if they got any points
+  }
+}
+
 void FlowChamp::startSendInGameInfo() {
   if (!sendInGameInfoTimer) {
     return;
@@ -182,9 +193,11 @@ void FlowChamp::MRStartGameForAll() {
   qDebug() << "In MRStartGameForAll()";
   NPWelcomeToRoom packet;
   // for (PlayerModel* temp : playerList.keys()) {
+  playerList.getPlayer(1)->enableTimers();
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
+      temp->enableTimers();
       emit this->hostSendWelcomeToRoom(packet, temp->getTCPSocket());
     }
   }
@@ -216,7 +229,12 @@ void FlowChamp::JGGoToWaitingToStart(QHostAddress addressIn, QString portIn,
     dialogJG->hide();
   } else {
     /// @todo say what went wrong when joining game
+    error networkError;
+    QString errorMessage = "Error connecting to Host: " +
+                           guestHandler->getTcpSocket()->errorString();
+    networkError.throwErrorMsg(errorMessage);
     dialogJG->hide();
+    networkError.exec();
     dialogDR->show();
   }
 }
@@ -258,6 +276,8 @@ void FlowChamp::GDSpacePressed() {
   qDebug() << "In GDSpacePressed()";
   if (this->isHost()) {
     qDebug() << "GDSpacePressedLocal is Host";
+    makePlayerLunge(
+        playerList.getPlayer(1));  // Call this on the host player with UID == 1
   } else {
     qDebug() << "GDSpacePressedLocal is Guest";
     NPSpacePressed packet;
@@ -308,6 +328,7 @@ void FlowChamp::hostHandleSpacePressed(NPSpacePressed packet,
                                        QTcpSocket* socket) {
   qDebug() << "Host: Space Pressed by "
            << playerList.getPlayer(socket)->getName();
+  makePlayerLunge(playerList.getPlayer(socket));
 }
 
 void FlowChamp::hostHandleGuestTerminated(QTcpSocket* socket) {

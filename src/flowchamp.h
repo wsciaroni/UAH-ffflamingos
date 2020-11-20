@@ -88,6 +88,13 @@ class FlowChamp : public QApplication {
    */
   void removePlayer(PlayerModel* player);
 
+  /**
+   * Used to trigger the correct actions on the Host when a player presses
+   * space.
+   * @param player The PlayerModel of the player to lunge
+   */
+  void makePlayerLunge(PlayerModel* player);
+
   /// For sending the UDP packets on interval from the Host to the Guests
   QTimer* sendInGameInfoTimer = new QTimer(this);
 

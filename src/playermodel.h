@@ -22,7 +22,9 @@ enum class PlayerPosition {
 /**
  * Dynamically allocate one of these players for each player
  */
-class PlayerModel {
+class PlayerModel : public QObject {
+  Q_OBJECT
+
  private:
   // Id
   /// Unique User id used to allow name changes in the future
@@ -79,7 +81,7 @@ class PlayerModel {
   bool timersEnabled = false;
 
   /// The number of spaces allowed per each cooldown period
-  const int numAllowedInTime = 3;
+  const int numAllowedInTime = 4;
 
   /// The length of the time (in milliseconds) of the cooldown Period
   const int cooldownPeriod = 10000;

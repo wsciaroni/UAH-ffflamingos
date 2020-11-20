@@ -54,6 +54,8 @@ void GuestNetworkHandler::stopListeningOnUDP() {
 
 QUdpSocket* GuestNetworkHandler::getUdpSocket() { return &udpSocket; }
 
+QTcpSocket* GuestNetworkHandler::getTcpSocket() { return &tcpSocket; }
+
 void GuestNetworkHandler::onTCPConnected() {
   qDebug() << "In client onTCPConnected()";
 }

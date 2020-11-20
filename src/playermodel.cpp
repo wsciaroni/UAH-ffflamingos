@@ -4,19 +4,29 @@ void PlayerModel::setUID(int uid) { this->uid = uid; }
 
 bool PlayerModel::allowedToLunge() {
   // This is what happens when grading occurs based on SLOC
+  qDebug() << "Checking for lunge ability";
   if (!timersEnabled) {
     return false;
-  } else if (animationLocked) {
+  }
+  qDebug() << "Timers Enabled";
+  if (animationLocked) {
+    qDebug() << "Animation is locked";
     return false;
   } else if (numPressesSinceTimeReset > numAllowedInTime) {
+    qDebug() << "Number of presses too high";
     return false;
   }
+  qDebug() << "Allowed to lunge";
+  numPressesSinceTimeReset++;
   return true;
 }
 
 PlayerModel::PlayerModel(int uid, QTcpSocket* socket) {
   setUID(uid);
   setTCPSocket(socket);
+  connect(&coolDownTimer, &QTimer::timeout, this,
+          &PlayerModel::resetCooldownPeriod);
+  connect(&animationTimer, &QTimer::timeout, this, &PlayerModel::animationDone);
 }
 
 PlayerModel::PlayerModel(int uid) { setUID(uid); }
@@ -53,9 +63,10 @@ void PlayerModel::enableTimers() {
 void PlayerModel::disableTimers() {}
 
 bool PlayerModel::spacePressed() {
-  numPressesSinceTimeReset++;
   if (allowedToLunge()) {
+    animationTimer.setSingleShot(true);
     animationTimer.start(animationPeriod);
+    animationLocked = true;
     return true;
   }
   return false;

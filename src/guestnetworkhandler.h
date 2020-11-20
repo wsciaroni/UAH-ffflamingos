@@ -92,6 +92,12 @@ class GuestNetworkHandler : public QObject {
    */
   QUdpSocket* getUdpSocket();
 
+  /**
+   * Used to interact directly with the QTcpSocket.
+   * @return The QTcpSocket used by the guest.
+   */
+  QTcpSocket* getTcpSocket();
+
  protected
 slots:
 
