@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QKeyEvent>
 
+
 namespace Ui {
 class GameDialog;
 }
