@@ -140,4 +140,8 @@ void GameDialog::spawnPlayer(int playerPos) {
   }
 }
 
+void GameDialog::setBallPos(qint32 xPos[25], qint32 yPos[25]) {
+  /// @todo draw balls at each coordinate pair.
+}
+
 void GameDialog::HandleInfoIn(/*TBD*/) {}

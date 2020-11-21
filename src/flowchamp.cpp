@@ -383,7 +383,7 @@ void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
   }
   /// @todo make animation of players based off the playerExtensions array.
   /// @todo make the current scores based off the scores array.
-  /// @todo make the balls appear at the place of the xPos and yPos arrays.
+  dialogGD->setBallPos(xPos, yPos);
 }
 
 void FlowChamp::guestHandleEndGameInfo(NPEndGameInfo packet) {
@@ -401,15 +401,27 @@ void FlowChamp::guestHandleTCPDropOut() {
 }
 
 void FlowChamp::prepareAndSendInGameInfo() {
+  /// @todo calculate all ball positions
+  qint32 xPos[25];
+  qint32 yPos[25];
+  qint32 scores[6];
+
   NPInGameInfo packet;
   for (int i = 0; i < 25; i++) {
+    /// @todo Update and get each balls position
     packet.setBallPosition(i, 0, 0);
+    // xPos[i] = ballPositionX;
+    // yPos[i] = ballPositionY;
   }
-
+  qint32 player[6];
   for (int i = 0; i < 6; i++) {
     packet.setPlayerExtension(i, false);
-    packet.setPlayerScore(i, qint32(1000));
+    packet.setPlayerScore(i, 1000);
+    // scores[i] = playerScore; // Player 0 should be used to denote the high
+    // score.
   }
+
+  dialogGD->setBallPos(xPos, yPos);
 
   emit this->hostSendInGameInfo(packet, multicastAddress);
 }
