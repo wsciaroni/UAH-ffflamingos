@@ -1,4 +1,5 @@
 #include "flowchamp.h"
+#include <QRandomGenerator>
 
 FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
   connect(dialogDR, &DetermineRoleDialog::DRPlayAsHost, this,
@@ -71,6 +72,12 @@ FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
 
   connect(sendInGameInfoTimer, &QTimer::timeout, this,
           QOverload<>::of(&FlowChamp::prepareAndSendInGameInfo));
+
+  for(int i = 0; i < 25; i++){
+      hostBallInfo[i] = new ball;
+      //hostBallInfo[i]->setPos(QRandomGenerator::global()->bounded(-200,200),QRandomGenerator::global()->bounded(-200,200));
+      hostBallInfo[i]->setPos(0,0);
+  }
 }
 
 FlowChamp::~FlowChamp() {
@@ -409,9 +416,11 @@ void FlowChamp::prepareAndSendInGameInfo() {
   NPInGameInfo packet;
   for (int i = 0; i < 25; i++) {
     /// @todo Update and get each balls position
-    packet.setBallPosition(i, 0, 0);
-    // xPos[i] = ballPositionX;
-    // yPos[i] = ballPositionY;
+
+    hostBallInfo[i]->advanceBall();
+    packet.setBallPosition(i, hostBallInfo[i]->pos().x(), hostBallInfo[i]->pos().y());
+    xPos[i] = hostBallInfo[i]->pos().x();
+    yPos[i] = hostBallInfo[i]->pos().y();
   }
   qint32 player[6];
   for (int i = 0; i < 6; i++) {

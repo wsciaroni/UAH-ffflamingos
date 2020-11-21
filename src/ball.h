@@ -15,8 +15,9 @@ class ball : public QGraphicsItem {
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
              QWidget *widget);
 
- protected:
   void advanceBall();
+ protected:
+
 
  private:
   QColor color;

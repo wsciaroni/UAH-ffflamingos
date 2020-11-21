@@ -13,6 +13,7 @@
 // Networking
 #include "guestnetworkhandler.h"
 #include "hostnetworkhandler.h"
+#include "ball.h"
 
 // Player Abstraction
 #include "playerlist.h"
@@ -37,6 +38,8 @@ class FlowChamp : public QApplication {
 
   /// Holds a list of currently attached players.
   QStringList playerNames;
+
+  ball* hostBallInfo[25];
 
   // Dialogs
 

@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QPen>
 #include <QBrush>
+#include "ball.h"
 
 namespace Ui {
 class GameDialog;
@@ -79,6 +80,7 @@ class GameDialog : public QDialog {
   QGraphicsItem *player4Head;
   QGraphicsItem *player5Body;
   QGraphicsItem *player5Head;
+  ball* gameBalls[25];
 
  protected:
   /**

@@ -31,15 +31,14 @@ void GameDialog::drawBoard() {
   // Create ellipse
   QPen ellipsePen(Qt::red);
   ellipsePen.setWidth(10);
-  gameBoard = scene->addEllipse(0, 0, 600, 600, ellipsePen, QBrush(Qt::gray));
+
+  gameBoard = scene->addEllipse(-300, -300, 600, 600, ellipsePen, QBrush(Qt::gray));
 
   // Lower Left
   player1Body =
-      scene->addRect(290, 10, 20, 100, QPen(Qt::black), QBrush(Qt::magenta));
+      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::magenta));
   player1Head =
-      scene->addRect(275, 110, 50, 50, QPen(Qt::black), QBrush(Qt::magenta));
-  player1Body->setTransformOriginPoint(300, 300);
-  player1Head->setTransformOriginPoint(300, 300);
+      scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::magenta));
   player1Body->setRotation(-144);
   player1Head->setRotation(-144);
   player1Body->setVisible(false);
@@ -47,11 +46,9 @@ void GameDialog::drawBoard() {
 
   // Upper Left
   player2Body =
-      scene->addRect(290, 10, 20, 100, QPen(Qt::black), QBrush(Qt::cyan));
+        scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::cyan));
   player2Head =
-      scene->addRect(275, 110, 50, 50, QPen(Qt::black), QBrush(Qt::cyan));
-  player2Body->setTransformOriginPoint(300, 300);
-  player2Head->setTransformOriginPoint(300, 300);
+        scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::cyan));
   player2Body->setRotation(-72);
   player2Head->setRotation(-72);
   player2Body->setVisible(false);
@@ -59,19 +56,17 @@ void GameDialog::drawBoard() {
 
   // Center
   player3Body =
-      scene->addRect(290, 10, 20, 100, QPen(Qt::black), QBrush(Qt::yellow));
+        scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::yellow));
   player3Head =
-      scene->addRect(275, 110, 50, 50, QPen(Qt::black), QBrush(Qt::yellow));
+        scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::yellow));
   player3Body->setVisible(false);
   player3Head->setVisible(false);
 
   // Upper Right
   player4Body =
-      scene->addRect(290, 10, 20, 100, QPen(Qt::black), QBrush(Qt::green));
+        scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::green));
   player4Head =
-      scene->addRect(275, 110, 50, 50, QPen(Qt::black), QBrush(Qt::green));
-  player4Body->setTransformOriginPoint(300, 300);
-  player4Head->setTransformOriginPoint(300, 300);
+        scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::green));
   player4Body->setRotation(72);
   player4Head->setRotation(72);
   player4Body->setVisible(false);
@@ -79,15 +74,20 @@ void GameDialog::drawBoard() {
 
   // Lower Right
   player5Body =
-      scene->addRect(290, 10, 20, 100, QPen(Qt::black), QBrush(Qt::blue));
+      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::blue));
   player5Head =
-      scene->addRect(275, 110, 50, 50, QPen(Qt::black), QBrush(Qt::blue));
-  player5Body->setTransformOriginPoint(300, 300);
-  player5Head->setTransformOriginPoint(300, 300);
+      scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::blue));
   player5Body->setRotation(144);
   player5Head->setRotation(144);
   player5Body->setVisible(false);
   player5Head->setVisible(false);
+
+  //initializing balls
+  for(int i = 0; i < 25; i++){
+     gameBalls[i] = new ball;
+     gameBalls[i]->setPos(0,0);
+     scene->addItem(gameBalls[i]);
+  }
 
   qDebug() << "Drawing Board" << endl;
 }
@@ -142,6 +142,9 @@ void GameDialog::spawnPlayer(int playerPos) {
 
 void GameDialog::setBallPos(qint32 xPos[25], qint32 yPos[25]) {
   /// @todo draw balls at each coordinate pair.
+    for(int i = 0;i < 25; i++){
+        gameBalls[i]->setPos(xPos[i],yPos[i]);
+    }
 }
 
 void GameDialog::HandleInfoIn(/*TBD*/) {}
