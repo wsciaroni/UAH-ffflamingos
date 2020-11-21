@@ -24,9 +24,6 @@ bool PlayerModel::allowedToLunge() {
 PlayerModel::PlayerModel(int uid, QTcpSocket* socket) {
   setUID(uid);
   setTCPSocket(socket);
-  connect(&coolDownTimer, &QTimer::timeout, this,
-          &PlayerModel::resetCooldownPeriod);
-  connect(&animationTimer, &QTimer::timeout, this, &PlayerModel::animationDone);
 }
 
 PlayerModel::PlayerModel(int uid) { setUID(uid); }
@@ -58,14 +55,15 @@ PlayerPosition PlayerModel::getPositionId() { return this->positionID; }
 void PlayerModel::enableTimers() {
   timersEnabled = true;
   coolDownTimer.start(cooldownPeriod);
+  connect(&coolDownTimer, &QTimer::timeout, this,
+          &PlayerModel::resetCooldownPeriod);
 }
 
 void PlayerModel::disableTimers() {}
 
 bool PlayerModel::spacePressed() {
   if (allowedToLunge()) {
-    animationTimer.setSingleShot(true);
-    animationTimer.start(animationPeriod);
+    QTimer::singleShot(animationPeriod, this, &PlayerModel::animationDone);
     animationLocked = true;
     return true;
   }

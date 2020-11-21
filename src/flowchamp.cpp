@@ -363,19 +363,27 @@ void FlowChamp::guestHandleWelcomeToRoom(NPWelcomeToRoom packet) {
 }
 
 void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
-  /// @todo Handle all the in game info stuff
-  /// @note ball ranges from 0-24 while player ranges from 1-5 in UID. 0
-  /// Represents the High Score
+  /// @note ball ranges from 0-24 while player ranges from 1-5 in UID.
+  /// 0 Represents the High Score.
+  qint32 xPos[25];
+  qint32 yPos[25];
+
   for (int i = 0; i < 25; i++) {
-    qint32 xPos, yPos;
-    xPos = packet.getBallPosX(i);
-    yPos = packet.getBallPosY(i);
+    xPos[i] = packet.getBallPosX(i);
+    yPos[i] = packet.getBallPosY(i);
   }
 
+  bool playerExtensions[6];
+  playerExtensions[0] =
+      0;  // There is no player 0, that is the high score slot.
+  qint32 scores[6];
   for (int i = 0; i < 6; i++) {
-    bool isExtended = packet.isPlayerExtended(i);
-    qint32 playerScore = packet.getPlayerScore(i);
+    playerExtensions[i] = packet.isPlayerExtended(i);
+    scores[i] = packet.getPlayerScore(i);
   }
+  /// @todo make animation of players based off the playerExtensions array.
+  /// @todo make the current scores based off the scores array.
+  /// @todo make the balls appear at the place of the xPos and yPos arrays.
 }
 
 void FlowChamp::guestHandleEndGameInfo(NPEndGameInfo packet) {
