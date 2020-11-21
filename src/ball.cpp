@@ -28,29 +28,23 @@ QRectF ball::boundingRect() const {
 void ball::advanceBall() {
 
   if (qSqrt(qPow(this->pos().rx(), 2) + qPow(this->pos().y(), 2)) + 5 >= 300) {
-
-    qDebug() << "Hits edge\n";
-
+    // qDebug() << "Hits edge\n";
     double random = ((double)rand() / RAND_MAX);
     if ((this->pos().x() < 2) && (this->pos().x() > -2)) {
       if (this->pos().y() < 0) {
         dx = 2;
         dy = 2;
-        qDebug() << "a\n";
       } else {
         dx = -2;
         dy = -2;
-        qDebug() << "b\n";
       }
     } else if ((this->pos().y() < 2) && (this->pos().y() > -2)) {
       if (this->pos().x() < 0) {
         dx = 2;
         dy = 2;
-        qDebug() << "c\n";
       } else {
         dx = -2;
         dy = -2;
-        qDebug() << "d\n";
       }
     } else {
       dy = -random * (this->pos().y()) / 310 * 2;
@@ -69,9 +63,6 @@ void ball::advanceBall() {
         dy += -0.5;
       }
     }
-
-    qDebug() << dx << " " << dy << this->pos().x() << " " << this->pos().y()
-             << '\n';
   }
   x = this->pos().rx();
   y = this->pos().ry();

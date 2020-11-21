@@ -16,9 +16,8 @@ class ball : public QGraphicsItem {
              QWidget *widget);
 
   void advanceBall();
+
  protected:
-
-
  private:
   QColor color;
   qreal start_x = 305;

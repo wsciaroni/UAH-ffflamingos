@@ -80,7 +80,7 @@ class GameDialog : public QDialog {
   QGraphicsItem *player4Head;
   QGraphicsItem *player5Body;
   QGraphicsItem *player5Head;
-  ball* gameBalls[25];
+  ball *gameBalls[25];
 
  protected:
   /**

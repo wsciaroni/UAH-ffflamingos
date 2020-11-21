@@ -73,10 +73,10 @@ FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
   connect(sendInGameInfoTimer, &QTimer::timeout, this,
           QOverload<>::of(&FlowChamp::prepareAndSendInGameInfo));
 
-  for(int i = 0; i < 25; i++){
-      hostBallInfo[i] = new ball;
-      //hostBallInfo[i]->setPos(QRandomGenerator::global()->bounded(-200,200),QRandomGenerator::global()->bounded(-200,200));
-      hostBallInfo[i]->setPos(0,0);
+  for (int i = 0; i < 25; i++) {
+    hostBallInfo[i] = new ball;
+    // hostBallInfo[i]->setPos(QRandomGenerator::global()->bounded(-200,200),QRandomGenerator::global()->bounded(-200,200));
+    hostBallInfo[i]->setPos(0, 0);
   }
 }
 
@@ -178,6 +178,11 @@ void FlowChamp::CGGoToManageRoom(QHostAddress addressIn, QString portIn,
     emit this->MRUpdatePlayerList(newList);
     emit this->MRPassHostInfo(addressIn.toString(), portIn, roomCodeIn);
     dialogCG->hide();
+    dialogGD->drawBoard();
+    // Spawn each player
+    for (int i = 1; i <= playerList.getMaxUID(); i++) {
+      dialogGD->spawnPlayer(i);
+    }
     dialogMR->show();
   } else {
     error networkError;
@@ -418,7 +423,8 @@ void FlowChamp::prepareAndSendInGameInfo() {
     /// @todo Update and get each balls position
 
     hostBallInfo[i]->advanceBall();
-    packet.setBallPosition(i, hostBallInfo[i]->pos().x(), hostBallInfo[i]->pos().y());
+    packet.setBallPosition(i, hostBallInfo[i]->pos().x(),
+                           hostBallInfo[i]->pos().y());
     xPos[i] = hostBallInfo[i]->pos().x();
     yPos[i] = hostBallInfo[i]->pos().y();
   }

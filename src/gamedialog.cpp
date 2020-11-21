@@ -32,7 +32,8 @@ void GameDialog::drawBoard() {
   QPen ellipsePen(Qt::red);
   ellipsePen.setWidth(10);
 
-  gameBoard = scene->addEllipse(-300, -300, 600, 600, ellipsePen, QBrush(Qt::gray));
+  gameBoard =
+      scene->addEllipse(-300, -300, 600, 600, ellipsePen, QBrush(Qt::gray));
 
   // Lower Left
   player1Body =
@@ -46,9 +47,9 @@ void GameDialog::drawBoard() {
 
   // Upper Left
   player2Body =
-        scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::cyan));
+      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::cyan));
   player2Head =
-        scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::cyan));
+      scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::cyan));
   player2Body->setRotation(-72);
   player2Head->setRotation(-72);
   player2Body->setVisible(false);
@@ -56,17 +57,17 @@ void GameDialog::drawBoard() {
 
   // Center
   player3Body =
-        scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::yellow));
+      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::yellow));
   player3Head =
-        scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::yellow));
+      scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::yellow));
   player3Body->setVisible(false);
   player3Head->setVisible(false);
 
   // Upper Right
   player4Body =
-        scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::green));
+      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::green));
   player4Head =
-        scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::green));
+      scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::green));
   player4Body->setRotation(72);
   player4Head->setRotation(72);
   player4Body->setVisible(false);
@@ -82,11 +83,11 @@ void GameDialog::drawBoard() {
   player5Body->setVisible(false);
   player5Head->setVisible(false);
 
-  //initializing balls
-  for(int i = 0; i < 25; i++){
-     gameBalls[i] = new ball;
-     gameBalls[i]->setPos(0,0);
-     scene->addItem(gameBalls[i]);
+  // initializing balls
+  for (int i = 0; i < 25; i++) {
+    gameBalls[i] = new ball;
+    gameBalls[i]->setPos(0, 0);
+    scene->addItem(gameBalls[i]);
   }
 
   qDebug() << "Drawing Board" << endl;
@@ -142,9 +143,9 @@ void GameDialog::spawnPlayer(int playerPos) {
 
 void GameDialog::setBallPos(qint32 xPos[25], qint32 yPos[25]) {
   /// @todo draw balls at each coordinate pair.
-    for(int i = 0;i < 25; i++){
-        gameBalls[i]->setPos(xPos[i],yPos[i]);
-    }
+  for (int i = 0; i < 25; i++) {
+    gameBalls[i]->setPos(xPos[i], yPos[i]);
+  }
 }
 
 void GameDialog::HandleInfoIn(/*TBD*/) {}
