@@ -59,8 +59,8 @@ void HostNetworkHandler::onNewTCPConnection() {
 
 void HostNetworkHandler::onTCPConnected() {
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
-  tcpSocket->setProxy(QNetworkProxy::NoProxy);
-  if (tcpSocket != nullptr) {
+  if (tcpSocket != NULL) {
+    tcpSocket->setProxy(QNetworkProxy::NoProxy);
     qDebug() << "In onTCPConnected()\n";
   }
 }
@@ -74,6 +74,7 @@ void HostNetworkHandler::onTCPDisconnected() {
 void HostNetworkHandler::onTCPDataReady() {
   qDebug() << "In onTCPDataReady()";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
+  tcpSocket->setProxy(QNetworkProxy::NoProxy);
   while (tcpSocket->bytesAvailable()) {
     qDebug() << "In LOOP onTCPDataReady()";
     tcpSocket->setProxy(QNetworkProxy::NoProxy);

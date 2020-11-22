@@ -261,12 +261,6 @@ void FlowChamp::JGQuitGame() {
 void FlowChamp::WSStartClientGame() {
   qDebug() << "In WSStartClientGame()";
   dialogWS->hide();
-  dialogGD->drawBoard();
-  // Spawn each player
-  for (int i = 1; i <= 5; i++) {
-    dialogGD->spawnPlayer(i);
-  }
-  dialogGD->show();
   if (!guestHandler->listenOnUDP()) {
     error networkError;
     QString errorMessage =
@@ -276,6 +270,13 @@ void FlowChamp::WSStartClientGame() {
     dialogCG->hide();
     networkError.exec();
     dialogDR->show();
+  } else {
+    dialogGD->drawBoard();
+    // Spawn each player
+    for (int i = 1; i <= 5; i++) {
+      dialogGD->spawnPlayer(i);
+    }
+    dialogGD->show();
   }
 }
 

@@ -13,6 +13,7 @@ bool GuestNetworkHandler::connectToHost(QHostAddress hostAddress,
                                         QString portIn) {
   if (!tcpSocket.isOpen()) {
     port = portIn.toInt();
+    tcpSocket.setProxy(QNetworkProxy::NoProxy);
     tcpSocket.connectToHost(hostAddress, port);
     if (tcpSocket.waitForConnected(3000)) {
 
