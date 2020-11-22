@@ -178,11 +178,6 @@ void FlowChamp::CGGoToManageRoom(QHostAddress addressIn, QString portIn,
     emit this->MRUpdatePlayerList(newList);
     emit this->MRPassHostInfo(addressIn.toString(), portIn, roomCodeIn);
     dialogCG->hide();
-    dialogGD->drawBoard();
-    // Spawn each player
-    for (int i = 1; i <= playerList.getMaxUID(); i++) {
-      dialogGD->spawnPlayer(i);
-    }
     dialogMR->show();
   } else {
     error networkError;
@@ -266,6 +261,11 @@ void FlowChamp::JGQuitGame() {
 void FlowChamp::WSStartClientGame() {
   qDebug() << "In WSStartClientGame()";
   dialogWS->hide();
+  dialogGD->drawBoard();
+  // Spawn each player
+  for (int i = 1; i <= 5; i++) {
+    dialogGD->spawnPlayer(i);
+  }
   dialogGD->show();
   if (!guestHandler->listenOnUDP()) {
     error networkError;
