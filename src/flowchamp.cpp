@@ -75,8 +75,19 @@ FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
 
   for (int i = 0; i < 25; i++) {
     hostBallInfo[i] = new ball;
-    // hostBallInfo[i]->setPos(QRandomGenerator::global()->bounded(-200,200),QRandomGenerator::global()->bounded(-200,200));
-    hostBallInfo[i]->setPos(0, 0);
+    qreal x = 400, y = 400, dx = 0, dy = 0;
+    while (qSqrt(qPow(x, 2) + qPow(y, 2)) + 5 >= 300) {
+      x = static_cast<qreal>(QRandomGenerator::global()->bounded(-300, 300));
+      y = static_cast<qreal>(QRandomGenerator::global()->bounded(-300, 300));
+    }
+
+    while (dx == 0 && dy == 0) {
+      dx = static_cast<qreal>(QRandomGenerator::global()->bounded(-2, 2));
+      dy = static_cast<qreal>(QRandomGenerator::global()->bounded(-2, 2));
+    }
+
+    hostBallInfo[i]->initializeBall(x, y, dx, dy);
+    // hostBallInfo[i]->setPos(0, 0);
   }
 }
 

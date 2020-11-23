@@ -26,49 +26,21 @@ QRectF ball::boundingRect() const {
 }
 
 void ball::advanceBall() {
-
-  if (qSqrt(qPow(this->pos().rx(), 2) + qPow(this->pos().y(), 2)) + 5 >= 300) {
-    // qDebug() << "Hits edge\n";
-    double random = ((double)rand() / RAND_MAX);
-    if ((this->pos().x() < 2) && (this->pos().x() > -2)) {
-      if (this->pos().y() < 0) {
-        dx = 2;
-        dy = 2;
-      } else {
-        dx = -2;
-        dy = -2;
-      }
-    } else if ((this->pos().y() < 2) && (this->pos().y() > -2)) {
-      if (this->pos().x() < 0) {
-        dx = 2;
-        dy = 2;
-      } else {
-        dx = -2;
-        dy = -2;
-      }
-    } else {
-      dy = -random * (this->pos().y()) / 310 * 2;
-      dx = -(1 - random) * (this->pos().x()) / 310 * 2;
-    }
-
-    if (qSqrt(qPow(dx, 2) + qPow(dy, 2)) < 2) {
-      if (dx >= 0) {
-        dx += 0.5;
-      } else {
-        dx -= 0.5;
-      }
-      if (dy >= 0) {
-        dy += 0.5;
-      } else {
-        dy += -0.5;
-      }
-    }
-  }
   x = this->pos().rx();
   y = this->pos().ry();
-  x = x + dx;
-  y = y + dy;
-
+  if (qSqrt(qPow(x, 2) + qPow(y, 2)) + 5 >= 300) {
+    // qDebug() << "Hits edge\n";
+    double beta = 300;
+    int megaPi = M_PI * 10000;
+    qreal angleOffset = static_cast<qreal>(
+        static_cast<double>(
+            QRandomGenerator::global()->bounded(-megaPi, megaPi)) /
+        static_cast<double>(10000));
+    dx = (-x / beta) + qSin(angleOffset);
+    dy = (-y / beta) + qCos(angleOffset);
+  }
+  x += dx;
+  y += dy;
   setPos(x, y);
 }
 
@@ -76,4 +48,10 @@ QPainterPath ball::shape() const {
   QPainterPath path;
   path.addEllipse(-w / 2, -h / 2, w, h);
   return path;
+}
+
+void ball::initializeBall(qreal xPos, qreal yPos, qreal dxIn, qreal dyIn) {
+  setPos(xPos, yPos);
+  this->dx = dxIn;
+  this->dy = dyIn;
 }
