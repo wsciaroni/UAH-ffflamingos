@@ -435,10 +435,11 @@ void FlowChamp::prepareAndSendInGameInfo() {
     /// @todo Update and get each balls position
 
     hostBallInfo[i]->advanceBall();
-    packet.setBallPosition(i, hostBallInfo[i]->pos().x(),
-                           hostBallInfo[i]->pos().y());
-    xPos[i] = hostBallInfo[i]->pos().x();
-    yPos[i] = hostBallInfo[i]->pos().y();
+    qreal x = hostBallInfo[i]->pos().x();
+    qreal y = hostBallInfo[i]->pos().y();
+    packet.setBallPosition(i, x, y);
+    xPos[i] = static_cast<qint32>(x);
+    yPos[i] = static_cast<qint32>(y);
   }
   qint32 player[6];
   for (int i = 0; i < 6; i++) {
