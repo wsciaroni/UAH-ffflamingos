@@ -132,6 +132,15 @@ void FlowChamp::makePlayerLunge(PlayerModel* player) {
   if (player->spacePressed()) {
     /// @todo Then space was allowed to be pressed so make the animation happen
     /// and check to see if they got any points
+    bool* isColliding =
+        dialogGD->determineCapturedBalls(player->getPositionId());
+    for (int i = 0; i < 25; i++) {
+      if (isColliding[i]) {
+        hostBallInfo[i]->hideBall();
+        player->increaseScore(1);
+        qDebug() << "Player score: " << player->getScore();
+      }
+    }
   }
 }
 
@@ -311,7 +320,7 @@ void FlowChamp::GDSpacePressed() {
   } else {
     qDebug() << "GDSpacePressedLocal is Guest";
     NPSpacePressed packet;
-    packet.setUID(0);
+    packet.setUID(playerList.getMaxUID());
     emit this->guestSendSpacePressed(packet);
   }
 }
@@ -444,7 +453,17 @@ void FlowChamp::prepareAndSendInGameInfo() {
   qint32 player[6];
   for (int i = 0; i < 6; i++) {
     packet.setPlayerExtension(i, false);
-    packet.setPlayerScore(i, 1000);
+    if (i == 0) {
+      packet.setPlayerScore(i, 1000);
+    } else {
+      PlayerModel* player = playerList.getPlayer(i);
+      int score = 1000;
+      if (player) {
+        score = player->getScore();
+      }
+
+      packet.setPlayerScore(i, score);
+    }
     // scores[i] = playerScore; // Player 0 should be used to denote the high
     // score.
   }

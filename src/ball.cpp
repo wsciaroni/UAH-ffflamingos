@@ -16,6 +16,7 @@ ball::ball() {
 
 void ball::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                  QWidget *widget) {
+
   painter->setBrush(color);
   painter->drawEllipse(-w / 2, -h / 2, w, h);
 }
@@ -26,8 +27,13 @@ QRectF ball::boundingRect() const {
 }
 
 void ball::advanceBall() {
+  if (isHidden) {
+    return;
+  }
+
   x = this->pos().rx();
   y = this->pos().ry();
+
   if (qSqrt(qPow(x, 2) + qPow(y, 2)) + 5 >= 300) {
     // qDebug() << "Hits edge\n";
     double beta = 300;
@@ -42,6 +48,14 @@ void ball::advanceBall() {
   x += dx;
   y += dy;
   setPos(x, y);
+}
+
+void ball::hideBall() {
+  isHidden = true;
+  dx = 0;
+  dy = 0;
+  setPos(0, 0);
+  hide();
 }
 
 QPainterPath ball::shape() const {

@@ -44,6 +44,11 @@ class ball : public QGraphicsItem {
    */
   void initializeBall(qreal xPos, qreal yPos, qreal dxIn, qreal dyIn);
 
+  /**
+   * Used when the ball has been eaten to hide it
+   */
+  void hideBall();
+
  protected:
  private:
   QColor color;
@@ -54,6 +59,7 @@ class ball : public QGraphicsItem {
   qreal h, w;
   qreal dx;
   qreal dy;
+  bool isHidden = false;
 };
 
 #endif  // BALL_H

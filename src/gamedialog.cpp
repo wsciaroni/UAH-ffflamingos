@@ -148,4 +148,36 @@ void GameDialog::setBallPos(qint32 xPos[25], qint32 yPos[25]) {
   }
 }
 
+bool* GameDialog::determineCapturedBalls(PlayerPosition pos) {
+  static bool isColliding[25];
+  for (int i = 0; i < 25; i++) {
+    isColliding[i] = false;
+  }
+
+  QGraphicsItem* player = NULL;
+  switch (pos) {
+    case PlayerPosition::LOWER_LEFT:
+      player = player1Head;
+      break;
+    case PlayerPosition::UPPER_LEFT:
+      player = player2Head;
+      break;
+    case PlayerPosition::CENTER:
+      player = player3Head;
+      break;
+    case PlayerPosition::UPPER_RIGHT:
+      player = player4Head;
+      break;
+    case PlayerPosition::LOWER_RIGHT:
+      player = player5Head;
+      break;
+    default:
+      return NULL;
+  }
+  for (int i = 0; i < 25; i++) {
+    isColliding[i] = player->collidesWithItem(gameBalls[i]);
+  }
+  return isColliding;
+}
+
 void GameDialog::HandleInfoIn(/*TBD*/) {}
