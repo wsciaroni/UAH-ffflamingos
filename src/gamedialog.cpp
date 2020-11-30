@@ -1,5 +1,6 @@
 #include "gamedialog.h"
 #include "ui_gamedialog.h"
+#include <QtMath>
 
 GameDialog::GameDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::GameDialog) {
@@ -37,7 +38,7 @@ void GameDialog::drawBoard() {
 
   // Lower Left
   player1Body =
-      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::magenta));
+      scene->addRect(-10, -290, 20, 150, QPen(Qt::black), QBrush(Qt::magenta));
   player1Head =
       scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::magenta));
   player1Body->setRotation(-144);
@@ -47,7 +48,7 @@ void GameDialog::drawBoard() {
 
   // Upper Left
   player2Body =
-      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::cyan));
+      scene->addRect(-10, -290, 20, 150, QPen(Qt::black), QBrush(Qt::cyan));
   player2Head =
       scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::cyan));
   player2Body->setRotation(-72);
@@ -57,7 +58,7 @@ void GameDialog::drawBoard() {
 
   // Center
   player3Body =
-      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::yellow));
+      scene->addRect(-10, -290, 20, 150, QPen(Qt::black), QBrush(Qt::yellow));
   player3Head =
       scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::yellow));
   player3Body->setVisible(false);
@@ -65,7 +66,7 @@ void GameDialog::drawBoard() {
 
   // Upper Right
   player4Body =
-      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::green));
+      scene->addRect(-10, -290, 20, 150, QPen(Qt::black), QBrush(Qt::green));
   player4Head =
       scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::green));
   player4Body->setRotation(72);
@@ -75,7 +76,7 @@ void GameDialog::drawBoard() {
 
   // Lower Right
   player5Body =
-      scene->addRect(-10, -290, 20, 100, QPen(Qt::black), QBrush(Qt::blue));
+      scene->addRect(-10, -290, 20, 150, QPen(Qt::black), QBrush(Qt::blue));
   player5Head =
       scene->addRect(-25, -190, 50, 50, QPen(Qt::black), QBrush(Qt::blue));
   player5Body->setRotation(144);
@@ -95,25 +96,51 @@ void GameDialog::drawBoard() {
 
 void GameDialog::extendHead(int playerPos) {
   qDebug() << "Extending " << playerPos << endl;
+  switch (playerPos) {
+    case 0:
+      break;
+    case 1:
+      player1Head->moveBy(-50*qSin(-144*M_PI/180), 50*qCos(-144*M_PI/180));
+      break;
+    case 2:
+      player2Head->moveBy(-50*qSin(-72*M_PI/180), 50*qCos(-72*M_PI/180));
+      break;
+    case 3:
+      player3Head->moveBy(0, 50);
+      break;
+    case 4:
+      player4Head->moveBy(-50*qSin(72*M_PI/180), 50*qCos(72*M_PI/180));
+      break;
+    case 5:
+      player5Head->moveBy(-50*qSin(144*M_PI/180), 50*qCos(144*M_PI/180));
+      break;
+    default:
+      break;
+  }
 }
 
 void GameDialog::retractHead(int playerPos) {
   qDebug() << "Retracting " << playerPos << endl;
   switch (playerPos) {
-    case 0:
-      break;
-    case 1:
-      player1Head->moveBy(0, -50);
-    case 2:
-      player2Head->moveBy(0, -50);
-    case 3:
-      player3Head->moveBy(0, -50);
-    case 4:
-      player4Head->moveBy(0, -50);
-    case 5:
-      player5Head->moveBy(0, -50);
-    default:
-      break;
+  case 0:
+    break;
+  case 1:
+    player1Head->moveBy(50*qSin(-144*M_PI/180), -50*qCos(-144*M_PI/180));
+    break;
+  case 2:
+    player2Head->moveBy(50*qSin(-72*M_PI/180), -50*qCos(-72*M_PI/180));
+    break;
+  case 3:
+    player3Head->moveBy(0, -50);
+    break;
+  case 4:
+    player4Head->moveBy(50*qSin(72*M_PI/180), -50*qCos(72*M_PI/180));
+    break;
+  case 5:
+    player5Head->moveBy(50*qSin(144*M_PI/180), -50*qCos(144*M_PI/180));
+    break;
+  default:
+    break;
   }
 }
 
@@ -124,18 +151,23 @@ void GameDialog::spawnPlayer(int playerPos) {
     case 1:
       player1Body->setVisible(true);
       player1Head->setVisible(true);
+      break;
     case 2:
       player2Body->setVisible(true);
       player2Head->setVisible(true);
+      break;
     case 3:
       player3Body->setVisible(true);
       player3Head->setVisible(true);
+      break;
     case 4:
       player4Body->setVisible(true);
       player4Head->setVisible(true);
+      break;
     case 5:
       player5Body->setVisible(true);
       player5Head->setVisible(true);
+      break;
     default:
       break;
   }

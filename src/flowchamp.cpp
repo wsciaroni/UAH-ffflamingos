@@ -132,6 +132,10 @@ void FlowChamp::makePlayerLunge(PlayerModel* player) {
   if (player->spacePressed()) {
     /// @todo Then space was allowed to be pressed so make the animation happen
     /// and check to see if they got any points
+    int position = int(player->getPositionId());
+
+    dialogGD->extendHead(position);
+    qDebug() << position << '\n';
     bool* isColliding =
         dialogGD->determineCapturedBalls(player->getPositionId());
     for (int i = 0; i < 25; i++) {
@@ -141,6 +145,7 @@ void FlowChamp::makePlayerLunge(PlayerModel* player) {
         qDebug() << "Player score: " << player->getScore();
       }
     }
+    //dialogGD->retractHead(position);
   }
 }
 
