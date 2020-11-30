@@ -215,7 +215,8 @@ bool* GameDialog::determineCapturedBalls(PlayerPosition pos) {
       return NULL;
   }
   for (int i = 0; i < 25; i++) {
-    isColliding[i] = player->collidesWithItem(gameBalls[i]);
+    isColliding[i] =
+        player->collidesWithItem(gameBalls[i], Qt::IntersectsItemShape);
   }
   return isColliding;
 }
