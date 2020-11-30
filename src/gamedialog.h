@@ -72,7 +72,8 @@ class GameDialog : public QDialog {
 
   /**
    * Used to set the scores and time on the dialog
-   * @param scores Array of the scores with 0 being the high score and 1-5 being player scores
+   * @param scores Array of the scores with 0 being the high score and 1-5 being
+   * player scores
    * @param timeRemaining Number of seconds remaining in the game.
    */
   void updateInfo(qint32 scores[6], qint32 timeRemaining);

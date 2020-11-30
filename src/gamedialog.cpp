@@ -194,9 +194,7 @@ void GameDialog::setBallPos(qint32 xPos[25], qint32 yPos[25]) {
   }
 }
 
-void GameDialog::updateInfo(qint32 scores[6], qint32 timeRemaining) {
-
-}
+void GameDialog::updateInfo(qint32 scores[6], qint32 timeRemaining) {}
 
 bool* GameDialog::determineCapturedBalls(PlayerPosition pos) {
   static bool isColliding[25];

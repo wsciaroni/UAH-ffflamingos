@@ -161,14 +161,13 @@ void FlowChamp::stopSendInGameInfo() {
 }
 
 void FlowChamp::startGameTimer() {
-  int gameTimeMilli = 60*1000;
+  int gameTimeMilli = 60 * 1000;
   gameTimer->start(gameTimeMilli);
-  connect(gameTimer, &QTimer::timeout, this, &FlowChamp::prepareAndSendEndGameInfo);
+  connect(gameTimer, &QTimer::timeout, this,
+          &FlowChamp::prepareAndSendEndGameInfo);
 }
 
-void FlowChamp::stopGameTimer() {
-  gameTimer->stop();
-}
+void FlowChamp::stopGameTimer() { gameTimer->stop(); }
 
 void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   qDebug() << "In DRPlayAsHost()";
@@ -518,7 +517,7 @@ void FlowChamp::prepareAndSendEndGameInfo() {
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
-      emit this->hostSendEndGameInfo(packet,temp->getTCPSocket());
+      emit this->hostSendEndGameInfo(packet, temp->getTCPSocket());
     }
   }
 }
