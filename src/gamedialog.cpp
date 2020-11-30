@@ -181,6 +181,12 @@ void GameDialog::spawnPlayer(int playerPos) {
   }
 }
 
+void GameDialog::spawnAllPlayers() {
+  for (int i = 1; i <= 5; i++) {
+    spawnPlayer(i);
+  }
+}
+
 void GameDialog::setBallPos(qint32 xPos[25], qint32 yPos[25]) {
   /// @todo draw balls at each coordinate pair.
   for (int i = 0; i < 25; i++) {

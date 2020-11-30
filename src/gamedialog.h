@@ -59,6 +59,11 @@ class GameDialog : public QDialog {
   void spawnPlayer(int playerPos);
 
   /**
+   * Calls spawn player for each player
+   */
+  void spawnAllPlayers();
+
+  /**
    * Used to draw the balls in the appropriate places on the GameDialog
    * @param xPos Array of X coordinates of each ball
    * @param yPos Array of Y coordinates of each ball
