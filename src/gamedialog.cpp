@@ -95,24 +95,28 @@ void GameDialog::drawBoard() {
 }
 
 void GameDialog::extendHead(int playerPos) {
-  qDebug() << "Extending " << playerPos << endl;
+  // qDebug() << "Extending " << playerPos << endl;
   switch (playerPos) {
     case 0:
       break;
     case 1:
-      player1Head->moveBy(-50*qSin(-144*M_PI/180), 50*qCos(-144*M_PI/180));
+      player1Head->moveBy(-50 * qSin(-144 * M_PI / 180),
+                          50 * qCos(-144 * M_PI / 180));
       break;
     case 2:
-      player2Head->moveBy(-50*qSin(-72*M_PI/180), 50*qCos(-72*M_PI/180));
+      player2Head->moveBy(-50 * qSin(-72 * M_PI / 180),
+                          50 * qCos(-72 * M_PI / 180));
       break;
     case 3:
       player3Head->moveBy(0, 50);
       break;
     case 4:
-      player4Head->moveBy(-50*qSin(72*M_PI/180), 50*qCos(72*M_PI/180));
+      player4Head->moveBy(-50 * qSin(72 * M_PI / 180),
+                          50 * qCos(72 * M_PI / 180));
       break;
     case 5:
-      player5Head->moveBy(-50*qSin(144*M_PI/180), 50*qCos(144*M_PI/180));
+      player5Head->moveBy(-50 * qSin(144 * M_PI / 180),
+                          50 * qCos(144 * M_PI / 180));
       break;
     default:
       break;
@@ -120,27 +124,31 @@ void GameDialog::extendHead(int playerPos) {
 }
 
 void GameDialog::retractHead(int playerPos) {
-  qDebug() << "Retracting " << playerPos << endl;
+  // qDebug() << "Retracting " << playerPos << endl;
   switch (playerPos) {
-  case 0:
-    break;
-  case 1:
-    player1Head->moveBy(50*qSin(-144*M_PI/180), -50*qCos(-144*M_PI/180));
-    break;
-  case 2:
-    player2Head->moveBy(50*qSin(-72*M_PI/180), -50*qCos(-72*M_PI/180));
-    break;
-  case 3:
-    player3Head->moveBy(0, -50);
-    break;
-  case 4:
-    player4Head->moveBy(50*qSin(72*M_PI/180), -50*qCos(72*M_PI/180));
-    break;
-  case 5:
-    player5Head->moveBy(50*qSin(144*M_PI/180), -50*qCos(144*M_PI/180));
-    break;
-  default:
-    break;
+    case 0:
+      break;
+    case 1:
+      player1Head->moveBy(50 * qSin(-144 * M_PI / 180),
+                          -50 * qCos(-144 * M_PI / 180));
+      break;
+    case 2:
+      player2Head->moveBy(50 * qSin(-72 * M_PI / 180),
+                          -50 * qCos(-72 * M_PI / 180));
+      break;
+    case 3:
+      player3Head->moveBy(0, -50);
+      break;
+    case 4:
+      player4Head->moveBy(50 * qSin(72 * M_PI / 180),
+                          -50 * qCos(72 * M_PI / 180));
+      break;
+    case 5:
+      player5Head->moveBy(50 * qSin(144 * M_PI / 180),
+                          -50 * qCos(144 * M_PI / 180));
+      break;
+    default:
+      break;
   }
 }
 

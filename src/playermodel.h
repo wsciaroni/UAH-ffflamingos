@@ -214,6 +214,11 @@ class PlayerModel : public QObject {
    */
   bool spacePressed();
 
+  /**
+   * Used to determine if the player should be extended or not
+   */
+  bool isExtended();
+
  private
 slots:
   /**

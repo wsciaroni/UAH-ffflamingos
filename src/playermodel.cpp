@@ -70,6 +70,8 @@ bool PlayerModel::spacePressed() {
   return false;
 }
 
+bool PlayerModel::isExtended() { return animationLocked; }
+
 void PlayerModel::animationDone() { animationLocked = false; }
 
 void PlayerModel::resetCooldownPeriod() { numPressesSinceTimeReset = 0; }

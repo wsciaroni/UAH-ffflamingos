@@ -130,8 +130,6 @@ void FlowChamp::makePlayerLunge(PlayerModel* player) {
   }
 
   if (player->spacePressed()) {
-    /// @todo Then space was allowed to be pressed so make the animation happen
-    /// and check to see if they got any points
     int position = int(player->getPositionId());
 
     dialogGD->extendHead(position);
@@ -145,7 +143,6 @@ void FlowChamp::makePlayerLunge(PlayerModel* player) {
         qDebug() << "Player score: " << player->getScore();
       }
     }
-    //dialogGD->retractHead(position);
   }
 }
 
@@ -411,15 +408,29 @@ void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
     yPos[i] = packet.getBallPosY(i);
   }
 
-  bool playerExtensions[6];
-  playerExtensions[0] =
-      0;  // There is no player 0, that is the high score slot.
+  static bool previousExtensionStatus[6];
+  static bool initialized = false;
+  if (!initialized) {
+    for (int i = 0; i < 6; i++) {
+      previousExtensionStatus[i] = false;
+    }
+    initialized = true;
+  }
   qint32 scores[6];
   for (int i = 0; i < 6; i++) {
-    playerExtensions[i] = packet.isPlayerExtended(i);
+    if (i != 0) {
+      bool isextended = packet.isPlayerExtended(i);
+      if (isextended != previousExtensionStatus[i]) {
+        previousExtensionStatus[i] = isextended;
+        if (!isextended) {
+          dialogGD->retractHead(i);
+        } else {
+          dialogGD->extendHead(i);
+        }
+      }
+    }
     scores[i] = packet.getPlayerScore(i);
   }
-  /// @todo make animation of players based off the playerExtensions array.
   /// @todo make the current scores based off the scores array.
   dialogGD->setBallPos(xPos, yPos);
 }
@@ -439,15 +450,20 @@ void FlowChamp::guestHandleTCPDropOut() {
 }
 
 void FlowChamp::prepareAndSendInGameInfo() {
-  /// @todo calculate all ball positions
   qint32 xPos[25];
   qint32 yPos[25];
   qint32 scores[6];
+  static bool previousExtensionStatus[6];
+  static bool initialized = false;
+  if (!initialized) {
+    for (int i = 0; i < 6; i++) {
+      previousExtensionStatus[i] = false;
+    }
+    initialized = true;
+  }
 
   NPInGameInfo packet;
   for (int i = 0; i < 25; i++) {
-    /// @todo Update and get each balls position
-
     hostBallInfo[i]->advanceBall();
     qreal x = hostBallInfo[i]->pos().x();
     qreal y = hostBallInfo[i]->pos().y();
@@ -455,18 +471,27 @@ void FlowChamp::prepareAndSendInGameInfo() {
     xPos[i] = static_cast<qint32>(x);
     yPos[i] = static_cast<qint32>(y);
   }
-  qint32 player[6];
+  // qint32 player[6];
   for (int i = 0; i < 6; i++) {
-    packet.setPlayerExtension(i, false);
     if (i == 0) {
       packet.setPlayerScore(i, 1000);
+      packet.setPlayerExtension(i, false);
     } else {
       PlayerModel* player = playerList.getPlayer(i);
       int score = 1000;
+      bool isextended = false;
       if (player) {
         score = player->getScore();
-      }
 
+        isextended = player->isExtended();
+        if (isextended != previousExtensionStatus[i]) {
+          previousExtensionStatus[i] = isextended;
+          if (!isextended) {
+            dialogGD->retractHead(i);
+          }
+        }
+      }
+      packet.setPlayerExtension(i, isextended);
       packet.setPlayerScore(i, score);
     }
     // scores[i] = playerScore; // Player 0 should be used to denote the high
