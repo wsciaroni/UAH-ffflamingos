@@ -162,9 +162,8 @@ void FlowChamp::stopSendInGameInfo() {
 
 void FlowChamp::startGameTimer() {
   int gameTimeMilli = 60 * 1000;
-  gameTimer->start(gameTimeMilli);
-  connect(gameTimer, &QTimer::timeout, this,
-          &FlowChamp::prepareAndSendEndGameInfo);
+  gameTimer->singleShot(gameTimeMilli, this,
+                        &FlowChamp::prepareAndSendEndGameInfo);
 }
 
 void FlowChamp::stopGameTimer() { gameTimer->stop(); }
