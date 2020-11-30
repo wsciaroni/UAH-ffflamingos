@@ -160,6 +160,16 @@ void FlowChamp::stopSendInGameInfo() {
   sendInGameInfoTimer->stop();
 }
 
+void FlowChamp::startGameTimer() {
+  int gameTimeMilli = 60*1000;
+  gameTimer->start(gameTimeMilli);
+  connect(gameTimer, &QTimer::timeout, this, &FlowChamp::prepareAndSendEndGameInfo);
+}
+
+void FlowChamp::stopGameTimer() {
+  gameTimer->stop();
+}
+
 void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   qDebug() << "In DRPlayAsHost()";
   playerName = playerNameIn;
@@ -237,6 +247,7 @@ void FlowChamp::MRStartGameForAll() {
   dialogGD->spawnAllPlayers();
   dialogGD->show();
   startSendInGameInfo();
+  startGameTimer();
 }
 
 void FlowChamp::MRQuitGame() {
@@ -397,6 +408,7 @@ void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
   /// 0 Represents the High Score.
   qint32 xPos[25];
   qint32 yPos[25];
+  qint32 timeRemaining = packet.getTimeRemaining();
 
   for (int i = 0; i < 25; i++) {
     xPos[i] = packet.getBallPosX(i);
@@ -426,7 +438,7 @@ void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
     }
     scores[i] = packet.getPlayerScore(i);
   }
-  /// @todo make the current scores based off the scores array.
+  dialogGD->updateInfo(scores, timeRemaining);
   dialogGD->setBallPos(xPos, yPos);
 }
 
@@ -448,6 +460,7 @@ void FlowChamp::prepareAndSendInGameInfo() {
   qint32 xPos[25];
   qint32 yPos[25];
   qint32 scores[6];
+  qint32 timeRemaining = gameTimer->remainingTime() / 1000;
   static bool previousExtensionStatus[6];
   static bool initialized = false;
   if (!initialized) {
@@ -458,6 +471,7 @@ void FlowChamp::prepareAndSendInGameInfo() {
   }
 
   NPInGameInfo packet;
+  packet.setTimeRemaining(timeRemaining);
   for (int i = 0; i < 25; i++) {
     hostBallInfo[i]->advanceBall();
     qreal x = hostBallInfo[i]->pos().x();
@@ -489,11 +503,22 @@ void FlowChamp::prepareAndSendInGameInfo() {
       packet.setPlayerExtension(i, isextended);
       packet.setPlayerScore(i, score);
     }
-    // scores[i] = playerScore; // Player 0 should be used to denote the high
-    // score.
   }
 
+  dialogGD->updateInfo(scores, timeRemaining);
   dialogGD->setBallPos(xPos, yPos);
 
   emit this->hostSendInGameInfo(packet, multicastAddress);
+}
+
+void FlowChamp::prepareAndSendEndGameInfo() {
+  NPEndGameInfo packet;
+  /// @todo Stuff the packet
+  qDebug() << "In PrepareAndSendEndGameInfo";
+  for (int i = 1; i <= playerList.getMaxUID(); i++) {
+    PlayerModel* temp = playerList.getPlayer(i);
+    if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
+      emit this->hostSendEndGameInfo(packet,temp->getTCPSocket());
+    }
+  }
 }

@@ -116,6 +116,21 @@ class FlowChamp : public QApplication {
    */
   QHostAddress multicastAddress = QHostAddress("239.255.43.21");
 
+  /**
+   * For keeping the clock remaining in the game
+   */
+  QTimer* gameTimer = new QTimer(this);
+
+  /**
+   * Used to start the timer which will signal the end of the game
+   */
+  void startGameTimer();
+
+  /**
+   * Used to stop the game timer
+   */
+  void stopGameTimer();
+
  public:
   FlowChamp(int& argc, char** argv);
   ~FlowChamp();
@@ -278,6 +293,11 @@ slots:
    * Used to build and send the inGameInfoPackets
    */
   void prepareAndSendInGameInfo();
+
+  /**
+   * Used to build and send the endGameInfo packet
+   */
+  void prepareAndSendEndGameInfo();
 
 signals:
   // Guest To Host
