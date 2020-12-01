@@ -447,20 +447,28 @@ void GameDialog::HandleInfoIn(QString highScoreHolder, qint32 highScore,
   QPen pen;
   pen.setColor(QColor("white"));
 
+  QFont font;
+  font.setPixelSize(48);
+
   HighScore->setText("High Score: " + QString::number(highScore, 10));
   HighScoreHolder->setText("Held by: " + highScoreHolder);
   WinnerName->setText("Game Winner: " + winnerName);
   WinnerScore->setText("With a Score of: " + QString::number(winnerScore, 10));
 
-  HighScore->setPos(400, 650);
-  HighScoreHolder->setPos(400, 600);
-  WinnerName->setPos(400, 350);
-  WinnerScore->setPos(400, 300);
+  HighScore->setPos(-200,-150);
+  HighScoreHolder->setPos(-200, -100);
+  WinnerName->setPos(-200, 0);
+  WinnerScore->setPos(-200, 50);
 
   HighScore->setPen(pen);
   HighScoreHolder->setPen(pen);
   WinnerName->setPen(pen);
   WinnerScore->setPen(pen);
+
+  HighScore->setFont(font);
+  HighScoreHolder->setFont(font);
+  WinnerName->setFont(font);
+  WinnerScore->setFont(font);
 
   scene->addItem(HighScore);
   scene->addItem(HighScoreHolder);
