@@ -85,6 +85,28 @@ void GameDialog::drawBoard() {
   player5Body->setVisible(false);
   player5Head->setVisible(false);
 
+  head1_retracted = player1Head->pos();
+  head2_retracted = player2Head->pos();
+  head3_retracted = player3Head->pos();
+  head4_retracted = player4Head->pos();
+  head5_retracted = player5Head->pos();
+
+  head1_extended.setX(head1_retracted.x() + -50*qSin(-144 * M_PI / 180));
+  head1_extended.setY(head1_retracted.y() + 50*qCos(-144 * M_PI / 180));
+
+  head2_extended.setX(head1_retracted.x() + -50*qSin(-72 * M_PI / 180));
+  head2_extended.setY(head1_retracted.y() + 50*qCos(-72 * M_PI / 180));
+
+  head3_extended.setX(head1_retracted.x());
+  head3_extended.setY(head1_retracted.y() + 50);
+
+  head4_extended.setX(head1_retracted.x() + -50*qSin(72 * M_PI / 180));
+  head4_extended.setY(head1_retracted.y() + 50*qCos(72 * M_PI / 180));
+
+  head5_extended.setX(head1_retracted.x() + -50*qSin(144 * M_PI / 180));
+  head5_extended.setY(head1_retracted.y() + 50*qCos(144 * M_PI / 180));
+
+
   // initializing balls
   for (int i = 0; i < 25; i++) {
     gameBalls[i] = new ball;
@@ -220,23 +242,19 @@ void GameDialog::extendHead(int playerPos) {
     case 0:
       break;
     case 1:
-      player1Head->moveBy(-50 * qSin(-144 * M_PI / 180),
-                          50 * qCos(-144 * M_PI / 180));
+      player1Head->setPos(head1_extended);
       break;
     case 2:
-      player2Head->moveBy(-50 * qSin(-72 * M_PI / 180),
-                          50 * qCos(-72 * M_PI / 180));
+      player2Head->setPos(head2_extended);
       break;
     case 3:
-      player3Head->moveBy(0, 50);
+      player3Head->setPos(head3_extended);
       break;
     case 4:
-      player4Head->moveBy(-50 * qSin(72 * M_PI / 180),
-                          50 * qCos(72 * M_PI / 180));
+      player4Head->setPos(head4_extended);
       break;
     case 5:
-      player5Head->moveBy(-50 * qSin(144 * M_PI / 180),
-                          50 * qCos(144 * M_PI / 180));
+      player5Head->setPos(head5_extended);
       break;
     default:
       break;
@@ -249,23 +267,19 @@ void GameDialog::retractHead(int playerPos) {
     case 0:
       break;
     case 1:
-      player1Head->moveBy(50 * qSin(-144 * M_PI / 180),
-                          -50 * qCos(-144 * M_PI / 180));
+      player1Head->setPos(head1_retracted);
       break;
     case 2:
-      player2Head->moveBy(50 * qSin(-72 * M_PI / 180),
-                          -50 * qCos(-72 * M_PI / 180));
+      player2Head->setPos(head2_retracted);
       break;
     case 3:
-      player3Head->moveBy(0, -50);
+      player3Head->setPos(head3_retracted);
       break;
     case 4:
-      player4Head->moveBy(50 * qSin(72 * M_PI / 180),
-                          -50 * qCos(72 * M_PI / 180));
+      player4Head->setPos(head4_retracted);
       break;
     case 5:
-      player5Head->moveBy(50 * qSin(144 * M_PI / 180),
-                          -50 * qCos(144 * M_PI / 180));
+      player5Head->setPos(head5_retracted);
       break;
     default:
       break;

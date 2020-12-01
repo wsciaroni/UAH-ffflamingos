@@ -122,6 +122,18 @@ class GameDialog : public QDialog {
   QGraphicsTextItem *player4Name;
   QGraphicsTextItem *player5Name;
 
+  QPointF head1_retracted;
+  QPointF head2_retracted;
+  QPointF head3_retracted;
+  QPointF head4_retracted;
+  QPointF head5_retracted;
+
+  QPointF head1_extended;
+  QPointF head2_extended;
+  QPointF head3_extended;
+  QPointF head4_extended;
+  QPointF head5_extended;
+
  protected:
   /**
    * @brief A Key Press Event handler (will be used for escape)
