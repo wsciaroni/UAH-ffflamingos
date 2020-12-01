@@ -92,6 +92,17 @@ void GameDialog::drawBoard() {
     scene->addItem(gameBalls[i]);
   }
 
+  QFont font1;
+  font1.setPixelSize(10);
+  font1.setPointSize(17);
+  font1.setFamily("Arial");
+
+  QFont font2;
+  font2.setPixelSize(10);
+  font2.setPointSize(15);
+  font2.setFamily("Arial");
+
+
   timeRemainingLabel = new QGraphicsTextItem;
   timeRemaining = new QGraphicsTextItem;
 
@@ -109,61 +120,81 @@ void GameDialog::drawBoard() {
   player4Name = new QGraphicsTextItem;
   player5Name = new QGraphicsTextItem;
 
-  timeRemainingLabel->setPos(-75, -425);
+  timeRemainingLabel->setPos(-120, -370);
   timeRemainingLabel->setDefaultTextColor("red");
   timeRemainingLabel->setPlainText("TIME REMAINING:");
+  timeRemainingLabel->setFont(font1);
 
-  timeRemaining->setPos(45, -425);
+  timeRemaining->setPos(90, -370);
   timeRemaining->setDefaultTextColor("red");
   timeRemaining->setPlainText("60");
+  timeRemaining->setFont(font1);
 
-  highScoreName->setPos(-325, -425);
+  highScoreName->setPos(-350, -425);
   highScoreName->setDefaultTextColor("red");
   highScoreName->setPlainText("HIGH SCORE:");
+  highScoreName->setFont(font2);
 
-  player1Name->setPos(-325, -400);
+  player1Name->setPos(-350, -375);
   player1Name->setDefaultTextColor("magenta");
   player1Name->setPlainText("Player 1:");
+  player1Name->setFont(font2);
 
-  player2Name->setPos(-325, -375);
+  player2Name->setPos(-350, -325);
   player2Name->setDefaultTextColor("cyan");
   player2Name->setPlainText("Player 2:");
+  player2Name->setFont(font2);
 
-  player3Name->setPos(-325, -350);
+  //player3Name->setPos(-325, -350);
+  player3Name->setPos(205, -425);
   player3Name->setDefaultTextColor("yellow");
   player3Name->setPlainText("Player 3:");
+  player3Name->setFont(font2);
 
-  player4Name->setPos(-325, -325);
+  //player4Name->setPos(-325, -325);
+  player4Name->setPos(205, -375);
   player4Name->setDefaultTextColor("green");
   player4Name->setPlainText("Player 4:");
+  player4Name->setFont(font2);
 
-  player5Name->setPos(-325, -300);
+  //player5Name->setPos(-325, -300);
+  player5Name->setPos(205, -325);
   player5Name->setDefaultTextColor("blue");
   player5Name->setPlainText("Player 5:");
+  player5Name->setFont(font2);
 
-  highScore->setPos(-240, -425);
+  highScore->setPos(-205, -425);
   highScore->setDefaultTextColor("red");
   highScore->setPlainText("0");
+  highScore->setFont(font2);
 
-  player1Score->setPos(-240, -400);
+  player1Score->setPos(-205, -375);
   player1Score->setDefaultTextColor("magenta");
   player1Score->setPlainText("0");
+  player1Score->setFont(font2);
 
-  player2Score->setPos(-240, -375);
+  player2Score->setPos(-205, -325);
   player2Score->setDefaultTextColor("cyan");
   player2Score->setPlainText("0");
+  player2Score->setFont(font2);
 
-  player3Score->setPos(-240, -350);
+  //player3Score->setPos(-240, -350);
+  player3Score->setPos(350, -425);
   player3Score->setDefaultTextColor("yellow");
   player3Score->setPlainText("0");
+  player3Score->setFont(font2);
 
-  player4Score->setPos(-240, -325);
+  //player4Score->setPos(-240, -325);
+  player4Score->setPos(350, -375);
   player4Score->setDefaultTextColor("green");
   player4Score->setPlainText("0");
+  player4Score->setFont(font2);
 
-  player5Score->setPos(-240, -300);
+  //player5Score->setPos(-240, -300);
+  player5Score->setPos(350, -325);
   player5Score->setDefaultTextColor("blue");
   player5Score->setPlainText("0");
+  player5Score->setFont(font2);
 
   scene->addItem(timeRemainingLabel);
   scene->addItem(timeRemaining);
@@ -313,22 +344,22 @@ void GameDialog::setNames(QString names[6]) {
     } else {
       switch (i) {
         case 0:
-          highScoreName->setPlainText(names[i]);
+          highScoreName->setPlainText(names[i] + ':');
           break;
         case 1:
-          player1Name->setPlainText(names[i]);
+          player1Name->setPlainText(names[i] + ':');
           break;
         case 2:
-          player2Name->setPlainText(names[i]);
+          player2Name->setPlainText(names[i] + ':');
           break;
         case 3:
-          player3Name->setPlainText(names[i]);
+          player3Name->setPlainText(names[i] + ':');
           break;
         case 4:
-          player4Name->setPlainText(names[i]);
+          player4Name->setPlainText(names[i] + ':');
           break;
         case 5:
-          player5Name->setPlainText(names[i]);
+          player5Name->setPlainText(names[i] + ':');
           break;
         default:
           break;

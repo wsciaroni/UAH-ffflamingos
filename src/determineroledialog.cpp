@@ -10,7 +10,7 @@ DetermineRoleDialog::DetermineRoleDialog(QWidget* parent)
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this,
           &DetermineRoleDialog::cancel);
 
-  QRegularExpression userName("[a-zA-Z0-9]{1,10}");
+  QRegularExpression userName("[a-zA-Z0-9]{1,8}");
   QRegularExpressionValidator* userNameValidator =
       new QRegularExpressionValidator(userName, ui->userName);
   ui->userName->setValidator(userNameValidator);
