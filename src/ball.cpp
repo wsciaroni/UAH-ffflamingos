@@ -54,7 +54,7 @@ void ball::hideBall() {
   isHidden = true;
   dx = 0;
   dy = 0;
-  setPos(0, 0);
+  setPos(0, -400);
   hide();
 }
 

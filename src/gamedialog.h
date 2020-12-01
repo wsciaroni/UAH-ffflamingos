@@ -104,6 +104,7 @@ class GameDialog : public QDialog {
   QGraphicsItem *player5Body;
   QGraphicsItem *player5Head;
   ball *gameBalls[25];
+  QGraphicsItem *hiddenSquare;
 
   QGraphicsTextItem *timeRemainingLabel;
   QGraphicsTextItem *timeRemaining;

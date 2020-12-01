@@ -114,6 +114,10 @@ void GameDialog::drawBoard() {
     scene->addItem(gameBalls[i]);
   }
 
+  hiddenSquare =
+      scene->addRect(-25, -425, 50, 50, QPen(Qt::black), QBrush(Qt::black));
+  hiddenSquare->setZValue(100);
+
   QFont font1;
   font1.setPixelSize(10);
   font1.setPointSize(17);
