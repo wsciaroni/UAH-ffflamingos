@@ -13,8 +13,8 @@ QString NPEndGameInfo::getWinnerName() { return winnerName; }
 
 qint32 NPEndGameInfo::getWinnerScore() { return winnerScore; }
 
-void NPEndGameInfo::setHighScoreInf(QString highScoreHolderIn,
-                                    qint32 highScoreIn) {
+void NPEndGameInfo::setHighScoreInfo(QString highScoreHolderIn,
+                                     qint32 highScoreIn) {
   highScoreHolder = highScoreHolderIn;
   highScore = highScoreIn;
 }

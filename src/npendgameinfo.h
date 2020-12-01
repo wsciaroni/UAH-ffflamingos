@@ -49,7 +49,7 @@ class NPEndGameInfo : public NPHostToGuest {
    * machine.
    * @param highScoreIn The high score from the Host's machine.
    */
-  void setHighScoreInf(QString highScoreHolderIn, qint32 highScoreIn);
+  void setHighScoreInfo(QString highScoreHolderIn, qint32 highScoreIn);
 
   /**
    * Used to return the Name of the high score holder.

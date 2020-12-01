@@ -3,35 +3,31 @@
 #include <QTableView>
 #include <QtDebug>
 
-highScoreDb::highScoreDb()
-{
-    qDebug() <<"start";
+highScoreDb::highScoreDb() {
+  qDebug() << "start";
 
-       QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-       db.setDatabaseName("/home/student/eal0010/high_score.db");
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  db.setDatabaseName("/home/student/eal0010/high_score.db");
 
-       if ( !db.open())
-       {
-           qDebug() << db.lastError();
-           qDebug() << "Error: Unable to connect";
-           //return 1;
+  if (!db.open()) {
+    qDebug() << db.lastError();
+    qDebug() << "Error: Unable to connect";
+    // return 1;
+  }
 
-       }
+  // QSqlQueryModel model;
+  // model.setQuery("SELECT * FROM highScore");
+  QSqlTableModel* model = new QSqlTableModel;
+  model->setTable("High Score Mode");
+  model->select();
+  model->setEditStrategy(QSqlTableModel::OnFieldChange);
 
-       //QSqlQueryModel model;
-       //model.setQuery("SELECT * FROM highScore");
-       QSqlTableModel* model = new QSqlTableModel;
-       model->setTable("High Score Mode");
-       model->select();
-       model->setEditStrategy(QSqlTableModel::OnFieldChange);
+  QTableView* view = new QTableView;
+  view->setModel(model);
+  view->show();
 
-       QTableView* view = new QTableView;
-       view->setModel(model);
-       view->show();
-
-       db.close();
-      // return a.exec();
-   }
-
+  db.close();
+  // return a.exec();
+}
 
 // }

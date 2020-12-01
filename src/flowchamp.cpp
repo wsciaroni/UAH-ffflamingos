@@ -74,6 +74,9 @@ FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
           QOverload<>::of(&FlowChamp::prepareAndSendInGameInfo));
 
   initializeBalls();
+
+  globalHighScore = readHighScoreFromDatabase();
+  globalHighScoreName = readHighScoreHolderFromDatabase();
 }
 
 FlowChamp::~FlowChamp() {
@@ -203,7 +206,11 @@ void FlowChamp::startGameTimer() {
           &FlowChamp::prepareAndSendEndGameInfo);
 }
 
-void FlowChamp::stopGameTimer() { gameTimer->stop(); }
+void FlowChamp::stopGameTimer() {
+  if (gameTimer) {
+    gameTimer->stop();
+  }
+}
 
 void FlowChamp::initializeBalls() {
   for (int i = 0; i < 25; i++) {
@@ -222,6 +229,15 @@ void FlowChamp::initializeBalls() {
     hostBallInfo[i]->initializeBall(x, y, dx, dy);
   }
 }
+
+qint32 FlowChamp::readHighScoreFromDatabase() { return 0; }
+
+QString FlowChamp::readHighScoreHolderFromDatabase() {
+  return QString("Loser");
+}
+
+void FlowChamp::setNewHighScore(QString name, qint32 score) {}
+
 void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   qDebug() << "In DRPlayAsHost()";
   playerName = playerNameIn;
@@ -580,30 +596,55 @@ void FlowChamp::prepareAndSendInGameInfo() {
 }
 
 void FlowChamp::prepareAndSendEndGameInfo() {
-  stopGameTimer();
-  NPEndGameInfo packet;
-  /// @todo Stuff the packet
-  // Calculate the high score and the winner
-  QString winnerName, highScoreHolder;
-  qint32 winnerScore, highScore;
-  for (int i = 1; i <= playerList.getMaxUID(); i++) {
-    PlayerModel* temp = playerList.getPlayer(i);
-    if (temp && temp->getUID() > 0) {
-      if (temp->getScore() > winnerScore) {
-        winnerScore = temp->getScore();
-        winnerName = temp->getName();
-      }
-
-      if (temp->getScore() > highScore) {
-        highScore = temp->getScore();
-        highScoreHolder = temp->getName();
-      }
-    }
-  }
-  packet.setWinnerInfo(winnerName, winnerScore);
-  packet.setHighScoreInf(highScoreHolder, highScore);
-  dialogGD->HandleInfoIn(highScoreHolder, highScore, winnerName, winnerScore);
   qDebug() << "In PrepareAndSendEndGameInfo";
+  stopGameTimer();
+  qDebug() << "A";
+  NPEndGameInfo packet;
+  qDebug() << "B";
+  QString winnerName;
+  qDebug() << "C";
+  qint32 winnerScore;
+  qDebug() << "D";
+  winnerScore = 0;
+  qDebug() << "G";
+  for (int i = 1; i <= playerList.getMaxUID(); i++) {
+    qDebug() << "H";
+    PlayerModel* temp = playerList.getPlayer(i);
+    qDebug() << "I";
+    if (temp && temp->getUID() > 0) {
+      qDebug() << "J";
+      if (temp->getScore() > winnerScore) {
+        qDebug() << "K";
+        winnerScore = temp->getScore();
+        qDebug() << "L";
+        winnerName = temp->getName();
+        qDebug() << "M";
+      }
+      qDebug() << "N";
+      if (temp->getScore() > globalHighScore) {
+        qDebug() << "O";
+        globalHighScore = temp->getScore();
+        qDebug() << "P";
+        qDebug() << "pGlobal Name" << globalHighScoreName;
+        globalHighScoreName = temp->getName();
+        qDebug() << "sGlobal Name" << globalHighScoreName;
+        qDebug() << "S";
+        setNewHighScore(globalHighScoreName, globalHighScore);
+        qDebug() << "T";
+      }
+      qDebug() << "U";
+    }
+    qDebug() << "V";
+  }
+  qDebug() << "W";
+  packet.setWinnerInfo(winnerName, winnerScore);
+  qDebug() << "X";
+  qDebug() << "Global Name" << globalHighScoreName;
+  packet.setHighScoreInfo(globalHighScoreName, globalHighScore);
+  qDebug() << "Y";
+  dialogGD->HandleInfoIn(globalHighScoreName, globalHighScore, winnerName,
+                         winnerScore);
+  qDebug() << "Z";
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {

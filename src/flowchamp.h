@@ -39,6 +39,7 @@ class FlowChamp : public QApplication {
   /// Holds a list of currently attached players.
   QStringList playerNames;
 
+  /// Holds the balls in order to calculate the positions
   ball* hostBallInfo[25];
 
   // Dialogs
@@ -140,6 +141,35 @@ class FlowChamp : public QApplication {
    * Function to initialize all the balls
    */
   void initializeBalls();
+
+  /**
+   * Holds the high score read from the database.
+   */
+  qint32 globalHighScore;
+
+  /**
+   * Holds the Name of the high score holder.
+   */
+  QString globalHighScoreName;
+
+  /**
+   * Used to get the high score from the database.
+   * @return High Score from the database.
+   */
+  qint32 readHighScoreFromDatabase();
+
+  /**
+   * Used to get the name of the high score holder from the database.
+   * @return Name of the high score holder.
+   */
+  QString readHighScoreHolderFromDatabase();
+
+  /**
+   * Used to set a new High Score in the database.
+   * @param name The name of the new high score holder.
+   * @param score The Score that player received.
+   */
+  void setNewHighScore(QString name, qint32 score);
 
  public:
   FlowChamp(int& argc, char** argv);

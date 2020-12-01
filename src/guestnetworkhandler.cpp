@@ -89,7 +89,7 @@ void GuestNetworkHandler::onTCPDataReady() {
       qint32 winnerScore, highScore;
       BlockReader(tcpSocket).stream() >> highScoreHolderName >> highScore >>
           winnerName >> winnerScore;
-      endGameInfo.setHighScoreInf(highScoreHolderName, highScore);
+      endGameInfo.setHighScoreInfo(highScoreHolderName, highScore);
       endGameInfo.setWinnerInfo(winnerName, winnerScore);
       emit this->recvEndGameInfo(endGameInfo);
     } else if (pType == PacketType::WELCOMETOROOM) {

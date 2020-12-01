@@ -434,37 +434,36 @@ void GameDialog::HandleInfoIn(QString highScoreHolder, qint32 highScore,
   // "Held By: " + highScoreHolder
   // "Game Winner: " + winnerName;
   // "With a Score of: " + QString::number(winnerScore,10)
-    QGraphicsSimpleTextItem *HighScore;
-    QGraphicsSimpleTextItem *HighScoreHolder;
-    QGraphicsSimpleTextItem *WinnerName;
-    QGraphicsSimpleTextItem *WinnerScore;
+  QGraphicsSimpleTextItem* HighScore;
+  QGraphicsSimpleTextItem* HighScoreHolder;
+  QGraphicsSimpleTextItem* WinnerName;
+  QGraphicsSimpleTextItem* WinnerScore;
 
-    HighScore = new QGraphicsSimpleTextItem;
-    HighScoreHolder= new QGraphicsSimpleTextItem;
-    WinnerName = new QGraphicsSimpleTextItem;
-    WinnerScore = new QGraphicsSimpleTextItem;
+  HighScore = new QGraphicsSimpleTextItem;
+  HighScoreHolder = new QGraphicsSimpleTextItem;
+  WinnerName = new QGraphicsSimpleTextItem;
+  WinnerScore = new QGraphicsSimpleTextItem;
 
-    QPen pen;
-    pen.setColor(QColor("white"));
+  QPen pen;
+  pen.setColor(QColor("white"));
 
-    HighScore->setText("High Score: " + QString::number(highScore,10));
-    HighScoreHolder->setText("Held by: " + highScoreHolder);
-    WinnerName->setText("Game Winner: " + winnerName);
-    WinnerScore->setText("With a Score of: "+ QString::number(winnerScore,10));
+  HighScore->setText("High Score: " + QString::number(highScore, 10));
+  HighScoreHolder->setText("Held by: " + highScoreHolder);
+  WinnerName->setText("Game Winner: " + winnerName);
+  WinnerScore->setText("With a Score of: " + QString::number(winnerScore, 10));
 
-    HighScore->setPos(400,650);
-    HighScoreHolder->setPos(400,600);
-    WinnerName->setPos(400,350);
-    WinnerScore->setPos(400,300);
+  HighScore->setPos(400, 650);
+  HighScoreHolder->setPos(400, 600);
+  WinnerName->setPos(400, 350);
+  WinnerScore->setPos(400, 300);
 
-    HighScore->setPen(pen);
-    HighScoreHolder->setPen(pen);
-    WinnerName->setPen(pen);
-    WinnerScore->setPen(pen);
+  HighScore->setPen(pen);
+  HighScoreHolder->setPen(pen);
+  WinnerName->setPen(pen);
+  WinnerScore->setPen(pen);
 
-    scene->addItem(HighScore);
-    scene->addItem(HighScoreHolder);
-    scene->addItem(WinnerName);
-    scene->addItem(WinnerScore);
-
+  scene->addItem(HighScore);
+  scene->addItem(HighScoreHolder);
+  scene->addItem(WinnerName);
+  scene->addItem(WinnerScore);
 }
