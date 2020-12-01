@@ -406,7 +406,8 @@ void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
   /// 0 Represents the High Score.
   qint32 xPos[25];
   qint32 yPos[25];
-  qint32 timeRemaining = packet.getTimeRemaining();
+  static qint32 timeRemaining;
+  timeRemaining = packet.getTimeRemaining();
 
   for (int i = 0; i < 25; i++) {
     xPos[i] = packet.getBallPosX(i);
@@ -421,7 +422,7 @@ void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
     }
     initialized = true;
   }
-  qint32 scores[6];
+  static qint32 scores[6];
   for (int i = 0; i < 6; i++) {
     if (i != 0) {
       bool isextended = packet.isPlayerExtended(i);
@@ -457,8 +458,8 @@ void FlowChamp::guestHandleTCPDropOut() {
 void FlowChamp::prepareAndSendInGameInfo() {
   qint32 xPos[25];
   qint32 yPos[25];
-  qint32 scores[6];
-  qint32 timeRemaining = gameTimer->remainingTime() / 1000;
+  static qint32 scores[6];
+  static qint32 timeRemaining;
   static bool previousExtensionStatus[6];
   static bool initialized = false;
   if (!initialized) {
@@ -469,6 +470,7 @@ void FlowChamp::prepareAndSendInGameInfo() {
   }
 
   NPInGameInfo packet;
+  timeRemaining = gameTimer->remainingTime() / 1000;
   packet.setTimeRemaining(timeRemaining);
   for (int i = 0; i < 25; i++) {
     hostBallInfo[i]->advanceBall();
@@ -481,11 +483,11 @@ void FlowChamp::prepareAndSendInGameInfo() {
   // qint32 player[6];
   for (int i = 0; i < 6; i++) {
     if (i == 0) {
-      packet.setPlayerScore(i, 0);
-      packet.setPlayerExtension(i, false);
+      packet.setPlayerScore(0, 0);
+      packet.setPlayerExtension(0, false);
     } else {
       PlayerModel* player = playerList.getPlayer(i);
-      int score = 0;
+      qint32 score = 0;
       bool isextended = false;
       if (player) {
         score = player->getScore();

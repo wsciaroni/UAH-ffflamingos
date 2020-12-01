@@ -11,6 +11,7 @@ QDataStream& operator<<(QDataStream& ds, NPInGameInfo& packet) {
   for (int i = 0; i < 6; i++) {
     ds << packet.getPlayerScore(i) << packet.isPlayerExtended(i);
   }
+  ds << packet.getTimeRemaining();
   return ds;
 }
 
@@ -28,6 +29,9 @@ QDataStream& operator>>(QDataStream& ds, NPInGameInfo& packet) {
     packet.setPlayerExtension(i, isExtended);
   }
   packet.setPlayerExtension(0, false);
+  qint32 timeRemaining = -1;
+  ds >> timeRemaining;
+  packet.setTimeRemaining(timeRemaining);
   return ds;
 }
 
