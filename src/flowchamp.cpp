@@ -162,8 +162,9 @@ void FlowChamp::stopSendInGameInfo() {
 
 void FlowChamp::startGameTimer() {
   int gameTimeMilli = 60 * 1000;
-  gameTimer->singleShot(gameTimeMilli, this,
-                        &FlowChamp::prepareAndSendEndGameInfo);
+  gameTimer->start(gameTimeMilli);
+  connect(gameTimer, &QTimer::timeout, this,
+          &FlowChamp::prepareAndSendEndGameInfo);
 }
 
 void FlowChamp::stopGameTimer() { gameTimer->stop(); }
@@ -480,17 +481,16 @@ void FlowChamp::prepareAndSendInGameInfo() {
     xPos[i] = static_cast<qint32>(x);
     yPos[i] = static_cast<qint32>(y);
   }
-  // qint32 player[6];
   for (int i = 0; i < 6; i++) {
     if (i == 0) {
       packet.setPlayerScore(0, 0);
       packet.setPlayerExtension(0, false);
     } else {
       PlayerModel* player = playerList.getPlayer(i);
-      qint32 score = 0;
+
       bool isextended = false;
       if (player) {
-        score = player->getScore();
+        scores[i] = player->getScore();
 
         isextended = player->isExtended();
         if (isextended != previousExtensionStatus[i]) {
@@ -499,9 +499,11 @@ void FlowChamp::prepareAndSendInGameInfo() {
             dialogGD->retractHead(i);
           }
         }
+      } else {
+        scores[i] = 0;
       }
       packet.setPlayerExtension(i, isextended);
-      packet.setPlayerScore(i, score);
+      packet.setPlayerScore(i, scores[i]);
     }
   }
 
@@ -512,6 +514,7 @@ void FlowChamp::prepareAndSendInGameInfo() {
 }
 
 void FlowChamp::prepareAndSendEndGameInfo() {
+  stopGameTimer();
   NPEndGameInfo packet;
   /// @todo Stuff the packet
   qDebug() << "In PrepareAndSendEndGameInfo";
