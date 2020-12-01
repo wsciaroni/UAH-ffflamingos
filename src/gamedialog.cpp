@@ -1,6 +1,7 @@
 #include "gamedialog.h"
 #include "ui_gamedialog.h"
 #include <QtMath>
+#include<QGraphicsTextItem>
 
 GameDialog::GameDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::GameDialog) {
@@ -91,6 +92,94 @@ void GameDialog::drawBoard() {
     scene->addItem(gameBalls[i]);
   }
 
+  timeRemainingLabel = new QGraphicsTextItem;
+  timeRemaining = new QGraphicsTextItem;
+
+  highScore = new QGraphicsTextItem;
+  player1Score = new QGraphicsTextItem;
+  player2Score = new QGraphicsTextItem;
+  player3Score = new QGraphicsTextItem;
+  player4Score = new QGraphicsTextItem;
+  player5Score = new QGraphicsTextItem;
+
+  highScoreName = new QGraphicsTextItem;
+  player1Name = new QGraphicsTextItem;
+  player2Name = new QGraphicsTextItem;
+  player3Name = new QGraphicsTextItem;
+  player4Name = new QGraphicsTextItem;
+  player5Name = new QGraphicsTextItem;
+
+  timeRemainingLabel->setPos(-75,-425);
+  timeRemainingLabel->setDefaultTextColor("red");
+  timeRemainingLabel->setPlainText("TIME REMAINING:");
+
+  timeRemaining->setPos(45,-425);
+  timeRemaining->setDefaultTextColor("red");
+  timeRemaining->setPlainText("60");
+
+  highScoreName->setPos(-325,-425);
+  highScoreName->setDefaultTextColor("red");
+  highScoreName->setPlainText("HIGH SCORE:");
+
+  player1Name->setPos(-325,-400);
+  player1Name->setDefaultTextColor("magenta");
+  player1Name->setPlainText("Player 1:");
+
+  player2Name->setPos(-325,-375);
+  player2Name->setDefaultTextColor("cyan");
+  player2Name->setPlainText("Player 2:");
+
+  player3Name->setPos(-325,-350);
+  player3Name->setDefaultTextColor("yellow");
+  player3Name->setPlainText("Player 3:");
+
+  player4Name->setPos(-325,-325);
+  player4Name->setDefaultTextColor("green");
+  player4Name->setPlainText("Player 4:");
+
+  player5Name->setPos(-325,-300);
+  player5Name->setDefaultTextColor("blue");
+  player5Name->setPlainText("Player 5:");
+
+  highScore->setPos(-240,-425);
+  highScore->setDefaultTextColor("red");
+  highScore->setPlainText("0");
+
+  player1Score->setPos(-240, -400);
+  player1Score->setDefaultTextColor("magenta");
+  player1Score->setPlainText("0");
+
+  player2Score->setPos(-240, -375);
+  player2Score->setDefaultTextColor("cyan");
+  player2Score->setPlainText("0");
+
+  player3Score->setPos(-240, -350);
+  player3Score->setDefaultTextColor("yellow");
+  player3Score->setPlainText("0");
+
+  player4Score->setPos(-240, -325);
+  player4Score->setDefaultTextColor("green");
+  player4Score->setPlainText("0");
+
+  player5Score->setPos(-240, -300);
+  player5Score->setDefaultTextColor("blue");
+  player5Score->setPlainText("0");
+
+  scene->addItem(timeRemainingLabel);
+  scene->addItem(timeRemaining);
+  scene->addItem(highScore);
+  scene->addItem(player1Score);
+  scene->addItem(player2Score);
+  scene->addItem(player3Score);
+  scene->addItem(player4Score);
+  scene->addItem(player5Score);
+  scene->addItem(highScoreName);
+  scene->addItem(player1Name);
+  scene->addItem(player2Name);
+  scene->addItem(player3Name);
+  scene->addItem(player4Name);
+  scene->addItem(player5Name);
+
   qDebug() << "Drawing Board" << endl;
 }
 
@@ -159,23 +248,18 @@ void GameDialog::spawnPlayer(int playerPos) {
     case 1:
       player1Body->setVisible(true);
       player1Head->setVisible(true);
-      break;
     case 2:
       player2Body->setVisible(true);
       player2Head->setVisible(true);
-      break;
     case 3:
       player3Body->setVisible(true);
       player3Head->setVisible(true);
-      break;
     case 4:
       player4Body->setVisible(true);
       player4Head->setVisible(true);
-      break;
     case 5:
       player5Body->setVisible(true);
       player5Head->setVisible(true);
-      break;
     default:
       break;
   }
@@ -194,7 +278,36 @@ void GameDialog::setBallPos(qint32 xPos[25], qint32 yPos[25]) {
   }
 }
 
-void GameDialog::updateInfo(qint32 scores[6], qint32 timeRemaining) {}
+void GameDialog::updateInfo(qint32 scores[6], qint32 timeRemainingValue) {
+    timeRemaining->setPlainText(QString::number(timeRemainingValue,10));
+
+    for(int i = 0; i < 6; i++){
+        switch (i) {
+          case 0:
+            highScore->setPlainText(QString::number(scores[i],10));
+            break;
+          case 1:
+            player1Score->setPlainText(QString::number(scores[i],10));
+            break;
+          case 2:
+            player2Score->setPlainText(QString::number(scores[i],10));
+            break;
+          case 3:
+            player3Score->setPlainText(QString::number(scores[i],10));
+            break;
+          case 4:
+            player4Score->setPlainText(QString::number(scores[i],10));
+            break;
+          case 5:
+            player5Score->setPlainText(QString::number(scores[i],10));
+            break;
+          default:
+            break;
+        }
+
+    }
+}
+
 
 bool* GameDialog::determineCapturedBalls(PlayerPosition pos) {
   static bool isColliding[25];

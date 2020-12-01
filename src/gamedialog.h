@@ -76,7 +76,7 @@ class GameDialog : public QDialog {
    * player scores
    * @param timeRemaining Number of seconds remaining in the game.
    */
-  void updateInfo(qint32 scores[6], qint32 timeRemaining);
+  void updateInfo(qint32 scores[6], qint32 timeRemainingValue);
 
   /**
    * Determines what balls are in collision with the specific player
@@ -99,6 +99,23 @@ class GameDialog : public QDialog {
   QGraphicsItem *player5Body;
   QGraphicsItem *player5Head;
   ball *gameBalls[25];
+
+  QGraphicsTextItem *timeRemainingLabel;
+  QGraphicsTextItem *timeRemaining;
+
+  QGraphicsTextItem *highScore;
+  QGraphicsTextItem *player1Score;
+  QGraphicsTextItem *player2Score;
+  QGraphicsTextItem *player3Score;
+  QGraphicsTextItem *player4Score;
+  QGraphicsTextItem *player5Score;
+
+  QGraphicsTextItem *highScoreName;
+  QGraphicsTextItem *player1Name;
+  QGraphicsTextItem *player2Name;
+  QGraphicsTextItem *player3Name;
+  QGraphicsTextItem *player4Name;
+  QGraphicsTextItem *player5Name;
 
  protected:
   /**

@@ -481,11 +481,11 @@ void FlowChamp::prepareAndSendInGameInfo() {
   // qint32 player[6];
   for (int i = 0; i < 6; i++) {
     if (i == 0) {
-      packet.setPlayerScore(i, 1000);
+      packet.setPlayerScore(i, 0);
       packet.setPlayerExtension(i, false);
     } else {
       PlayerModel* player = playerList.getPlayer(i);
-      int score = 1000;
+      int score = 0;
       bool isextended = false;
       if (player) {
         score = player->getScore();
