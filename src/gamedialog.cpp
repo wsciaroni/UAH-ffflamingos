@@ -306,6 +306,36 @@ void GameDialog::updateInfo(qint32 scores[6], qint32 timeRemainingValue) {
     }
   }
 }
+void GameDialog::setNames(QString names[6]) {
+  for (int i = 0; i < 6; i++) {
+    if (names[i] == "") {
+      continue;
+    } else {
+      switch (i) {
+        case 0:
+          highScoreName->setPlainText(names[i]);
+          break;
+        case 1:
+          player1Name->setPlainText(names[i]);
+          break;
+        case 2:
+          player2Name->setPlainText(names[i]);
+          break;
+        case 3:
+          player3Name->setPlainText(names[i]);
+          break;
+        case 4:
+          player4Name->setPlainText(names[i]);
+          break;
+        case 5:
+          player5Name->setPlainText(names[i]);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+}
 
 bool* GameDialog::determineCapturedBalls(PlayerPosition pos) {
   static bool isColliding[25];

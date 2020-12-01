@@ -230,8 +230,16 @@ void FlowChamp::CGQuitGame() {
 void FlowChamp::MRStartGameForAll() {
   qDebug() << "In MRStartGameForAll()";
   NPWelcomeToRoom packet;
-  // for (PlayerModel* temp : playerList.keys()) {
+  static QString playerNames[6];
   playerList.getPlayer(1)->enableTimers();
+  for (int i = 1; i <= playerList.getMaxUID(); i++) {
+    PlayerModel* temp = playerList.getPlayer(i);
+    if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
+      playerNames[i] = temp->getName();
+    }
+  }
+  playerNames[1] = playerName;
+  packet.setNames(playerNames);
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
@@ -241,7 +249,7 @@ void FlowChamp::MRStartGameForAll() {
   }
   dialogMR->hide();
   dialogGD->drawBoard();
-
+  dialogGD->setNames(playerNames);
   // Spawn each player
   dialogGD->spawnAllPlayers();
   dialogGD->show();
@@ -399,7 +407,9 @@ void FlowChamp::guestHandleRoomCodeStatus(NPRoomCodeStatus packet) {
 }
 
 void FlowChamp::guestHandleWelcomeToRoom(NPWelcomeToRoom packet) {
+  static QString* names = packet.getNames();
   WSStartClientGame();
+  dialogGD->setNames(names);
 }
 
 void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {

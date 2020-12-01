@@ -90,7 +90,11 @@ void GuestNetworkHandler::onTCPDataReady() {
     } else if (pType == PacketType::WELCOMETOROOM) {
       qDebug() << "pType == WELCOMETOROOM\n";
       NPWelcomeToRoom welcomeToRoom;
-      // BlockReader(tcpSocket).stream() >> spacePressedPacket;
+      QString names[6];
+      for (int i = 0; i < 6; i++) {
+        BlockReader(tcpSocket).stream() >> names[i];
+      }
+      welcomeToRoom.setNames(names);
       emit this->recvWelcomeToRoom(welcomeToRoom);
     } else if (pType == PacketType::NULLPACKETTYPE) {
       qDebug() << "pType == NULLPACKETTYPE\n";

@@ -138,6 +138,10 @@ void HostNetworkHandler::sendRoomCodeStatus(NPRoomCodeStatus roomCodeStatus,
 void HostNetworkHandler::sendWelcomeToRoom(NPWelcomeToRoom welcomeToRoom,
                                            QTcpSocket* socket) {
   BlockWriter(socket).stream() << PacketType::WELCOMETOROOM;
+  QString* names = welcomeToRoom.getNames();
+  for (int i = 0; i < 6; i++) {
+    BlockWriter(socket).stream() << names[i];
+  }
 }
 
 void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo,

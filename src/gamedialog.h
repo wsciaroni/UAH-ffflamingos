@@ -79,6 +79,11 @@ class GameDialog : public QDialog {
   void updateInfo(qint32 scores[6], qint32 timeRemainingValue);
 
   /**
+   * Used to set the names of each player
+   */
+  void setNames(QString names[6]);
+
+  /**
    * Determines what balls are in collision with the specific player
    */
   bool *determineCapturedBalls(PlayerPosition pos);
