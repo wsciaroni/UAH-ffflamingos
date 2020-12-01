@@ -85,7 +85,12 @@ void GuestNetworkHandler::onTCPDataReady() {
     } else if (pType == PacketType::ENDGAMEINFO) {
       qDebug() << "pType == ENDGAMEINFO\n";
       NPEndGameInfo endGameInfo;
-      // BlockReader(tcpSocket).stream() >> spacePressedPacket;
+      QString winnerName, highScoreHolderName;
+      qint32 winnerScore, highScore;
+      BlockReader(tcpSocket).stream() >> highScoreHolderName >> highScore >>
+          winnerName >> winnerScore;
+      endGameInfo.setHighScoreInf(highScoreHolderName, highScore);
+      endGameInfo.setWinnerInfo(winnerName, winnerScore);
       emit this->recvEndGameInfo(endGameInfo);
     } else if (pType == PacketType::WELCOMETOROOM) {
       qDebug() << "pType == WELCOMETOROOM\n";

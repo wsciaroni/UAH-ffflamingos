@@ -156,6 +156,9 @@ void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo,
 
 void HostNetworkHandler::sendEndGameInfo(NPEndGameInfo endGameInfo,
                                          QTcpSocket* socket) {
-  // BlockWriter(socket).stream() << endGameInfo;
   BlockWriter(socket).stream() << PacketType::ENDGAMEINFO;
+  BlockWriter(socket).stream() << endGameInfo.getHighScoreName()
+                               << endGameInfo.getHighScore()
+                               << endGameInfo.getWinnerName()
+                               << endGameInfo.getWinnerScore();
 }

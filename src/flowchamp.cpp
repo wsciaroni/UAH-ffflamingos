@@ -508,6 +508,8 @@ void FlowChamp::guestHandleInGameInfo(NPInGameInfo packet) {
 
 void FlowChamp::guestHandleEndGameInfo(NPEndGameInfo packet) {
   /// @todo Handle all the end of game info stuff
+  dialogGD->HandleInfoIn(packet.getHighScoreName(), packet.getHighScore(),
+                         packet.getWinnerName(), packet.getWinnerScore());
 }
 void FlowChamp::guestHandleTCPDropOut() {
   dialogCG->hide();
@@ -581,7 +583,26 @@ void FlowChamp::prepareAndSendEndGameInfo() {
   stopGameTimer();
   NPEndGameInfo packet;
   /// @todo Stuff the packet
+  // Calculate the high score and the winner
+  QString winnerName, highScoreHolder;
+  qint32 winnerScore, highScore;
+  for (int i = 1; i <= playerList.getMaxUID(); i++) {
+    PlayerModel* temp = playerList.getPlayer(i);
+    if (temp && temp->getUID() > 0) {
+      if (temp->getScore() > winnerScore) {
+        winnerScore = temp->getScore();
+        winnerName = temp->getName();
+      }
 
+      if (temp->getScore() > highScore) {
+        highScore = temp->getScore();
+        highScoreHolder = temp->getName();
+      }
+    }
+  }
+  packet.setWinnerInfo(winnerName, winnerScore);
+  packet.setHighScoreInf(highScoreHolder, highScore);
+  dialogGD->HandleInfoIn(highScoreHolder, highScore, winnerName, winnerScore);
   qDebug() << "In PrepareAndSendEndGameInfo";
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
