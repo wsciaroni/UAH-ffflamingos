@@ -135,21 +135,27 @@ void FlowChamp::makePlayerLunge(PlayerModel* player) {
 }
 
 void FlowChamp::hostTerminateGame() {
+  // Close TCP Sockets
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
       temp->disableTimers();
       temp->getTCPSocket()->close();
-      delete temp;
     }
   }
+}
+
+void FlowChamp::reinitialize() {
   // handle creating a new Game Dialog
   disconnect(dialogGD, &GameDialog::GDSpacePressed, this,
              &FlowChamp::GDSpacePressed);
   disconnect(dialogGD, &GameDialog::GDEscPressed, this,
              &FlowChamp::GDEscPressed);
   disconnect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
-  delete dialogGD;
+  if (dialogGD)
+  {
+    delete dialogGD;
+  }
   dialogGD = new GameDialog();
   connect(dialogGD, &GameDialog::GDSpacePressed, this,
           &FlowChamp::GDSpacePressed);
@@ -157,7 +163,10 @@ void FlowChamp::hostTerminateGame() {
   connect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
 
   // handle balls
-  delete hostBallInfo;
+  if (hostBallInfo)
+  {
+    delete hostBallInfo;
+  }
   initializeBalls();
 
   // Stop timers
@@ -174,7 +183,10 @@ void FlowChamp::hostTerminateGame() {
              &ManageRoom::MRUpdatePlayerList);
   disconnect(this, &FlowChamp::MRPassHostInfo, dialogMR,
              &ManageRoom::MRPassHostInfo);
-  delete dialogMR;
+  if (dialogMR)
+  {
+    delete dialogMR;
+  }
   dialogMR = new ManageRoom();
   connect(dialogMR, &ManageRoom::MRStartGameForAll, this,
           &FlowChamp::MRStartGameForAll);
@@ -598,53 +610,28 @@ void FlowChamp::prepareAndSendInGameInfo() {
 void FlowChamp::prepareAndSendEndGameInfo() {
   qDebug() << "In PrepareAndSendEndGameInfo";
   stopGameTimer();
-  qDebug() << "A";
   NPEndGameInfo packet;
-  qDebug() << "B";
   QString winnerName;
-  qDebug() << "C";
   qint32 winnerScore;
-  qDebug() << "D";
   winnerScore = 0;
-  qDebug() << "G";
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
-    qDebug() << "H";
     PlayerModel* temp = playerList.getPlayer(i);
-    qDebug() << "I";
     if (temp && temp->getUID() > 0) {
-      qDebug() << "J";
       if (temp->getScore() > winnerScore) {
-        qDebug() << "K";
         winnerScore = temp->getScore();
-        qDebug() << "L";
         winnerName = temp->getName();
-        qDebug() << "M";
       }
-      qDebug() << "N";
       if (temp->getScore() > globalHighScore) {
-        qDebug() << "O";
         globalHighScore = temp->getScore();
-        qDebug() << "P";
-        qDebug() << "pGlobal Name" << globalHighScoreName;
         globalHighScoreName = temp->getName();
-        qDebug() << "sGlobal Name" << globalHighScoreName;
-        qDebug() << "S";
         setNewHighScore(globalHighScoreName, globalHighScore);
-        qDebug() << "T";
       }
-      qDebug() << "U";
     }
-    qDebug() << "V";
   }
-  qDebug() << "W";
   packet.setWinnerInfo(winnerName, winnerScore);
-  qDebug() << "X";
-  qDebug() << "Global Name" << globalHighScoreName;
   packet.setHighScoreInfo(globalHighScoreName, globalHighScore);
-  qDebug() << "Y";
   dialogGD->HandleInfoIn(globalHighScoreName, globalHighScore, winnerName,
                          winnerScore);
-  qDebug() << "Z";
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {

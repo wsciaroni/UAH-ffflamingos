@@ -104,6 +104,11 @@ class FlowChamp : public QApplication {
    */
   void hostTerminateGame();
 
+  /**
+   * Used to reallocate all the memory for the necesary areas.
+   */
+  void reinitialize();
+
   /// For sending the UDP packets on interval from the Host to the Guests
   QTimer* sendInGameInfoTimer = new QTimer(this);
 
