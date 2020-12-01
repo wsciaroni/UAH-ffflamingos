@@ -169,7 +169,8 @@ slots:
   /**
    * Slot to be triggered when
    */
-  void HandleInfoIn(/*TBD*/);
+  void HandleInfoIn(QString highScoreHolder, qint32 highScore,
+                    QString winnerName, qint32 winnerScore);
 };
 
 #endif  // GAMEDIALOG_H

@@ -73,22 +73,7 @@ FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
   connect(sendInGameInfoTimer, &QTimer::timeout, this,
           QOverload<>::of(&FlowChamp::prepareAndSendInGameInfo));
 
-  for (int i = 0; i < 25; i++) {
-    hostBallInfo[i] = new ball;
-    qreal x = 400, y = 400, dx = 0, dy = 0;
-    while (qSqrt(qPow(x, 2) + qPow(y, 2)) + 5 >= 300) {
-      x = static_cast<qreal>(QRandomGenerator::global()->bounded(-300, 300));
-      y = static_cast<qreal>(QRandomGenerator::global()->bounded(-300, 300));
-    }
-
-    while (dx == 0 && dy == 0) {
-      dx = static_cast<qreal>(QRandomGenerator::global()->bounded(-2, 2));
-      dy = static_cast<qreal>(QRandomGenerator::global()->bounded(-2, 2));
-    }
-
-    hostBallInfo[i]->initializeBall(x, y, dx, dy);
-    // hostBallInfo[i]->setPos(0, 0);
-  }
+  initializeBalls();
 }
 
 FlowChamp::~FlowChamp() {
@@ -146,6 +131,57 @@ void FlowChamp::makePlayerLunge(PlayerModel* player) {
   }
 }
 
+void FlowChamp::hostTerminateGame() {
+  for (int i = 1; i <= playerList.getMaxUID(); i++) {
+    PlayerModel* temp = playerList.getPlayer(i);
+    if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
+      temp->disableTimers();
+      temp->getTCPSocket()->close();
+      delete temp;
+    }
+  }
+  // handle creating a new Game Dialog
+  disconnect(dialogGD, &GameDialog::GDSpacePressed, this,
+             &FlowChamp::GDSpacePressed);
+  disconnect(dialogGD, &GameDialog::GDEscPressed, this,
+             &FlowChamp::GDEscPressed);
+  disconnect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
+  delete dialogGD;
+  dialogGD = new GameDialog();
+  connect(dialogGD, &GameDialog::GDSpacePressed, this,
+          &FlowChamp::GDSpacePressed);
+  connect(dialogGD, &GameDialog::GDEscPressed, this, &FlowChamp::GDEscPressed);
+  connect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
+
+  // handle balls
+  delete hostBallInfo;
+  initializeBalls();
+
+  // Stop timers
+  stopGameTimer();
+
+  // Stop sending in game info
+  stopSendInGameInfo();
+
+  // handle Manage Room
+  disconnect(dialogMR, &ManageRoom::MRStartGameForAll, this,
+             &FlowChamp::MRStartGameForAll);
+  disconnect(dialogMR, &ManageRoom::MRQuitGame, this, &FlowChamp::MRQuitGame);
+  disconnect(this, &FlowChamp::MRUpdatePlayerList, dialogMR,
+             &ManageRoom::MRUpdatePlayerList);
+  disconnect(this, &FlowChamp::MRPassHostInfo, dialogMR,
+             &ManageRoom::MRPassHostInfo);
+  delete dialogMR;
+  dialogMR = new ManageRoom();
+  connect(dialogMR, &ManageRoom::MRStartGameForAll, this,
+          &FlowChamp::MRStartGameForAll);
+  connect(dialogMR, &ManageRoom::MRQuitGame, this, &FlowChamp::MRQuitGame);
+  connect(this, &FlowChamp::MRUpdatePlayerList, dialogMR,
+          &ManageRoom::MRUpdatePlayerList);
+  connect(this, &FlowChamp::MRPassHostInfo, dialogMR,
+          &ManageRoom::MRPassHostInfo);
+}
+
 void FlowChamp::startSendInGameInfo() {
   if (!sendInGameInfoTimer) {
     return;
@@ -169,6 +205,23 @@ void FlowChamp::startGameTimer() {
 
 void FlowChamp::stopGameTimer() { gameTimer->stop(); }
 
+void FlowChamp::initializeBalls() {
+  for (int i = 0; i < 25; i++) {
+    hostBallInfo[i] = new ball;
+    qreal x = 400, y = 400, dx = 0, dy = 0;
+    while (qSqrt(qPow(x, 2) + qPow(y, 2)) + 5 >= 300) {
+      x = static_cast<qreal>(QRandomGenerator::global()->bounded(-300, 300));
+      y = static_cast<qreal>(QRandomGenerator::global()->bounded(-300, 300));
+    }
+
+    while (dx == 0 && dy == 0) {
+      dx = static_cast<qreal>(QRandomGenerator::global()->bounded(-2, 2));
+      dy = static_cast<qreal>(QRandomGenerator::global()->bounded(-2, 2));
+    }
+
+    hostBallInfo[i]->initializeBall(x, y, dx, dy);
+  }
+}
 void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   qDebug() << "In DRPlayAsHost()";
   playerName = playerNameIn;
@@ -349,6 +402,7 @@ void FlowChamp::GDQuitGame() {
   qDebug() << "In GDQuitGame()";
   if (isHost()) {
     hostHandler->stopTCPServer();
+    hostTerminateGame();
   } else {
     guestHandler->stopListeningOnUDP();
     guestHandler->disconnectFromHost();
@@ -527,6 +581,7 @@ void FlowChamp::prepareAndSendEndGameInfo() {
   stopGameTimer();
   NPEndGameInfo packet;
   /// @todo Stuff the packet
+
   qDebug() << "In PrepareAndSendEndGameInfo";
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);

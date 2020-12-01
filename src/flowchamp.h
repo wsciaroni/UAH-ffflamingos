@@ -98,6 +98,11 @@ class FlowChamp : public QApplication {
    */
   void makePlayerLunge(PlayerModel* player);
 
+  /**
+   * Used to clean up any memory leaks when the host goes to quit the game
+   */
+  void hostTerminateGame();
+
   /// For sending the UDP packets on interval from the Host to the Guests
   QTimer* sendInGameInfoTimer = new QTimer(this);
 
@@ -130,6 +135,11 @@ class FlowChamp : public QApplication {
    * Used to stop the game timer
    */
   void stopGameTimer();
+
+  /**
+   * Function to initialize all the balls
+   */
+  void initializeBalls();
 
  public:
   FlowChamp(int& argc, char** argv);

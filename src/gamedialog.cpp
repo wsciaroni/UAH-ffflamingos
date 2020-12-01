@@ -91,21 +91,20 @@ void GameDialog::drawBoard() {
   head4_retracted = player4Head->pos();
   head5_retracted = player5Head->pos();
 
-  head1_extended.setX(head1_retracted.x() + -50*qSin(-144 * M_PI / 180));
-  head1_extended.setY(head1_retracted.y() + 50*qCos(-144 * M_PI / 180));
+  head1_extended.setX(head1_retracted.x() + -50 * qSin(-144 * M_PI / 180));
+  head1_extended.setY(head1_retracted.y() + 50 * qCos(-144 * M_PI / 180));
 
-  head2_extended.setX(head1_retracted.x() + -50*qSin(-72 * M_PI / 180));
-  head2_extended.setY(head1_retracted.y() + 50*qCos(-72 * M_PI / 180));
+  head2_extended.setX(head1_retracted.x() + -50 * qSin(-72 * M_PI / 180));
+  head2_extended.setY(head1_retracted.y() + 50 * qCos(-72 * M_PI / 180));
 
   head3_extended.setX(head1_retracted.x());
   head3_extended.setY(head1_retracted.y() + 50);
 
-  head4_extended.setX(head1_retracted.x() + -50*qSin(72 * M_PI / 180));
-  head4_extended.setY(head1_retracted.y() + 50*qCos(72 * M_PI / 180));
+  head4_extended.setX(head1_retracted.x() + -50 * qSin(72 * M_PI / 180));
+  head4_extended.setY(head1_retracted.y() + 50 * qCos(72 * M_PI / 180));
 
-  head5_extended.setX(head1_retracted.x() + -50*qSin(144 * M_PI / 180));
-  head5_extended.setY(head1_retracted.y() + 50*qCos(144 * M_PI / 180));
-
+  head5_extended.setX(head1_retracted.x() + -50 * qSin(144 * M_PI / 180));
+  head5_extended.setY(head1_retracted.y() + 50 * qCos(144 * M_PI / 180));
 
   // initializing balls
   for (int i = 0; i < 25; i++) {
@@ -127,7 +126,6 @@ void GameDialog::drawBoard() {
   font2.setPixelSize(10);
   font2.setPointSize(15);
   font2.setFamily("Arial");
-
 
   timeRemainingLabel = new QGraphicsTextItem;
   timeRemaining = new QGraphicsTextItem;
@@ -171,19 +169,19 @@ void GameDialog::drawBoard() {
   player2Name->setPlainText("Player 2:");
   player2Name->setFont(font2);
 
-  //player3Name->setPos(-325, -350);
+  // player3Name->setPos(-325, -350);
   player3Name->setPos(205, -425);
   player3Name->setDefaultTextColor("yellow");
   player3Name->setPlainText("Player 3:");
   player3Name->setFont(font2);
 
-  //player4Name->setPos(-325, -325);
+  // player4Name->setPos(-325, -325);
   player4Name->setPos(205, -375);
   player4Name->setDefaultTextColor("green");
   player4Name->setPlainText("Player 4:");
   player4Name->setFont(font2);
 
-  //player5Name->setPos(-325, -300);
+  // player5Name->setPos(-325, -300);
   player5Name->setPos(205, -325);
   player5Name->setDefaultTextColor("blue");
   player5Name->setPlainText("Player 5:");
@@ -204,19 +202,19 @@ void GameDialog::drawBoard() {
   player2Score->setPlainText("0");
   player2Score->setFont(font2);
 
-  //player3Score->setPos(-240, -350);
+  // player3Score->setPos(-240, -350);
   player3Score->setPos(350, -425);
   player3Score->setDefaultTextColor("yellow");
   player3Score->setPlainText("0");
   player3Score->setFont(font2);
 
-  //player4Score->setPos(-240, -325);
+  // player4Score->setPos(-240, -325);
   player4Score->setPos(350, -375);
   player4Score->setDefaultTextColor("green");
   player4Score->setPlainText("0");
   player4Score->setFont(font2);
 
-  //player5Score->setPos(-240, -300);
+  // player5Score->setPos(-240, -300);
   player5Score->setPos(350, -325);
   player5Score->setDefaultTextColor("blue");
   player5Score->setPlainText("0");
@@ -419,4 +417,21 @@ bool* GameDialog::determineCapturedBalls(PlayerPosition pos) {
   return isColliding;
 }
 
-void GameDialog::HandleInfoIn(/*TBD*/) {}
+void GameDialog::HandleInfoIn(QString highScoreHolder, qint32 highScore,
+                              QString winnerName, qint32 winnerScore) {
+
+  /// @todo display information over game window when this is called (At the end
+  /// of the game)
+  /// Create 4 QGraphicsTextItems that will display the following theme:
+  /// High Score: ##
+  /// Held by: ###########
+  ///
+  /// Game Winner: ########
+  /// With a Score of: ######
+
+  // Useful notes: Display the following Really big and bold over the screen
+  // "High Score: " + QString::number(highScore,10)
+  // "Held By: " + highScoreHolder
+  // "Game Winner: " + winnerName;
+  // "With a Score of: " + QString::number(winnerScore,10)
+}
