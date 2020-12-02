@@ -228,9 +228,10 @@ void FlowChamp::connectHostHandler() {
 void FlowChamp::connectDialogDR() {
   if (!dialogDR) {
     dialogDR = new DetermineRoleDialog();
+  } else {
+    dialogDR->disconnect();
   }
 
-  dialogDR->disconnect();
   connect(dialogDR, &DetermineRoleDialog::DRPlayAsHost, this,
           &FlowChamp::DRPlayAsHost);
   connect(dialogDR, &DetermineRoleDialog::DRPlayAsGuest, this,
@@ -242,9 +243,10 @@ void FlowChamp::connectDialogDR() {
 void FlowChamp::connectDialogCG() {
   if (!dialogCG) {
     dialogCG = new CreateGame();
+  } else {
+    dialogCG->disconnect();
   }
 
-  dialogCG->disconnect();
   connect(dialogCG, &CreateGame::CGGoToManageRoom, this,
           &FlowChamp::CGGoToManageRoom);
   connect(dialogCG, &CreateGame::CGQuitGame, this, &FlowChamp::CGQuitGame);
@@ -253,9 +255,9 @@ void FlowChamp::connectDialogCG() {
 void FlowChamp::connectDialogMR() {
   if (!dialogMR) {
     dialogMR = new ManageRoom();
+  } else {
+    dialogMR->disconnect();
   }
-
-  dialogMR->disconnect();
   connect(dialogMR, &ManageRoom::MRStartGameForAll, this,
           &FlowChamp::MRStartGameForAll);
   connect(dialogMR, &ManageRoom::MRQuitGame, this, &FlowChamp::MRQuitGame);
@@ -268,21 +270,31 @@ void FlowChamp::connectDialogMR() {
 void FlowChamp::connectDialogJG() {
   if (!dialogJG) {
     dialogJG = new JoinExistingGame();
+  } else {
+    dialogJG->disconnect();
   }
-
-  dialogJG->disconnect();
   connect(dialogJG, &JoinExistingGame::JGGoToWaitingToStart, this,
           &FlowChamp::JGGoToWaitingToStart);
   connect(dialogJG, &JoinExistingGame::JGQuitGame, this,
           &FlowChamp::JGQuitGame);
 }
 void FlowChamp::connectDialogWS() {
-  disconnect(dialogWS, &WaitingToStart::WSQuitGame, this,
-             &FlowChamp::WSQuitGame);
+  if (!dialogWS) {
+    dialogWS = new WaitingToStart();
+  } else {
+    disconnect(dialogWS, &WaitingToStart::WSQuitGame, this,
+               &FlowChamp::WSQuitGame);
+  }
+
   connect(dialogWS, &WaitingToStart::WSQuitGame, this, &FlowChamp::WSQuitGame);
 }
 void FlowChamp::connectDialogGD() {
-  dialogGD->disconnect();
+  if (!dialogGD) {
+    dialogGD = new GameDialog();
+  } else {
+    dialogGD->disconnect();
+  }
+
   connect(dialogGD, &GameDialog::GDSpacePressed, this,
           &FlowChamp::GDSpacePressed);
   connect(dialogGD, &GameDialog::GDEscPressed, this, &FlowChamp::GDEscPressed);
@@ -290,7 +302,11 @@ void FlowChamp::connectDialogGD() {
 }
 
 void FlowChamp::connectGameInfoTimer() {
-  sendInGameInfoTimer->disconnect();
+  if (!sendInGameInfoTimer) {
+    sendInGameInfoTimer = new QTimer();
+  } else {
+    sendInGameInfoTimer->disconnect();
+  }
   connect(sendInGameInfoTimer, &QTimer::timeout, this,
           QOverload<>::of(&FlowChamp::prepareAndSendInGameInfo));
 }
