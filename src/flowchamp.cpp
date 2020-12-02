@@ -606,14 +606,23 @@ void FlowChamp::prepareAndSendEndGameInfo() {
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
     PlayerModel* temp = playerList.getPlayer(i);
     if (temp && temp->getUID() > 0) {
-      if (temp->getScore() > winnerScore) {
-        winnerScore = temp->getScore();
-        winnerName = temp->getName();
+      qint32 playerScorel = temp->getScore();
+      QString playerNamel;
+      if (i==1)
+      {
+        playerNamel = playerName;
+      } else {
+        playerNamel = temp->getName();
       }
-      if (temp->getScore() > globalHighScore) {
-        globalHighScore = temp->getScore();
-        qDebug() << "NameIn " << temp->getName();
-        globalHighScoreName = temp->getName();
+      
+      if (playerScorel > winnerScore) {
+        winnerScore = playerScorel;
+        winnerName = playerNamel;
+      }
+      if (playerScorel > globalHighScore) {
+        globalHighScore = playerScorel;
+        qDebug() << "NameIn " << playerNamel;
+        globalHighScoreName = playerNamel;
         setNewHighScore(globalHighScoreName, globalHighScore);
       }
     }
