@@ -170,9 +170,9 @@ slots:
    * @details Sends the positions of the balls and players, high score, and
    * current scores
    * @param inGameInfo A Network Packet of type NPInGameInfo
-   * @param destinationAddress The address to send the in game info to
+   * @param socket The socket to send the in game info
    */
-  void sendInGameInfo(NPInGameInfo inGameInfo, QHostAddress destinationAddress);
+  void sendInGameInfo(NPInGameInfo inGameInfo, QTcpSocket* socket);
 
   /**
    * @brief Used to send the end of game statistics

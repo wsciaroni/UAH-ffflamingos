@@ -70,22 +70,22 @@ void GuestNetworkHandler::onTCPDisconnected() {
 }
 
 void GuestNetworkHandler::onTCPDataReady() {
-  qDebug() << "In onTCPDataReady()\n";
+  // qDebug() << "In onTCPDataReady()\n";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
   while (tcpSocket->bytesAvailable()) {
     // Read from socket here
     PacketType pType;
     BlockReader(tcpSocket).stream() >> pType;
     if (pType == PacketType::ROOMCODESTATUS) {
-      qDebug() << "pType == ROOMCODESTATUS\n";
+      // qDebug() << "pType == ROOMCODESTATUS\n";
       NPRoomCodeStatus roomCodeStatus;
       bool status;
       BlockReader(tcpSocket).stream() >> status;
       roomCodeStatus.setRoomCodeStatus(status);
-      qDebug() << "Room Code Status Received";
+      // qDebug() << "Room Code Status Received";
       emit this->recvRoomCodeStatus(roomCodeStatus);
     } else if (pType == PacketType::ENDGAMEINFO) {
-      qDebug() << "pType == ENDGAMEINFO\n";
+      // qDebug() << "pType == ENDGAMEINFO\n";
       NPEndGameInfo endGameInfo;
       QString winnerName, highScoreHolderName;
       qint32 winnerScore, highScore;
@@ -95,7 +95,7 @@ void GuestNetworkHandler::onTCPDataReady() {
       endGameInfo.setWinnerInfo(winnerName, winnerScore);
       emit this->recvEndGameInfo(endGameInfo);
     } else if (pType == PacketType::WELCOMETOROOM) {
-      qDebug() << "pType == WELCOMETOROOM\n";
+      // qDebug() << "pType == WELCOMETOROOM\n";
       NPWelcomeToRoom welcomeToRoom;
       QString names[6];
       for (int i = 0; i < 6; i++) {
@@ -103,6 +103,26 @@ void GuestNetworkHandler::onTCPDataReady() {
       }
       welcomeToRoom.setNames(names);
       emit this->recvWelcomeToRoom(welcomeToRoom);
+    } else if (pType == PacketType::INGAMEINFO) {
+      // qDebug() << "pType == INGAMEINFO\n";
+      NPInGameInfo packet;
+      for (int i = 0; i < 25; i++) {
+        qint32 xPos, yPos;
+        BlockReader(tcpSocket).stream() >> xPos >> yPos;
+        packet.setBallPosition(i, xPos, yPos);
+      }
+      for (int i = 0; i < 6; i++) {
+        qint32 score;
+        bool isExtended;
+        BlockReader(tcpSocket).stream() >> score >> isExtended;
+        packet.setPlayerScore(i, score);
+        packet.setPlayerExtension(i, isExtended);
+      }
+      packet.setPlayerExtension(0, false);
+      qint32 timeRemaining = -1;
+      BlockReader(tcpSocket).stream() >> timeRemaining;
+      packet.setTimeRemaining(timeRemaining);
+      emit this->recvInGameInfo(packet);
     } else if (pType == PacketType::NULLPACKETTYPE) {
       qDebug() << "pType == NULLPACKETTYPE\n";
       // Throw an error
@@ -120,6 +140,7 @@ void GuestNetworkHandler::onTCPBytesWritten() {}
 
 void GuestNetworkHandler::onUDPReadPendingDatagrams() {
   // qDebug() << "In onUDPReadPendingDatagrams()";
+  /* // Commented out due to QT Bug-27641
   QByteArray datagram;
 
   while (udpSocket.hasPendingDatagrams()) {
@@ -134,6 +155,7 @@ void GuestNetworkHandler::onUDPReadPendingDatagrams() {
     in >> inGameInfo;
     emit this->recvInGameInfo(inGameInfo);
   }
+  */
 }
 
 void GuestNetworkHandler::provideRoomCode(

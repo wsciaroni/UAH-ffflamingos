@@ -5,6 +5,7 @@ NPInGameInfo::NPInGameInfo(/* args */) {}
 NPInGameInfo::~NPInGameInfo() {}
 
 QDataStream& operator<<(QDataStream& ds, NPInGameInfo& packet) {
+  /*
   for (int i = 0; i < 25; i++) {
     ds << packet.getBallPosX(i) << packet.getBallPosY(i);
   }
@@ -12,10 +13,12 @@ QDataStream& operator<<(QDataStream& ds, NPInGameInfo& packet) {
     ds << packet.getPlayerScore(i) << packet.isPlayerExtended(i);
   }
   ds << packet.getTimeRemaining();
+  */
   return ds;
 }
 
 QDataStream& operator>>(QDataStream& ds, NPInGameInfo& packet) {
+  /*
   for (int i = 0; i < 25; i++) {
     qint32 xPos, yPos;
     ds >> xPos >> yPos;
@@ -32,6 +35,7 @@ QDataStream& operator>>(QDataStream& ds, NPInGameInfo& packet) {
   qint32 timeRemaining = -1;
   ds >> timeRemaining;
   packet.setTimeRemaining(timeRemaining);
+  */
   return ds;
 }
 

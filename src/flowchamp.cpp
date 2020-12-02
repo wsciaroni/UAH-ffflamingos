@@ -457,6 +457,7 @@ void FlowChamp::JGQuitGame() {
 void FlowChamp::WSStartClientGame() {
   qDebug() << "In WSStartClientGame()";
   dialogWS->hide();
+  /**
   if (!guestHandler->listenOnUDP()) {
     error networkError;
     QString errorMessage =
@@ -466,11 +467,11 @@ void FlowChamp::WSStartClientGame() {
     dialogCG->hide();
     networkError.exec();
     dialogDR->show();
-  } else {
+  } else { */
     dialogGD->drawBoard();
     dialogGD->spawnAllPlayers();
     dialogGD->show();
-  }
+  //}
 }
 
 void FlowChamp::WSQuitGame() {
@@ -683,8 +684,14 @@ void FlowChamp::prepareAndSendInGameInfo() {
 
   dialogGD->updateInfo(scores, timeRemaining);
   dialogGD->setBallPos(xPos, yPos);
-
-  emit this->hostSendInGameInfo(packet, multicastAddress);
+  for (int i = 1; i <= playerList->getMaxUID(); i++) {
+    PlayerModel* temp = playerList->getPlayer(i);
+    if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
+      temp->enableTimers();
+      emit this->hostSendInGameInfo(packet, temp->getTCPSocket());
+    }
+  }
+  
 }
 
 void FlowChamp::prepareAndSendEndGameInfo() {

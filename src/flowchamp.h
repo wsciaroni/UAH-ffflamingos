@@ -417,8 +417,7 @@ signals:
    * @param destinationAddress The Address(s) to send the UDP NPInGameInfo
    * packets to.
    */
-  void hostSendInGameInfo(NPInGameInfo inGameInfo,
-                          QHostAddress destinationAddress);
+  void hostSendInGameInfo(NPInGameInfo inGameInfo, QTcpSocket* socket);
 
   /**
    * Used to signal a Host's desire to send out End of Game Information.

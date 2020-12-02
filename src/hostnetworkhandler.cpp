@@ -144,14 +144,23 @@ void HostNetworkHandler::sendWelcomeToRoom(NPWelcomeToRoom welcomeToRoom,
   }
 }
 
-void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo,
-                                        QHostAddress destinationAddress) {
+void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo, QTcpSocket* socket) {
+  /*
   static int ttl = 1;
   udpServer.setSocketOption(QAbstractSocket::MulticastTtlOption, ttl++);
   QByteArray datagram;
   QDataStream out(&datagram, QIODevice::WriteOnly);
   out << inGameInfo;
   udpServer.writeDatagram(datagram, destinationAddress, 45454);
+  */
+ BlockWriter(socket).stream() << PacketType::INGAMEINFO;
+ for (int i = 0; i < 25; i++) {
+    BlockWriter(socket).stream() << inGameInfo.getBallPosX(i) << inGameInfo.getBallPosY(i);
+  }
+  for (int i = 0; i < 6; i++) {
+    BlockWriter(socket).stream() << inGameInfo.getPlayerScore(i) << inGameInfo.isPlayerExtended(i);
+  }
+  BlockWriter(socket).stream() << inGameInfo.getTimeRemaining();
 }
 
 void HostNetworkHandler::sendEndGameInfo(NPEndGameInfo endGameInfo,
