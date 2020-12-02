@@ -34,7 +34,7 @@ class FlowChamp : public QApplication {
   bool isHostPlayer = false;
 
   /// Holds the PlayerModel for each player (including the Host as uid 0)
-  PlayerList playerList;
+  PlayerList* playerList = new PlayerList();
 
   /// Holds a list of currently attached players.
   QStringList playerNames;

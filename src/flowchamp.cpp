@@ -99,7 +99,7 @@ void FlowChamp::addPlayer(PlayerModel* player) {
   if (!player) {
     return;
   }
-  playerList.addPlayer(player);
+  playerList->addPlayer(player);
   playerNames.append(player->getName());
   emit this->MRUpdatePlayerList(playerNames);
 }
@@ -108,7 +108,7 @@ void FlowChamp::removePlayer(PlayerModel* player) {
     return;
   }
   playerNames.removeOne(player->getName());
-  playerList.removePlayer(player);
+  playerList->removePlayer(player);
   emit this->MRUpdatePlayerList(playerNames);
 }
 
@@ -134,17 +134,7 @@ void FlowChamp::makePlayerLunge(PlayerModel* player) {
   }
 }
 
-void FlowChamp::hostTerminateGame() {
-  // Close TCP Sockets
-  for (int i = 1; i <= playerList.getMaxUID(); i++) {
-    PlayerModel* temp = playerList.getPlayer(i);
-    if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
-      temp->disableTimers();
-      temp->getTCPSocket()->close();
-    }
-  }
-  reinitialize();
-}
+void FlowChamp::hostTerminateGame() { reinitialize(); }
 
 void FlowChamp::reinitialize() {
   if (dialogGD) {
@@ -166,11 +156,7 @@ void FlowChamp::reinitialize() {
   }
 
   initializeBalls();
-
-  // Stop timers
   stopGameTimer();
-
-  // Stop sending in game info
   stopSendInGameInfo();
 
   // handle Manage Room
@@ -186,6 +172,11 @@ void FlowChamp::reinitialize() {
           &ManageRoom::MRUpdatePlayerList);
   connect(this, &FlowChamp::MRPassHostInfo, dialogMR,
           &ManageRoom::MRPassHostInfo);
+
+  if (playerList) {
+    delete playerList;
+    playerList = new PlayerList();
+  }
 }
 
 void FlowChamp::startSendInGameInfo() {
@@ -247,7 +238,7 @@ void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   setRole(true);
   HostModel* hostPlayer = new HostModel(1, hostHandler->getTCPServer());
   hostPlayer->setPositionId(static_cast<PlayerPosition>(1));
-  playerList.addPlayer(hostPlayer);
+  playerList->addPlayer(hostPlayer);
   dialogDR->hide();
   dialogCG->show();
 }
@@ -303,17 +294,17 @@ void FlowChamp::MRStartGameForAll() {
   qDebug() << "In MRStartGameForAll()";
   NPWelcomeToRoom packet;
   static QString playerNames[6];
-  playerList.getPlayer(1)->enableTimers();
-  for (int i = 1; i <= playerList.getMaxUID(); i++) {
-    PlayerModel* temp = playerList.getPlayer(i);
+  playerList->getPlayer(1)->enableTimers();
+  for (int i = 1; i <= playerList->getMaxUID(); i++) {
+    PlayerModel* temp = playerList->getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
       playerNames[i] = temp->getName();
     }
   }
   playerNames[1] = playerName;
   packet.setNames(playerNames);
-  for (int i = 1; i <= playerList.getMaxUID(); i++) {
-    PlayerModel* temp = playerList.getPlayer(i);
+  for (int i = 1; i <= playerList->getMaxUID(); i++) {
+    PlayerModel* temp = playerList->getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
       temp->enableTimers();
       emit this->hostSendWelcomeToRoom(packet, temp->getTCPSocket());
@@ -403,12 +394,12 @@ void FlowChamp::GDSpacePressed() {
   qDebug() << "In GDSpacePressed()";
   if (this->isHost()) {
     qDebug() << "GDSpacePressedLocal is Host";
-    makePlayerLunge(
-        playerList.getPlayer(1));  // Call this on the host player with UID == 1
+    makePlayerLunge(playerList->getPlayer(1));  // Call this on the host player
+                                                // with UID == 1
   } else {
     qDebug() << "GDSpacePressedLocal is Guest";
     NPSpacePressed packet;
-    packet.setUID(playerList.getMaxUID());
+    packet.setUID(playerList->getMaxUID());
     emit this->guestSendSpacePressed(packet);
   }
 }
@@ -435,7 +426,7 @@ void FlowChamp::GDQuitGame() {
 void FlowChamp::hostHandleRoomCode(NPProvideRoomCode packet,
                                    QTcpSocket* socket) {
   NPRoomCodeStatus statusPacket;
-  int newPlayerID = playerList.getNewPlayerID();
+  int newPlayerID = playerList->getNewPlayerID();
   if ((packet.getRoomCode() == hostRoomCode) && (newPlayerID != -1) && (gameStarted == false)) {
     statusPacket.setRoomCodeStatus(true);
     PlayerModel* newPlayer = new PlayerModel(newPlayerID, socket);
@@ -450,17 +441,17 @@ void FlowChamp::hostHandleRoomCode(NPProvideRoomCode packet,
 
 void FlowChamp::hostHandleTerminateMe(NPTerminateMe packet,
                                       QTcpSocket* socket) {
-  removePlayer(playerList.getPlayer(socket));
+  removePlayer(playerList->getPlayer(socket));
 }
 void FlowChamp::hostHandleSpacePressed(NPSpacePressed packet,
                                        QTcpSocket* socket) {
   qDebug() << "Host: Space Pressed by "
-           << playerList.getPlayer(socket)->getName();
-  makePlayerLunge(playerList.getPlayer(socket));
+           << playerList->getPlayer(socket)->getName();
+  makePlayerLunge(playerList->getPlayer(socket));
 }
 
 void FlowChamp::hostHandleGuestTerminated(QTcpSocket* socket) {
-  PlayerModel* tmpPlayer = playerList.getPlayer(socket);
+  PlayerModel* tmpPlayer = playerList->getPlayer(socket);
   removePlayer(tmpPlayer);
 }
 
@@ -468,7 +459,7 @@ void FlowChamp::hostHandleGuestTerminated(QTcpSocket* socket) {
 void FlowChamp::guestHandleRoomCodeStatus(NPRoomCodeStatus packet) {
   if (packet.getRoomCodeStatus() == true) {
     PlayerModel* player = new PlayerModel(packet.getUID());
-    playerList.addPlayer(player);
+    playerList->addPlayer(player);
     dialogWS->show();
   } else {
     /// @todo throw an error if the room code is invalid
@@ -572,7 +563,7 @@ void FlowChamp::prepareAndSendInGameInfo() {
       packet.setPlayerScore(0, 0);
       packet.setPlayerExtension(0, false);
     } else {
-      PlayerModel* player = playerList.getPlayer(i);
+      PlayerModel* player = playerList->getPlayer(i);
 
       bool isextended = false;
       if (player) {
@@ -602,8 +593,8 @@ void FlowChamp::prepareAndSendInGameInfo() {
 void FlowChamp::prepareAndSendEndGameInfo() {
   qDebug() << "In PrepareAndSendEndGameInfo";
   stopGameTimer();
-  for (int i = 1; i <= playerList.getMaxUID(); i++) {
-    PlayerModel* temp = playerList.getPlayer(i);
+  for (int i = 1; i <= playerList->getMaxUID(); i++) {
+    PlayerModel* temp = playerList->getPlayer(i);
     if (temp && temp->getUID() > 0) {
       temp->disableTimers();
     }
@@ -612,8 +603,8 @@ void FlowChamp::prepareAndSendEndGameInfo() {
   QString winnerName;
   qint32 winnerScore;
   winnerScore = 0;
-  for (int i = 1; i <= playerList.getMaxUID(); i++) {
-    PlayerModel* temp = playerList.getPlayer(i);
+  for (int i = 1; i <= playerList->getMaxUID(); i++) {
+    PlayerModel* temp = playerList->getPlayer(i);
     if (temp && temp->getUID() > 0) {
       qint32 playerScorel = temp->getScore();
       QString playerNamel;
@@ -640,8 +631,8 @@ void FlowChamp::prepareAndSendEndGameInfo() {
   qDebug() << "Name " << winnerName;
   dialogGD->HandleInfoIn(globalHighScoreName, globalHighScore, winnerName,
                          winnerScore);
-  for (int i = 1; i <= playerList.getMaxUID(); i++) {
-    PlayerModel* temp = playerList.getPlayer(i);
+  for (int i = 1; i <= playerList->getMaxUID(); i++) {
+    PlayerModel* temp = playerList->getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
       emit this->hostSendEndGameInfo(packet, temp->getTCPSocket());
     }

@@ -5,6 +5,9 @@ PlayerList::PlayerList() {}
 PlayerList::~PlayerList() {
   for (PlayerModel* temp : playerList.keys()) {
     if (temp) {
+      if (temp->getTCPSocket()) {
+        temp->getTCPSocket()->close();
+      }
       delete temp;
     }
   }
