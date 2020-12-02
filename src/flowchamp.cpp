@@ -81,6 +81,7 @@ void FlowChamp::reinitialize() {
     delete dialogGD;
   }
   gameStarted = false;
+  dialogGD = new GameDialog;
   connectDialogGD();
 
   // handle balls
@@ -97,6 +98,7 @@ void FlowChamp::reinitialize() {
     dialogMR->disconnect();
     delete dialogMR;
   }
+  dialogMR = new ManageRoom();
   connectDialogMR();
 
   if (playerList) {
@@ -105,6 +107,9 @@ void FlowChamp::reinitialize() {
   }
 
   hostHandler->stopTCPServer();
+  delete hostHandler;
+  hostHandler = new HostNetworkHandler();
+  connectHostHandler();
 }
 
 void FlowChamp::startSendInGameInfo() {
