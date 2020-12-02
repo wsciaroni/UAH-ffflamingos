@@ -42,6 +42,9 @@ class FlowChamp : public QApplication {
   /// Holds the balls in order to calculate the positions
   ball* hostBallInfo[25];
 
+  /// Set to true when host has started game
+  bool gameStarted = false;
+
   // Dialogs
 
   /// Dialog to be displayed when need be

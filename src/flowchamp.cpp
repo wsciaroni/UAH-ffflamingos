@@ -151,6 +151,7 @@ void FlowChamp::reinitialize() {
     dialogGD->disconnect();
     delete dialogGD;
   }
+  gameStarted = false;
   qDebug() << "in reinitialize\n";
   dialogGD = new GameDialog();
   connect(dialogGD, &GameDialog::GDSpacePressed, this,
@@ -318,6 +319,7 @@ void FlowChamp::MRStartGameForAll() {
       emit this->hostSendWelcomeToRoom(packet, temp->getTCPSocket());
     }
   }
+  gameStarted = true;
   dialogMR->hide();
   dialogGD->drawBoard();
   dialogGD->setNames(playerNames);
@@ -434,7 +436,7 @@ void FlowChamp::hostHandleRoomCode(NPProvideRoomCode packet,
                                    QTcpSocket* socket) {
   NPRoomCodeStatus statusPacket;
   int newPlayerID = playerList.getNewPlayerID();
-  if (packet.getRoomCode() == hostRoomCode && newPlayerID != -1) {
+  if ((packet.getRoomCode() == hostRoomCode) && (newPlayerID != -1) && (gameStarted == false)) {
     statusPacket.setRoomCodeStatus(true);
     PlayerModel* newPlayer = new PlayerModel(newPlayerID, socket);
     newPlayer->setName(packet.getName());
@@ -471,7 +473,7 @@ void FlowChamp::guestHandleRoomCodeStatus(NPRoomCodeStatus packet) {
   } else {
     /// @todo throw an error if the room code is invalid
     error* throwError = new error;
-    throwError->throwErrorMsg("ERROR: Invalid Room Code or the Room is Full");
+    throwError->throwErrorMsg("ERROR: COULD NOT JOIN GAME\n\nTroubleshooting:\n   Room code could be invalid\n   Room could be full\n   Game could already be in session");
     throwError->exec();
     delete throwError;
     JGQuitGame();
