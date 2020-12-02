@@ -143,6 +143,7 @@ void FlowChamp::hostTerminateGame() {
       temp->getTCPSocket()->close();
     }
   }
+  reinitialize();
 }
 
 void FlowChamp::reinitialize() {
