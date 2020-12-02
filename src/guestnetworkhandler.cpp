@@ -27,6 +27,8 @@ bool GuestNetworkHandler::connectToHost(QHostAddress hostAddress,
       return true;
     }
   }
+  tcpSocket.flush();
+  tcpSocket.close();
   return false;
 }
 

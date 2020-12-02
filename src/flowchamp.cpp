@@ -162,9 +162,10 @@ void FlowChamp::setNewHighScore(QString name, qint32 score) {}
 
 void FlowChamp::connectGuestHandler() {
   if (!guestHandler) {
+    qDebug() << "Creating guestHandler in connectGuestHandler" << endl;
     guestHandler = new GuestNetworkHandler();
   } else {
-
+    qDebug() << "Disconnecting in connectGuestHandler" << endl;
     disconnect(guestHandler, &GuestNetworkHandler::recvRoomCodeStatus, this,
                &FlowChamp::guestHandleRoomCodeStatus);
     disconnect(guestHandler, &GuestNetworkHandler::recvWelcomeToRoom, this,
@@ -182,8 +183,10 @@ void FlowChamp::connectGuestHandler() {
     disconnect(this, &FlowChamp::guestSendSpacePressed, guestHandler,
                &GuestNetworkHandler::spacePressed);
   }
+  qDebug() << "Setting up connections in connectGuestHandler" << endl;
   connect(guestHandler, &GuestNetworkHandler::recvRoomCodeStatus, this,
           &FlowChamp::guestHandleRoomCodeStatus);
+  qDebug() << "Done setting up recvRoomCodeStatus" << endl;
   connect(guestHandler, &GuestNetworkHandler::recvWelcomeToRoom, this,
           &FlowChamp::guestHandleWelcomeToRoom);
   connect(guestHandler, &GuestNetworkHandler::recvInGameInfo, this,
@@ -198,6 +201,8 @@ void FlowChamp::connectGuestHandler() {
           &GuestNetworkHandler::terminateMe);
   connect(this, &FlowChamp::guestSendSpacePressed, guestHandler,
           &GuestNetworkHandler::spacePressed);
+
+  qDebug() << "Done setting up connections in connectGuestHandler" << endl;
 }
 
 void FlowChamp::connectHostHandler() {
@@ -430,7 +435,9 @@ void FlowChamp::JGGoToWaitingToStart(QHostAddress addressIn, QString portIn,
     dialogJG->hide();
     networkError.exec();
     guestHandler->disconnect();
+    guestHandler->disconnectFromHost();
     delete guestHandler;
+    guestHandler = new GuestNetworkHandler();
     connectGuestHandler();
     dialogDR->show();
   }
