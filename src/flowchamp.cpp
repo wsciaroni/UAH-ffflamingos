@@ -146,14 +146,9 @@ void FlowChamp::hostTerminateGame() {
 }
 
 void FlowChamp::reinitialize() {
-  // handle creating a new Game Dialog
-  disconnect(dialogGD, &GameDialog::GDSpacePressed, this,
-             &FlowChamp::GDSpacePressed);
-  disconnect(dialogGD, &GameDialog::GDEscPressed, this,
-             &FlowChamp::GDEscPressed);
-  disconnect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
   if (dialogGD)
   {
+    dialogGD->disconnect();
     delete dialogGD;
   }
   dialogGD = new GameDialog();
@@ -176,15 +171,9 @@ void FlowChamp::reinitialize() {
   stopSendInGameInfo();
 
   // handle Manage Room
-  disconnect(dialogMR, &ManageRoom::MRStartGameForAll, this,
-             &FlowChamp::MRStartGameForAll);
-  disconnect(dialogMR, &ManageRoom::MRQuitGame, this, &FlowChamp::MRQuitGame);
-  disconnect(this, &FlowChamp::MRUpdatePlayerList, dialogMR,
-             &ManageRoom::MRUpdatePlayerList);
-  disconnect(this, &FlowChamp::MRPassHostInfo, dialogMR,
-             &ManageRoom::MRPassHostInfo);
   if (dialogMR)
   {
+    dialogMR->disconnect();
     delete dialogMR;
   }
   dialogMR = new ManageRoom();
@@ -623,6 +612,7 @@ void FlowChamp::prepareAndSendEndGameInfo() {
       }
       if (temp->getScore() > globalHighScore) {
         globalHighScore = temp->getScore();
+        qDebug() << "NameIn " << temp->getName();
         globalHighScoreName = temp->getName();
         setNewHighScore(globalHighScoreName, globalHighScore);
       }
@@ -630,6 +620,7 @@ void FlowChamp::prepareAndSendEndGameInfo() {
   }
   packet.setWinnerInfo(winnerName, winnerScore);
   packet.setHighScoreInfo(globalHighScoreName, globalHighScore);
+  qDebug() << "Name " << winnerName;
   dialogGD->HandleInfoIn(globalHighScoreName, globalHighScore, winnerName,
                          winnerScore);
   for (int i = 1; i <= playerList.getMaxUID(); i++) {
