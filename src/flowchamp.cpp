@@ -2,77 +2,17 @@
 #include <QRandomGenerator>
 
 FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
-  connect(dialogDR, &DetermineRoleDialog::DRPlayAsHost, this,
-          &FlowChamp::DRPlayAsHost);
-  connect(dialogDR, &DetermineRoleDialog::DRPlayAsGuest, this,
-          &FlowChamp::DRPlayAsGuest);
-  connect(dialogDR, &DetermineRoleDialog::DRQuitGame, this,
-          &FlowChamp::DRQuitGame);
+  connectDialogDR();
   dialogDR->show();
 
-  connect(dialogCG, &CreateGame::CGGoToManageRoom, this,
-          &FlowChamp::CGGoToManageRoom);
-  connect(dialogCG, &CreateGame::CGQuitGame, this, &FlowChamp::CGQuitGame);
-
-  connect(dialogMR, &ManageRoom::MRStartGameForAll, this,
-          &FlowChamp::MRStartGameForAll);
-  connect(dialogMR, &ManageRoom::MRQuitGame, this, &FlowChamp::MRQuitGame);
-  connect(this, &FlowChamp::MRUpdatePlayerList, dialogMR,
-          &ManageRoom::MRUpdatePlayerList);
-  connect(this, &FlowChamp::MRPassHostInfo, dialogMR,
-          &ManageRoom::MRPassHostInfo);
-
-  connect(dialogJG, &JoinExistingGame::JGGoToWaitingToStart, this,
-          &FlowChamp::JGGoToWaitingToStart);
-  connect(dialogJG, &JoinExistingGame::JGQuitGame, this,
-          &FlowChamp::JGQuitGame);
-
-  connect(dialogWS, &WaitingToStart::WSQuitGame, this, &FlowChamp::WSQuitGame);
-
-  connect(dialogGD, &GameDialog::GDSpacePressed, this,
-          &FlowChamp::GDSpacePressed);
-  connect(dialogGD, &GameDialog::GDEscPressed, this, &FlowChamp::GDEscPressed);
-  connect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
-
-  // Networking Connects
-  // Guest Connections
-  connect(guestHandler, &GuestNetworkHandler::recvRoomCodeStatus, this,
-          &FlowChamp::guestHandleRoomCodeStatus);
-  connect(guestHandler, &GuestNetworkHandler::recvWelcomeToRoom, this,
-          &FlowChamp::guestHandleWelcomeToRoom);
-  connect(guestHandler, &GuestNetworkHandler::recvInGameInfo, this,
-          &FlowChamp::guestHandleInGameInfo);
-  connect(guestHandler, &GuestNetworkHandler::recvEndGameInfo, this,
-          &FlowChamp::guestHandleEndGameInfo);
-  connect(guestHandler, &GuestNetworkHandler::tcpConnectionDropped, this,
-          &FlowChamp::guestHandleTCPDropOut);
-  connect(this, &FlowChamp::guestSendRoomCode, guestHandler,
-          &GuestNetworkHandler::provideRoomCode);
-  connect(this, &FlowChamp::guestSendTerminateMe, guestHandler,
-          &GuestNetworkHandler::terminateMe);
-  connect(this, &FlowChamp::guestSendSpacePressed, guestHandler,
-          &GuestNetworkHandler::spacePressed);
-  // Host Connections
-  connect(hostHandler, &HostNetworkHandler::provideRoomCode, this,
-          &FlowChamp::hostHandleRoomCode);
-  connect(hostHandler, &HostNetworkHandler::terminateMe, this,
-          &FlowChamp::hostHandleTerminateMe);
-  connect(hostHandler, &HostNetworkHandler::spacePressed, this,
-          &FlowChamp::hostHandleSpacePressed);
-  connect(hostHandler, &HostNetworkHandler::hostHandleGuestTerminated, this,
-          &FlowChamp::hostHandleGuestTerminated);
-  connect(this, &FlowChamp::hostSendRoomCodeStatus, hostHandler,
-          &HostNetworkHandler::sendRoomCodeStatus);
-  connect(this, &FlowChamp::hostSendWelcomeToRoom, hostHandler,
-          &HostNetworkHandler::sendWelcomeToRoom);
-  connect(this, &FlowChamp::hostSendInGameInfo, hostHandler,
-          &HostNetworkHandler::sendInGameInfo);
-  connect(this, &FlowChamp::hostSendEndGameInfo, hostHandler,
-          &HostNetworkHandler::sendEndGameInfo);
-
-  connect(sendInGameInfoTimer, &QTimer::timeout, this,
-          QOverload<>::of(&FlowChamp::prepareAndSendInGameInfo));
-
+  connectDialogCG();
+  connectDialogMR();
+  connectDialogJG();
+  connectDialogWS();
+  connectDialogGD();
+  connectGameInfoTimer();
+  connectGuestHandler();
+  connectHostHandler();
   initializeBalls();
 
   globalHighScore = readHighScoreFromDatabase();
@@ -138,21 +78,14 @@ void FlowChamp::hostTerminateGame() { reinitialize(); }
 
 void FlowChamp::reinitialize() {
   if (dialogGD) {
-    dialogGD->disconnect();
     delete dialogGD;
   }
   gameStarted = false;
-  qDebug() << "in reinitialize\n";
-  dialogGD = new GameDialog();
-  connect(dialogGD, &GameDialog::GDSpacePressed, this,
-          &FlowChamp::GDSpacePressed);
-  connect(dialogGD, &GameDialog::GDEscPressed, this, &FlowChamp::GDEscPressed);
-  connect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
+  connectDialogGD();
 
   // handle balls
-  for(int i=0; i<25;i++){
-      if(hostBallInfo[i])
-        delete hostBallInfo[i];
+  for (int i = 0; i < 25; i++) {
+    if (hostBallInfo[i]) delete hostBallInfo[i];
   }
 
   initializeBalls();
@@ -164,19 +97,14 @@ void FlowChamp::reinitialize() {
     dialogMR->disconnect();
     delete dialogMR;
   }
-  dialogMR = new ManageRoom();
-  connect(dialogMR, &ManageRoom::MRStartGameForAll, this,
-          &FlowChamp::MRStartGameForAll);
-  connect(dialogMR, &ManageRoom::MRQuitGame, this, &FlowChamp::MRQuitGame);
-  connect(this, &FlowChamp::MRUpdatePlayerList, dialogMR,
-          &ManageRoom::MRUpdatePlayerList);
-  connect(this, &FlowChamp::MRPassHostInfo, dialogMR,
-          &ManageRoom::MRPassHostInfo);
+  connectDialogMR();
 
   if (playerList) {
     delete playerList;
     playerList = new PlayerList();
   }
+
+  hostHandler->stopTCPServer();
 }
 
 void FlowChamp::startSendInGameInfo() {
@@ -232,6 +160,141 @@ QString FlowChamp::readHighScoreHolderFromDatabase() {
 
 void FlowChamp::setNewHighScore(QString name, qint32 score) {}
 
+void FlowChamp::connectGuestHandler() {
+  if (!guestHandler) {
+    guestHandler = new GuestNetworkHandler();
+  } else {
+
+    disconnect(guestHandler, &GuestNetworkHandler::recvRoomCodeStatus, this,
+               &FlowChamp::guestHandleRoomCodeStatus);
+    disconnect(guestHandler, &GuestNetworkHandler::recvWelcomeToRoom, this,
+               &FlowChamp::guestHandleWelcomeToRoom);
+    disconnect(guestHandler, &GuestNetworkHandler::recvInGameInfo, this,
+               &FlowChamp::guestHandleInGameInfo);
+    disconnect(guestHandler, &GuestNetworkHandler::recvEndGameInfo, this,
+               &FlowChamp::guestHandleEndGameInfo);
+    disconnect(guestHandler, &GuestNetworkHandler::tcpConnectionDropped, this,
+               &FlowChamp::guestHandleTCPDropOut);
+    disconnect(this, &FlowChamp::guestSendRoomCode, guestHandler,
+               &GuestNetworkHandler::provideRoomCode);
+    disconnect(this, &FlowChamp::guestSendTerminateMe, guestHandler,
+               &GuestNetworkHandler::terminateMe);
+    disconnect(this, &FlowChamp::guestSendSpacePressed, guestHandler,
+               &GuestNetworkHandler::spacePressed);
+  }
+  connect(guestHandler, &GuestNetworkHandler::recvRoomCodeStatus, this,
+          &FlowChamp::guestHandleRoomCodeStatus);
+  connect(guestHandler, &GuestNetworkHandler::recvWelcomeToRoom, this,
+          &FlowChamp::guestHandleWelcomeToRoom);
+  connect(guestHandler, &GuestNetworkHandler::recvInGameInfo, this,
+          &FlowChamp::guestHandleInGameInfo);
+  connect(guestHandler, &GuestNetworkHandler::recvEndGameInfo, this,
+          &FlowChamp::guestHandleEndGameInfo);
+  connect(guestHandler, &GuestNetworkHandler::tcpConnectionDropped, this,
+          &FlowChamp::guestHandleTCPDropOut);
+  connect(this, &FlowChamp::guestSendRoomCode, guestHandler,
+          &GuestNetworkHandler::provideRoomCode);
+  connect(this, &FlowChamp::guestSendTerminateMe, guestHandler,
+          &GuestNetworkHandler::terminateMe);
+  connect(this, &FlowChamp::guestSendSpacePressed, guestHandler,
+          &GuestNetworkHandler::spacePressed);
+}
+
+void FlowChamp::connectHostHandler() {
+  if (!hostHandler) {
+    hostHandler = new HostNetworkHandler();
+  } else {
+    hostHandler->disconnect();
+  }
+
+  connect(hostHandler, &HostNetworkHandler::provideRoomCode, this,
+          &FlowChamp::hostHandleRoomCode);
+  connect(hostHandler, &HostNetworkHandler::terminateMe, this,
+          &FlowChamp::hostHandleTerminateMe);
+  connect(hostHandler, &HostNetworkHandler::spacePressed, this,
+          &FlowChamp::hostHandleSpacePressed);
+  connect(hostHandler, &HostNetworkHandler::hostHandleGuestTerminated, this,
+          &FlowChamp::hostHandleGuestTerminated);
+  connect(this, &FlowChamp::hostSendRoomCodeStatus, hostHandler,
+          &HostNetworkHandler::sendRoomCodeStatus);
+  connect(this, &FlowChamp::hostSendWelcomeToRoom, hostHandler,
+          &HostNetworkHandler::sendWelcomeToRoom);
+  connect(this, &FlowChamp::hostSendInGameInfo, hostHandler,
+          &HostNetworkHandler::sendInGameInfo);
+  connect(this, &FlowChamp::hostSendEndGameInfo, hostHandler,
+          &HostNetworkHandler::sendEndGameInfo);
+}
+
+void FlowChamp::connectDialogDR() {
+  if (!dialogDR) {
+    dialogDR = new DetermineRoleDialog();
+  }
+
+  dialogDR->disconnect();
+  connect(dialogDR, &DetermineRoleDialog::DRPlayAsHost, this,
+          &FlowChamp::DRPlayAsHost);
+  connect(dialogDR, &DetermineRoleDialog::DRPlayAsGuest, this,
+          &FlowChamp::DRPlayAsGuest);
+  connect(dialogDR, &DetermineRoleDialog::DRQuitGame, this,
+          &FlowChamp::DRQuitGame);
+}
+
+void FlowChamp::connectDialogCG() {
+  if (!dialogCG) {
+    dialogCG = new CreateGame();
+  }
+
+  dialogCG->disconnect();
+  connect(dialogCG, &CreateGame::CGGoToManageRoom, this,
+          &FlowChamp::CGGoToManageRoom);
+  connect(dialogCG, &CreateGame::CGQuitGame, this, &FlowChamp::CGQuitGame);
+}
+
+void FlowChamp::connectDialogMR() {
+  if (!dialogMR) {
+    dialogMR = new ManageRoom();
+  }
+
+  dialogMR->disconnect();
+  connect(dialogMR, &ManageRoom::MRStartGameForAll, this,
+          &FlowChamp::MRStartGameForAll);
+  connect(dialogMR, &ManageRoom::MRQuitGame, this, &FlowChamp::MRQuitGame);
+  connect(this, &FlowChamp::MRUpdatePlayerList, dialogMR,
+          &ManageRoom::MRUpdatePlayerList);
+  connect(this, &FlowChamp::MRPassHostInfo, dialogMR,
+          &ManageRoom::MRPassHostInfo);
+}
+
+void FlowChamp::connectDialogJG() {
+  if (!dialogJG) {
+    dialogJG = new JoinExistingGame();
+  }
+
+  dialogJG->disconnect();
+  connect(dialogJG, &JoinExistingGame::JGGoToWaitingToStart, this,
+          &FlowChamp::JGGoToWaitingToStart);
+  connect(dialogJG, &JoinExistingGame::JGQuitGame, this,
+          &FlowChamp::JGQuitGame);
+}
+void FlowChamp::connectDialogWS() {
+  disconnect(dialogWS, &WaitingToStart::WSQuitGame, this,
+             &FlowChamp::WSQuitGame);
+  connect(dialogWS, &WaitingToStart::WSQuitGame, this, &FlowChamp::WSQuitGame);
+}
+void FlowChamp::connectDialogGD() {
+  dialogGD->disconnect();
+  connect(dialogGD, &GameDialog::GDSpacePressed, this,
+          &FlowChamp::GDSpacePressed);
+  connect(dialogGD, &GameDialog::GDEscPressed, this, &FlowChamp::GDEscPressed);
+  connect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
+}
+
+void FlowChamp::connectGameInfoTimer() {
+  sendInGameInfoTimer->disconnect();
+  connect(sendInGameInfoTimer, &QTimer::timeout, this,
+          QOverload<>::of(&FlowChamp::prepareAndSendInGameInfo));
+}
+
 void FlowChamp::DRPlayAsHost(QString playerNameIn) {
   qDebug() << "In DRPlayAsHost()";
   playerName = playerNameIn;
@@ -260,7 +323,7 @@ void FlowChamp::CGGoToManageRoom(QHostAddress addressIn, QString portIn,
                                  QString roomCodeIn) {
   qDebug() << "In CGGoToManageRoom()";
   if (!hostHandler) {
-    return;
+    connectHostHandler();
   }
 
   if (hostHandler->startTCPServer(addressIn, portIn.toUShort())) {
@@ -350,6 +413,9 @@ void FlowChamp::JGGoToWaitingToStart(QHostAddress addressIn, QString portIn,
     networkError.throwErrorMsg(errorMessage);
     dialogJG->hide();
     networkError.exec();
+    guestHandler->disconnect();
+    delete guestHandler;
+    connectGuestHandler();
     dialogDR->show();
   }
 }
@@ -427,7 +493,8 @@ void FlowChamp::hostHandleRoomCode(NPProvideRoomCode packet,
                                    QTcpSocket* socket) {
   NPRoomCodeStatus statusPacket;
   int newPlayerID = playerList->getNewPlayerID();
-  if ((packet.getRoomCode() == hostRoomCode) && (newPlayerID != -1) && (gameStarted == false)) {
+  if ((packet.getRoomCode() == hostRoomCode) && (newPlayerID != -1) &&
+      (gameStarted == false)) {
     statusPacket.setRoomCodeStatus(true);
     PlayerModel* newPlayer = new PlayerModel(newPlayerID, socket);
     newPlayer->setName(packet.getName());
@@ -464,7 +531,9 @@ void FlowChamp::guestHandleRoomCodeStatus(NPRoomCodeStatus packet) {
   } else {
     /// @todo throw an error if the room code is invalid
     error* throwError = new error;
-    throwError->throwErrorMsg("ERROR: COULD NOT JOIN GAME\n\nTroubleshooting:\n   Room code could be invalid\n   Room could be full\n   Game could already be in session");
+    throwError->throwErrorMsg(
+        "ERROR: COULD NOT JOIN GAME\n\nTroubleshooting:\n   Room code could be "
+        "invalid\n   Room could be full\n   Game could already be in session");
     throwError->exec();
     delete throwError;
     JGQuitGame();

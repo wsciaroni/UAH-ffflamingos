@@ -179,6 +179,37 @@ class FlowChamp : public QApplication {
    */
   void setNewHighScore(QString name, qint32 score);
 
+  /**
+   * Make all the QT connections necesary for the Guest Network Handler to
+   * function
+   */
+  void connectGuestHandler();
+
+  /**
+   * Make all the Qt Connections necessary for the Host Network Handler to
+   * function
+   */
+  void connectHostHandler();
+
+  /**
+   * Make a connect for each dialog.
+   * @details Make each QT style connection necessary in the code pertaining to
+   * that item
+   */
+  void connectDialogDR();
+  /// @copydoc connectDialogDR
+  void connectDialogCG();
+  /// @copydoc connectDialogDR
+  void connectDialogMR();
+  /// @copydoc connectDialogDR
+  void connectDialogJG();
+  /// @copydoc connectDialogDR
+  void connectDialogWS();
+  /// @copydoc connectDialogDR
+  void connectDialogGD();
+  /// @copydoc connectDialogDR
+  void connectGameInfoTimer();
+
  public:
   FlowChamp(int& argc, char** argv);
   ~FlowChamp();
