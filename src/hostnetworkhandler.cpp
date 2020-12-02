@@ -121,7 +121,7 @@ void HostNetworkHandler::onTCPDataReady() {
 }
 
 void HostNetworkHandler::onTCPBytesWritten(qint64 bytes) {
-  qDebug() << "In onTCPBytesWritten()\n";
+  //qDebug() << "In onTCPBytesWritten()\n";
 }
 
 int HostNetworkHandler::getPort() { return port; }

@@ -42,8 +42,8 @@ void ball::advanceBall() {
         static_cast<double>(
             QRandomGenerator::global()->bounded(-megaPi, megaPi)) /
         static_cast<double>(10000));
-    dx = (-x / beta) + qSin(angleOffset);
-    dy = (-y / beta) + qCos(angleOffset);
+    dx = 5*((-x / beta) + qSin(angleOffset));
+    dy = 5*((-y / beta) + qCos(angleOffset));
   }
   x += dx;
   y += dy;

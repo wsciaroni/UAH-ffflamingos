@@ -116,7 +116,7 @@ void FlowChamp::startSendInGameInfo() {
   if (!sendInGameInfoTimer) {
     return;
   }
-  sendInGameInfoTimer->start(10);
+  sendInGameInfoTimer->start(50);
 }
 
 void FlowChamp::stopSendInGameInfo() {
@@ -149,8 +149,8 @@ void FlowChamp::initializeBalls() {
     }
 
     while (dx == 0 && dy == 0) {
-      dx = static_cast<qreal>(QRandomGenerator::global()->bounded(-2, 2));
-      dy = static_cast<qreal>(QRandomGenerator::global()->bounded(-2, 2));
+      dx = static_cast<qreal>(QRandomGenerator::global()->bounded(-10, 10));
+      dy = static_cast<qreal>(QRandomGenerator::global()->bounded(-10, 10));
     }
 
     hostBallInfo[i]->initializeBall(x, y, dx, dy);
