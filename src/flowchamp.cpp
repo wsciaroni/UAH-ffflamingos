@@ -159,10 +159,9 @@ void FlowChamp::reinitialize() {
   connect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
 
   // handle balls
-  if (hostBallInfo[1]) {
-      for(int i=0; i<25;i++){
-          delete hostBallInfo[i];
-      }
+  for(int i=0; i<25;i++){
+      if(hostBallInfo[i])
+        delete hostBallInfo[i];
   }
 
   initializeBalls();
