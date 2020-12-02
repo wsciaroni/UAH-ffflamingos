@@ -687,7 +687,6 @@ void FlowChamp::prepareAndSendInGameInfo() {
   for (int i = 1; i <= playerList->getMaxUID(); i++) {
     PlayerModel* temp = playerList->getPlayer(i);
     if (temp && temp->getUID() > 0 && temp->getTCPSocket()) {
-      temp->enableTimers();
       emit this->hostSendInGameInfo(packet, temp->getTCPSocket());
     }
   }
