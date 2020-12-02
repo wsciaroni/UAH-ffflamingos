@@ -6,6 +6,7 @@ bool PlayerModel::allowedToLunge() {
   // This is what happens when grading occurs based on SLOC
   qDebug() << "Checking for lunge ability";
   if (!timersEnabled) {
+    qDebug() << "Timers Disabled";
     return false;
   }
   qDebug() << "Timers Enabled";
@@ -26,7 +27,10 @@ PlayerModel::PlayerModel(int uid, QTcpSocket* socket) {
   setTCPSocket(socket);
 }
 
-PlayerModel::PlayerModel(int uid) { setUID(uid); }
+PlayerModel::PlayerModel(int uid) {
+  setUID(uid);
+  timersEnabled = false;
+}
 
 PlayerModel::~PlayerModel() {}
 
@@ -59,7 +63,10 @@ void PlayerModel::enableTimers() {
           &PlayerModel::resetCooldownPeriod);
 }
 
-void PlayerModel::disableTimers() {}
+void PlayerModel::disableTimers() {
+  timersEnabled = false;
+  coolDownTimer.stop();
+}
 
 bool PlayerModel::spacePressed() {
   if (allowedToLunge()) {

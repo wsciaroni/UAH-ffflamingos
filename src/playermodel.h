@@ -78,7 +78,7 @@ class PlayerModel : public QObject {
    * @todo these will need to be enabled at the start of gameplay. No need to
    * run timers in the menus
    */
-  bool timersEnabled = false;
+  bool timersEnabled;
 
   /// The number of spaces allowed per each cooldown period
   const int numAllowedInTime = 4;

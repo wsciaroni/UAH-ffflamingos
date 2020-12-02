@@ -455,7 +455,7 @@ void GameDialog::HandleInfoIn(QString highScoreHolder, qint32 highScore,
   WinnerName->setText("Game Winner: " + winnerName);
   WinnerScore->setText("With a Score of: " + QString::number(winnerScore, 10));
 
-  HighScore->setPos(-200,-150);
+  HighScore->setPos(-200, -150);
   HighScoreHolder->setPos(-200, -100);
   WinnerName->setPos(-200, 0);
   WinnerScore->setPos(-200, 50);

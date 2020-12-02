@@ -146,8 +146,7 @@ void FlowChamp::hostTerminateGame() {
 }
 
 void FlowChamp::reinitialize() {
-  if (dialogGD)
-  {
+  if (dialogGD) {
     dialogGD->disconnect();
     delete dialogGD;
   }
@@ -158,8 +157,7 @@ void FlowChamp::reinitialize() {
   connect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
 
   // handle balls
-  if (hostBallInfo)
-  {
+  if (hostBallInfo) {
     delete hostBallInfo;
   }
   initializeBalls();
@@ -171,8 +169,7 @@ void FlowChamp::reinitialize() {
   stopSendInGameInfo();
 
   // handle Manage Room
-  if (dialogMR)
-  {
+  if (dialogMR) {
     dialogMR->disconnect();
     delete dialogMR;
   }
@@ -599,6 +596,12 @@ void FlowChamp::prepareAndSendInGameInfo() {
 void FlowChamp::prepareAndSendEndGameInfo() {
   qDebug() << "In PrepareAndSendEndGameInfo";
   stopGameTimer();
+  for (int i = 1; i <= playerList.getMaxUID(); i++) {
+    PlayerModel* temp = playerList.getPlayer(i);
+    if (temp && temp->getUID() > 0) {
+      temp->disableTimers();
+    }
+  }
   NPEndGameInfo packet;
   QString winnerName;
   qint32 winnerScore;
@@ -608,13 +611,12 @@ void FlowChamp::prepareAndSendEndGameInfo() {
     if (temp && temp->getUID() > 0) {
       qint32 playerScorel = temp->getScore();
       QString playerNamel;
-      if (i==1)
-      {
+      if (i == 1) {
         playerNamel = playerName;
       } else {
         playerNamel = temp->getName();
       }
-      
+
       if (playerScorel > winnerScore) {
         winnerScore = playerScorel;
         winnerName = playerNamel;
