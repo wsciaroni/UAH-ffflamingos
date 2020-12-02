@@ -151,6 +151,7 @@ void FlowChamp::reinitialize() {
     dialogGD->disconnect();
     delete dialogGD;
   }
+  qDebug() << "in reinitialize\n";
   dialogGD = new GameDialog();
   connect(dialogGD, &GameDialog::GDSpacePressed, this,
           &FlowChamp::GDSpacePressed);
@@ -158,9 +159,12 @@ void FlowChamp::reinitialize() {
   connect(dialogGD, &GameDialog::GDQuitGame, this, &FlowChamp::GDQuitGame);
 
   // handle balls
-  if (hostBallInfo) {
-    delete hostBallInfo;
+  if (hostBallInfo[1]) {
+      for(int i=0; i<25;i++){
+          delete hostBallInfo[i];
+      }
   }
+
   initializeBalls();
 
   // Stop timers
