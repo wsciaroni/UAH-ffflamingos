@@ -468,9 +468,9 @@ void FlowChamp::WSStartClientGame() {
     networkError.exec();
     dialogDR->show();
   } else { */
-    dialogGD->drawBoard();
-    dialogGD->spawnAllPlayers();
-    dialogGD->show();
+  dialogGD->drawBoard();
+  dialogGD->spawnAllPlayers();
+  dialogGD->show();
   //}
 }
 
@@ -691,7 +691,6 @@ void FlowChamp::prepareAndSendInGameInfo() {
       emit this->hostSendInGameInfo(packet, temp->getTCPSocket());
     }
   }
-  
 }
 
 void FlowChamp::prepareAndSendEndGameInfo() {
