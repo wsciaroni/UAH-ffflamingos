@@ -1,0 +1,25 @@
+var classHostNetworkHandler =
+[
+    [ "HostNetworkHandler", "classHostNetworkHandler.html#a146f0e0751725ce2154536c860d78e1b", null ],
+    [ "~HostNetworkHandler", "classHostNetworkHandler.html#ab958df44b4f6fa680d9067af4bba285b", null ],
+    [ "getPort", "classHostNetworkHandler.html#a14e2f93627521d3c9a38786becac6c3c", null ],
+    [ "getTCPServer", "classHostNetworkHandler.html#a2d7ff46f216b1f5fe6f44739124e3e49", null ],
+    [ "hostHandleGuestTerminated", "classHostNetworkHandler.html#a890d11d1ec2cf7cd241504304dcdcb67", null ],
+    [ "onNewTCPConnection", "classHostNetworkHandler.html#a905bedbb114f62c1be6f44edc354054b", null ],
+    [ "onTCPConnected", "classHostNetworkHandler.html#a4b50f1807fdae270a765cbc128f6dbb0", null ],
+    [ "onTCPDataReady", "classHostNetworkHandler.html#aab1593d69828e90d09f57a55681d84bb", null ],
+    [ "onTCPDisconnected", "classHostNetworkHandler.html#a8ab2fab23c9b4e7bd5c01742a311f63d", null ],
+    [ "provideRoomCode", "classHostNetworkHandler.html#a472c63448ee23522bb991d09b305e87d", null ],
+    [ "sendEndGameInfo", "classHostNetworkHandler.html#ae97054bc3d47e5a551b06982e7802722", null ],
+    [ "sendInGameInfo", "classHostNetworkHandler.html#ad108300e24098ec48337aa8ac7981353", null ],
+    [ "sendRoomCodeStatus", "classHostNetworkHandler.html#acd171abcd2c3028d9160831185c945fe", null ],
+    [ "sendWelcomeToRoom", "classHostNetworkHandler.html#af3215aeb38ac4c823d4ec502c1ae0504", null ],
+    [ "spacePressed", "classHostNetworkHandler.html#a64aef831f6eb46e4bea66c4e0bc3f0a0", null ],
+    [ "startTCPServer", "classHostNetworkHandler.html#a474212d7d194f1efd845692e53632cb1", null ],
+    [ "stopTCPServer", "classHostNetworkHandler.html#abab12232ebaa9a71417e331dbd96b393", null ],
+    [ "terminateMe", "classHostNetworkHandler.html#ad70849cf4060ba32334a9fffb8849c60", null ],
+    [ "multicastAddress", "classHostNetworkHandler.html#a49c9cab2639fc4a6fd9b539d351cb679", null ],
+    [ "port", "classHostNetworkHandler.html#a748d2f1561aac22a6e249f0e015dc362", null ],
+    [ "tcpServer", "classHostNetworkHandler.html#a5f95466b773617d61de7188e079ef9e7", null ],
+    [ "udpServer", "classHostNetworkHandler.html#a1693e387feeca8f8a0f89599f044cbbc", null ]
+];

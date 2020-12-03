@@ -1,0 +1,35 @@
+name: linuxBuild
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2.11.1
+      with:
+        # Version of Qt to install
+        version: 5.12.4
+        # Additional Qt modules to install
+        modules: core gui widgets network sql
+    - name: qmake
+      run: qmake
+    - name: make
+      run: make
+    - name: clean
+      run: make clean
+    - name: make check
+      run: make check
+    - name: clean
+      run: make clean
+    - name: make -d
+      run: make -d
+      
