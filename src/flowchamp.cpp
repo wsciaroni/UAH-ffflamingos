@@ -2,6 +2,7 @@
 #include <QRandomGenerator>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlRecord>
 
 FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
   connectDialogDR();
@@ -182,19 +183,25 @@ void FlowChamp::closeSQL() {
 qint32 FlowChamp::readHighScoreFromDatabase() { 
   if (!db.isOpen())
   {
-    return 0;
+    return static_cast<qint32>(0);
   }
-  qint32 score;
+  qint32 scorePulled;
   QSqlQuery q;
-  q.prepare("SELECT score FROM scores WHERE score = (:score)");
-  q.bindValue(":score", score);
+  q.prepare("SELECT score FROM scores");
 
   if ( q.exec() )
   {
-    return score;
+    QSqlRecord rec = q.record();
+
+    int scoreCol = rec.indexOf("score");
+    while (q.next())
+    {
+      scorePulled = q.value(scoreCol).toInt();
+    }
+    qDebug() << "High Score: " << scorePulled;
+    return static_cast<qint32>(scorePulled);
   }
-  
-  return 0; 
+  return static_cast<qint32>(0);
 }
 
 QString FlowChamp::readHighScoreHolderFromDatabase() {
@@ -204,12 +211,19 @@ QString FlowChamp::readHighScoreHolderFromDatabase() {
   }
   QString namePulled;
   QSqlQuery q;
-  q.prepare("SELECT name FROM scores WHERE name = (:name)");
-  q.bindValue(":name", namePulled);
+  q.prepare("SELECT name FROM scores");
 
   if ( q.exec() )
   {
-    return QString("WINNERWINNER");
+    QSqlRecord rec = q.record();
+
+    int nameCol = rec.indexOf("name");
+    while (q.next())
+    {
+      namePulled = q.value(nameCol).toString();
+    }
+    qDebug() << "High Score Name: " << namePulled;
+    return QString(namePulled);
   }
   
   return QString("Loser");
@@ -690,7 +704,8 @@ void FlowChamp::prepareAndSendInGameInfo() {
   }
   for (int i = 0; i < 6; i++) {
     if (i == 0) {
-      packet.setPlayerScore(0, 0);
+      packet.setPlayerScore(0, globalHighScore);
+      scores[0] = globalHighScore;
       packet.setPlayerExtension(0, false);
     } else {
       PlayerModel* player = playerList->getPlayer(i);
