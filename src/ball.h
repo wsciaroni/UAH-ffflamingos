@@ -15,6 +15,11 @@ class ball : public QGraphicsItem {
    * Default constructor.
    */
   explicit ball();
+  
+  /**
+   * Default Destructor.
+   */
+  ~ball();
 
   QRectF boundingRect() const;
   QPainterPath shape() const;

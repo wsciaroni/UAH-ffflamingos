@@ -14,6 +14,8 @@ ball::ball() {
   h = 10.0;
 }
 
+ball::~ball() {}
+
 void ball::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                  QWidget *widget) {
 
