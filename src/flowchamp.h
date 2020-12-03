@@ -21,6 +21,7 @@
 
 #include <QApplication>
 #include <QTimer>
+#include <QSqlDatabase>
 
 class FlowChamp : public QApplication {
   Q_OBJECT
@@ -159,6 +160,21 @@ class FlowChamp : public QApplication {
    * Holds the Name of the high score holder.
    */
   QString globalHighScoreName;
+
+  /**
+   * QSqlDatabase item that is used for high score
+   */
+  QSqlDatabase db;
+
+  /**
+   * Opens a database and creates one if unable to open it
+   */
+  int openSQL();
+
+  /**
+   * Closes the database.
+   */
+  void closeSQL();
 
   /**
    * Used to get the high score from the database.

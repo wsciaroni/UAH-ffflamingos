@@ -1,5 +1,7 @@
 #include "flowchamp.h"
 #include <QRandomGenerator>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
   connectDialogDR();
@@ -14,7 +16,7 @@ FlowChamp::FlowChamp(int& argc, char** argv) : QApplication(argc, argv) {
   connectGuestHandler();
   connectHostHandler();
   initializeBalls();
-
+  openSQL();
   globalHighScore = readHighScoreFromDatabase();
   globalHighScoreName = readHighScoreHolderFromDatabase();
 }
@@ -155,13 +157,91 @@ void FlowChamp::initializeBalls() {
   }
 }
 
-qint32 FlowChamp::readHighScoreFromDatabase() { return 0; }
+int FlowChamp::openSQL() {
+  db = QSqlDatabase::addDatabase("QSQLITE");
+  QString path = "src/highScore.db";
+  db.setDatabaseName(path);
+  if (!db.open())
+  {
+    qDebug() << "Error: Unable to connect to MySQL database";
+    return 1;
+  } else 
+  {
+    qDebug() << "Successful connection to database";
+    return 0;
+  }
+}
+
+void FlowChamp::closeSQL() {
+  if (db.isOpen())
+  {
+    db.close();
+  }
+}
+
+qint32 FlowChamp::readHighScoreFromDatabase() { 
+  if (!db.isOpen())
+  {
+    return 0;
+  }
+  qint32 score;
+  QSqlQuery q;
+  q.prepare("SELECT score FROM scores WHERE score = (:score)");
+  q.bindValue(":score", score);
+
+  if ( q.exec() )
+  {
+    return score;
+  }
+  
+  return 0; 
+}
 
 QString FlowChamp::readHighScoreHolderFromDatabase() {
+  if (!db.isOpen())
+  {
+    return QString("");
+  }
+  QString namePulled;
+  QSqlQuery q;
+  q.prepare("SELECT name FROM scores WHERE name = (:name)");
+  q.bindValue(":name", namePulled);
+
+  if ( q.exec() )
+  {
+    return QString("WINNERWINNER");
+  }
+  
   return QString("Loser");
 }
 
-void FlowChamp::setNewHighScore(QString name, qint32 score) {}
+void FlowChamp::setNewHighScore(QString name, qint32 score) {
+  if (!db.isOpen())
+  {
+    return;
+  }
+
+  QSqlQuery qDel;
+  qDel.prepare("DELETE FROM scores");
+
+  if ( qDel.exec() )
+  {
+    qDebug() << "Successfully deleted all previous scores"; // Successful delete from Database
+  } else {
+    return;
+  }
+
+  QSqlQuery qAdd;
+  qAdd.prepare("INSERT INTO scores (score, name) VALUES (:score, :name)");
+  qAdd.bindValue(":name", name);
+  qAdd.bindValue(":score",score);
+  if (qAdd.exec())
+  {
+    qDebug() << "Person added successfully";
+  } else {
+    qDebug() << "ERROR adding new High Score";
+  }
+}
 
 void FlowChamp::connectGuestHandler() {
   if (!guestHandler) {
@@ -436,21 +516,9 @@ void FlowChamp::JGQuitGame() {
 
 void FlowChamp::WSStartClientGame() {
   dialogWS->hide();
-  /**
-  if (!guestHandler->listenOnUDP()) {
-    error networkError;
-    QString errorMessage =
-        "Error Listening for QUdpSocket on Multicast Port: " +
-        guestHandler->getUdpSocket()->errorString();
-    networkError.throwErrorMsg(errorMessage);
-    dialogCG->hide();
-    networkError.exec();
-    dialogDR->show();
-  } else { */
   dialogGD->drawBoard();
   dialogGD->spawnAllPlayers();
   dialogGD->show();
-  //}
 }
 
 void FlowChamp::WSQuitGame() {
@@ -465,8 +533,7 @@ void FlowChamp::WSQuitGame() {
 
 void FlowChamp::GDSpacePressed() {
   if (this->isHost()) {
-    makePlayerLunge(playerList->getPlayer(1));  // Call this on the host player
-                                                // with UID == 1
+    makePlayerLunge(playerList->getPlayer(1));
   } else {
     NPSpacePressed packet;
     packet.setUID(playerList->getMaxUID());
@@ -689,6 +756,7 @@ void FlowChamp::prepareAndSendEndGameInfo() {
         globalHighScoreName = playerNamel;
         setNewHighScore(globalHighScoreName, globalHighScore);
       }
+      closeSQL();
     }
   }
   packet.setWinnerInfo(winnerName, winnerScore);
