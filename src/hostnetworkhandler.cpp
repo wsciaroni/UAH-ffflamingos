@@ -34,7 +34,6 @@ void HostNetworkHandler::stopTCPServer() {
   if (tcpServer.isListening()) {
     tcpServer.close();
   }
-  ///@todo kill all current client connections
 }
 
 QTcpServer* HostNetworkHandler::getTCPServer() { return &tcpServer; }
@@ -52,40 +51,30 @@ void HostNetworkHandler::onNewTCPConnection() {
           &HostNetworkHandler::onTCPDisconnected);
   connect(tcpSocket, &QTcpSocket::readyRead, this,
           &HostNetworkHandler::onTCPDataReady);
-
-  connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this,
-          SLOT(onTCPBytesWritten(qint64)));
 }
 
 void HostNetworkHandler::onTCPConnected() {
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
   if (tcpSocket != NULL) {
     tcpSocket->setProxy(QNetworkProxy::NoProxy);
-    qDebug() << "In onTCPConnected()\n";
   }
 }
 
 void HostNetworkHandler::onTCPDisconnected() {
-  qDebug() << "In onTCPDisconnected()\n";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
   emit this->hostHandleGuestTerminated(tcpSocket);
 }
 
 void HostNetworkHandler::onTCPDataReady() {
-  qDebug() << "In onTCPDataReady()";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
   tcpSocket->setProxy(QNetworkProxy::NoProxy);
   while (tcpSocket->bytesAvailable()) {
-    qDebug() << "In LOOP onTCPDataReady()";
     tcpSocket->setProxy(QNetworkProxy::NoProxy);
     // Read from socket here
     PacketType pType;
     BlockReader(tcpSocket).stream() >> pType;
     if (pType == PacketType::PROVIDEROOMCODE) {
-
-      qDebug() << "pType == PROVIDEROOMCODE";
       NPProvideRoomCode provideRoomCodePacket;
-
       QString roomcode;
       int uid;
       QString name;
@@ -93,43 +82,27 @@ void HostNetworkHandler::onTCPDataReady() {
       provideRoomCodePacket.setRoomCode(roomcode);
       provideRoomCodePacket.setUID(uid);
       provideRoomCodePacket.setName(name);
-      qDebug() << "Room code received" << uid << " " << roomcode;
       emit this->provideRoomCode(provideRoomCodePacket, tcpSocket);
-
     } else if (pType == PacketType::SPACEPRESSED) {
-      qDebug() << "pType == SPACEPRESSED";
       NPSpacePressed spacePressedPacket;
-
       int uid;
       BlockReader(tcpSocket).stream() >> uid;
       spacePressedPacket.setUID(uid);
       emit this->spacePressed(spacePressedPacket, tcpSocket);
     } else if (pType == PacketType::NULLPACKETTYPE) {
-      qDebug() << "pType == NULLPACKETTYPE";
       // Throw an error
       error* throwError = new error;
       throwError->throwErrorMsg("ERROR: Received a NULL packet type");
       throwError->exec();
       delete throwError;
-    } else {
-      qDebug() << "Unknown packet type";
     }
-
-    qDebug() << "In LOOP onTCPDataReady()";
   }
-  qDebug() << "out of onTCPDataReady()";
-}
-
-void HostNetworkHandler::onTCPBytesWritten(qint64 bytes) {
-  //qDebug() << "In onTCPBytesWritten()\n";
 }
 
 int HostNetworkHandler::getPort() { return port; }
 
 void HostNetworkHandler::sendRoomCodeStatus(NPRoomCodeStatus roomCodeStatus,
                                             QTcpSocket* socket) {
-  // BlockWriter(socket).stream() << roomCodeStatus;
-  qDebug() << "sent room code status\n";
   bool status = roomCodeStatus.getRoomCodeStatus();
   BlockWriter(socket).stream() << PacketType::ROOMCODESTATUS;
   BlockWriter(socket).stream() << status;
@@ -146,14 +119,6 @@ void HostNetworkHandler::sendWelcomeToRoom(NPWelcomeToRoom welcomeToRoom,
 
 void HostNetworkHandler::sendInGameInfo(NPInGameInfo inGameInfo,
                                         QTcpSocket* socket) {
-  /*
-  static int ttl = 1;
-  udpServer.setSocketOption(QAbstractSocket::MulticastTtlOption, ttl++);
-  QByteArray datagram;
-  QDataStream out(&datagram, QIODevice::WriteOnly);
-  out << inGameInfo;
-  udpServer.writeDatagram(datagram, destinationAddress, 45454);
-  */
   BlockWriter(socket).stream() << PacketType::INGAMEINFO;
   for (int i = 0; i < 25; i++) {
     BlockWriter(socket).stream() << inGameInfo.getBallPosX(i)

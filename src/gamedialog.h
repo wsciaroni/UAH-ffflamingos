@@ -142,11 +142,6 @@ class GameDialog : public QDialog {
    */
   void keyPressEvent(QKeyEvent *key);
 
-/*
- * Repaint the scene
- */
-// void paintEvent(QPaintEvent* e);
-
 signals:
   /**
    * Informs FlowChamp that the user has pressed the space bar
@@ -160,7 +155,6 @@ signals:
 
   /**
    * Informs FlowChamp that the user desires to leave the game
-   * @deprecated
    */
   void GDQuitGame();
 

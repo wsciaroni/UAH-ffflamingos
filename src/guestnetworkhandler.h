@@ -37,11 +37,6 @@ class GuestNetworkHandler : public QObject {
   QTcpSocket tcpSocket;
 
   /**
-   * QUdpSocket to listen for incoming packets on
-   */
-  QUdpSocket udpSocket;
-
-  /**
    * Holds the port that the TCP server is listening on on the Host
    */
   int port;
@@ -76,23 +71,6 @@ class GuestNetworkHandler : public QObject {
   void disconnectFromHost();
 
   /**
-   * Makes the QUdpSocket list on the GuestNetworkHandler::port and
-   * the multicastAddress
-   */
-  bool listenOnUDP();
-
-  /**
-   * Stop the QUdpSocket from listening on the port
-   */
-  void stopListeningOnUDP();
-
-  /**
-   * Used to interact directly with the QUdpSocket.
-   * @return The QUdpSocket used by the guest.
-   */
-  QUdpSocket* getUdpSocket();
-
-  /**
    * Used to interact directly with the QTcpSocket.
    * @return The QTcpSocket used by the guest.
    */
@@ -108,7 +86,7 @@ slots:
 
   /**
    * @brief handles what to do when a connection is disconnected
-   * @todo This exit out of the game if the connection is terminated
+   * This exits out of the game if the connection is terminated
    */
   void onTCPDisconnected();
 
@@ -116,16 +94,6 @@ slots:
    * Handles all incoming network information from the Host to this player
    */
   void onTCPDataReady();
-
-  /**
-   * Handles incoming bytes when data is written to the TCPSocket
-   */
-  void onTCPBytesWritten();
-
-  /**
-   * Handle incoming UDP information
-   */
-  void onUDPReadPendingDatagrams();
 
 signals:
   /**

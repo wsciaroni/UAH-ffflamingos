@@ -75,8 +75,7 @@ class PlayerModel : public QObject {
   bool animationLocked = false;
 
   /** True when the timers are enabled
-   * @todo these will need to be enabled at the start of gameplay. No need to
-   * run timers in the menus
+   * These are enabled at the start of gameplay.
    */
   bool timersEnabled;
 

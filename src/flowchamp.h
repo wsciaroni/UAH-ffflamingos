@@ -321,10 +321,9 @@ slots:
 
   /**
    * Used to handle a Client's Request to terminate the connection.
-   * @param packet The NPTerminateMe information from the connection.
    * @param socket The QTcpSocket on which is being communicated.
    */
-  void hostHandleTerminateMe(NPTerminateMe packet, QTcpSocket* socket);
+  void hostHandleTerminateMe(QTcpSocket* socket);
 
   /**
    * Used to handle a Client's Space Bar signal.

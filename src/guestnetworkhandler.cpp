@@ -4,7 +4,6 @@
 
 GuestNetworkHandler::GuestNetworkHandler(QObject* parent) : QObject(parent) {
   tcpSocket.setProxy(QNetworkProxy::NoProxy);
-  udpSocket.setProxy(QNetworkProxy::NoProxy);
 }
 
 GuestNetworkHandler::~GuestNetworkHandler() {}
@@ -38,54 +37,27 @@ void GuestNetworkHandler::disconnectFromHost() {
   }
 }
 
-bool GuestNetworkHandler::listenOnUDP() {
-  if (udpSocket.isOpen()) {
-    udpSocket.close();
-  }
-  bool status = udpSocket.bind(QHostAddress::AnyIPv4, 45454);
-  status = status && udpSocket.joinMulticastGroup(multicastAddress);
-  connect(&udpSocket, &QUdpSocket::readyRead, this,
-          &GuestNetworkHandler::onUDPReadPendingDatagrams);
-  return status;
-}
-
-void GuestNetworkHandler::stopListeningOnUDP() {
-  if (udpSocket.isOpen()) {
-    udpSocket.close();
-  }
-}
-
-QUdpSocket* GuestNetworkHandler::getUdpSocket() { return &udpSocket; }
-
 QTcpSocket* GuestNetworkHandler::getTcpSocket() { return &tcpSocket; }
 
-void GuestNetworkHandler::onTCPConnected() {
-  qDebug() << "In client onTCPConnected()";
-}
+void GuestNetworkHandler::onTCPConnected() {}
 
 void GuestNetworkHandler::onTCPDisconnected() {
-  qDebug() << "In client onTCPDisconnected()";
-
   emit this->tcpConnectionDropped();
 }
 
 void GuestNetworkHandler::onTCPDataReady() {
-  // qDebug() << "In onTCPDataReady()\n";
   QTcpSocket* tcpSocket = dynamic_cast<QTcpSocket*>(sender());
   while (tcpSocket->bytesAvailable()) {
     // Read from socket here
     PacketType pType;
     BlockReader(tcpSocket).stream() >> pType;
     if (pType == PacketType::ROOMCODESTATUS) {
-      // qDebug() << "pType == ROOMCODESTATUS\n";
       NPRoomCodeStatus roomCodeStatus;
       bool status;
       BlockReader(tcpSocket).stream() >> status;
       roomCodeStatus.setRoomCodeStatus(status);
-      // qDebug() << "Room Code Status Received";
       emit this->recvRoomCodeStatus(roomCodeStatus);
     } else if (pType == PacketType::ENDGAMEINFO) {
-      // qDebug() << "pType == ENDGAMEINFO\n";
       NPEndGameInfo endGameInfo;
       QString winnerName, highScoreHolderName;
       qint32 winnerScore, highScore;
@@ -95,7 +67,6 @@ void GuestNetworkHandler::onTCPDataReady() {
       endGameInfo.setWinnerInfo(winnerName, winnerScore);
       emit this->recvEndGameInfo(endGameInfo);
     } else if (pType == PacketType::WELCOMETOROOM) {
-      // qDebug() << "pType == WELCOMETOROOM\n";
       NPWelcomeToRoom welcomeToRoom;
       QString names[6];
       for (int i = 0; i < 6; i++) {
@@ -104,7 +75,6 @@ void GuestNetworkHandler::onTCPDataReady() {
       welcomeToRoom.setNames(names);
       emit this->recvWelcomeToRoom(welcomeToRoom);
     } else if (pType == PacketType::INGAMEINFO) {
-      // qDebug() << "pType == INGAMEINFO\n";
       NPInGameInfo packet;
       for (int i = 0; i < 25; i++) {
         qint32 xPos, yPos;
@@ -124,38 +94,13 @@ void GuestNetworkHandler::onTCPDataReady() {
       packet.setTimeRemaining(timeRemaining);
       emit this->recvInGameInfo(packet);
     } else if (pType == PacketType::NULLPACKETTYPE) {
-      qDebug() << "pType == NULLPACKETTYPE\n";
       // Throw an error
       error* throwError = new error;
       throwError->throwErrorMsg("ERROR: Received a NULL packet type");
       throwError->exec();
       delete throwError;
-    } else {
-      qDebug() << "Unknown packet type\n";
     }
   }
-}
-
-void GuestNetworkHandler::onTCPBytesWritten() {}
-
-void GuestNetworkHandler::onUDPReadPendingDatagrams() {
-  // qDebug() << "In onUDPReadPendingDatagrams()";
-  /* // Commented out due to QT Bug-27641
-  QByteArray datagram;
-
-  while (udpSocket.hasPendingDatagrams()) {
-    datagram.resize(int(udpSocket.pendingDatagramSize()));
-    udpSocket.readDatagram(datagram.data(), datagram.size());
-
-    // Process the incoming datagram
-
-    NPInGameInfo inGameInfo;
-    QDataStream in(&datagram, QIODevice::ReadOnly);
-
-    in >> inGameInfo;
-    emit this->recvInGameInfo(inGameInfo);
-  }
-  */
 }
 
 void GuestNetworkHandler::provideRoomCode(
@@ -166,7 +111,6 @@ void GuestNetworkHandler::provideRoomCode(
   int uid = provideRoomCodePacket.getUID();
   BlockWriter(&tcpSocket).stream() << PacketType::PROVIDEROOMCODE;
   BlockWriter(&tcpSocket).stream() << uid << roomcode << name;
-  qDebug() << "room code provided";
 }
 
 void GuestNetworkHandler::terminateMe(NPTerminateMe terminateMePacket) {

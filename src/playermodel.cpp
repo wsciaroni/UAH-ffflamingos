@@ -3,21 +3,14 @@
 void PlayerModel::setUID(int uid) { this->uid = uid; }
 
 bool PlayerModel::allowedToLunge() {
-  // This is what happens when grading occurs based on SLOC
-  qDebug() << "Checking for lunge ability";
   if (!timersEnabled) {
-    qDebug() << "Timers Disabled";
     return false;
   }
-  qDebug() << "Timers Enabled";
   if (animationLocked) {
-    qDebug() << "Animation is locked";
     return false;
   } else if (numPressesSinceTimeReset > numAllowedInTime) {
-    qDebug() << "Number of presses too high";
     return false;
   }
-  qDebug() << "Allowed to lunge";
   numPressesSinceTimeReset++;
   return true;
 }

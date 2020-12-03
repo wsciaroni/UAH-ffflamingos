@@ -234,12 +234,9 @@ void GameDialog::drawBoard() {
   scene->addItem(player3Name);
   scene->addItem(player4Name);
   scene->addItem(player5Name);
-
-  qDebug() << "Drawing Board" << endl;
 }
 
 void GameDialog::extendHead(int playerPos) {
-  // qDebug() << "Extending " << playerPos << endl;
   switch (playerPos) {
     case 0:
       break;
@@ -264,7 +261,6 @@ void GameDialog::extendHead(int playerPos) {
 }
 
 void GameDialog::retractHead(int playerPos) {
-  // qDebug() << "Retracting " << playerPos << endl;
   switch (playerPos) {
     case 0:
       break;
@@ -319,7 +315,6 @@ void GameDialog::spawnAllPlayers() {
 }
 
 void GameDialog::setBallPos(qint32 xPos[25], qint32 yPos[25]) {
-  /// @todo draw balls at each coordinate pair.
   for (int i = 0; i < 25; i++) {
     gameBalls[i]->setPos(xPos[i], yPos[i]);
   }
@@ -420,7 +415,7 @@ bool* GameDialog::determineCapturedBalls(PlayerPosition pos) {
 void GameDialog::HandleInfoIn(QString highScoreHolder, qint32 highScore,
                               QString winnerName, qint32 winnerScore) {
 
-  /// @todo display information over game window when this is called (At the end
+  /// Displays information over game window when this is called (At the end
   /// of the game)
   /// Create 4 QGraphicsTextItems that will display the following theme:
   /// High Score: ##

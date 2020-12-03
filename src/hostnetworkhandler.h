@@ -116,11 +116,6 @@ slots:
    */
   void onTCPDataReady();
 
-  /**
-   * Handles incoming bytes when data is written to the TCPSocket.
-   */
-  void onTCPBytesWritten(qint64 bytes);
-
 signals:
   /**
    * @brief emitted when a room code is provided
@@ -132,10 +127,9 @@ signals:
 
   /**
    * @brief emitted when a request to leave is received
-   * @param terminateMePacket A Network Packet of type NPTerminateMe
    * @param socket The QTcpSocket to communicate with that specific client on
    */
-  void terminateMe(NPTerminateMe terminateMePacket, QTcpSocket* socket);
+  void terminateMe(QTcpSocket* socket);
 
   /**
    * @brief emitted when a space bar is pressed

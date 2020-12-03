@@ -35,15 +35,14 @@ void ball::advanceBall() {
   y = this->pos().ry();
 
   if (qSqrt(qPow(x, 2) + qPow(y, 2)) + 5 >= 300) {
-    // qDebug() << "Hits edge\n";
     double beta = 300;
     int megaPi = M_PI * 10000;
     qreal angleOffset = static_cast<qreal>(
         static_cast<double>(
             QRandomGenerator::global()->bounded(-megaPi, megaPi)) /
         static_cast<double>(10000));
-    dx = 5*((-x / beta) + qSin(angleOffset));
-    dy = 5*((-y / beta) + qCos(angleOffset));
+    dx = 5 * ((-x / beta) + qSin(angleOffset));
+    dy = 5 * ((-y / beta) + qCos(angleOffset));
   }
   x += dx;
   y += dy;

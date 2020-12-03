@@ -4,41 +4,6 @@ NPInGameInfo::NPInGameInfo(/* args */) {}
 
 NPInGameInfo::~NPInGameInfo() {}
 
-QDataStream& operator<<(QDataStream& ds, NPInGameInfo& packet) {
-  /*
-  for (int i = 0; i < 25; i++) {
-    ds << packet.getBallPosX(i) << packet.getBallPosY(i);
-  }
-  for (int i = 0; i < 6; i++) {
-    ds << packet.getPlayerScore(i) << packet.isPlayerExtended(i);
-  }
-  ds << packet.getTimeRemaining();
-  */
-  return ds;
-}
-
-QDataStream& operator>>(QDataStream& ds, NPInGameInfo& packet) {
-  /*
-  for (int i = 0; i < 25; i++) {
-    qint32 xPos, yPos;
-    ds >> xPos >> yPos;
-    packet.setBallPosition(i, xPos, yPos);
-  }
-  for (int i = 0; i < 6; i++) {
-    qint32 score;
-    bool isExtended;
-    ds >> score >> isExtended;
-    packet.setPlayerScore(i, score);
-    packet.setPlayerExtension(i, isExtended);
-  }
-  packet.setPlayerExtension(0, false);
-  qint32 timeRemaining = -1;
-  ds >> timeRemaining;
-  packet.setTimeRemaining(timeRemaining);
-  */
-  return ds;
-}
-
 void NPInGameInfo::setBallPosition(qint32 ballNum, qint32 xCoord,
                                    qint32 yCoord) {
   // Invalid ball number
